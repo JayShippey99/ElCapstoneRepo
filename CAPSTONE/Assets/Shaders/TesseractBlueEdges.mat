@@ -39,7 +39,7 @@ Material:
     - Vector1_079da2f164da4d2987083dc72eeb34d9: 0.14
     - Vector1_47351debf8f144d9ba2c69c83c95cf3b: 0
     - Vector1_c4f8634825724fec991a233d00b403f5: 2.14
-    - _FlashAmount: 0.000112160866
+    - _FlashAmount: 0.0008676052
     m_Colors:
     - Color_3b448588a9f1413ca82ef57ee4ea9774: {r: 0.3647059, g: 0.9452748, b: 1, a: 1}
     - _Color: {r: 0.3372549, g: 0.8980392, b: 1, a: 1}

@@ -27,7 +27,7 @@ public class BuildTesseract : MonoBehaviour
 
         // vertices
 
-        //mesh.MarkDynamic();
+        mesh.MarkDynamic();
         // if I added more verts, would that be bad?
         // no, technically there are only 16, but I can add more from those 16 to get all the faces working properly, the positions would still function as needed
         Vector3[] vertices = new Vector3[]

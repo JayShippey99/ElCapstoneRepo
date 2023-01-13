@@ -17,8 +17,8 @@ public class TabletMovement : MonoBehaviour
 
     public Vector3 showLocation;
     public Vector3 showRotation;
-    public Vector3 hideLocation;
-    public Vector3 hideRotation;
+    Vector3 hideLocation;
+    Vector3 hideRotation;
 
     public GameObject Screen;
 
@@ -26,6 +26,9 @@ public class TabletMovement : MonoBehaviour
     void Start()
     {
         currentState = idle;
+
+        hideLocation = transform.position;
+        hideRotation = transform.rotation.eulerAngles;
     }
 
     // Update is called once per frame

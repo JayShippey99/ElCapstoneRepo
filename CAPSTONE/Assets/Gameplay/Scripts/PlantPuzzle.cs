@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class PlantPuzzle : MonoBehaviour
@@ -38,6 +39,8 @@ public class PlantPuzzle : MonoBehaviour
     // I guess it can be a script that I throw on each prefab
 
     // I need system now for me to easily make levels, lowkey... zack
+
+    public bool forTesting; // if for testing, then just use 1234 in the input, if not, stay normal game
 
     int counter;
 
@@ -100,13 +103,26 @@ public class PlantPuzzle : MonoBehaviour
 
         if (cCount == 0) // for the first input, use the root
         {
-            if (char.IsLower(t[0])) MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
-            
-            // if (char.IsUpper(t[0])) // do nothing if upper, its not an extension of anything
+            if (!forTesting)
+            {
+                if (char.IsLower(t[0])) MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
 
-            if (char.IsNumber(t[0])) MakeSplit(startPoint);
+                // if (char.IsUpper(t[0])) // do nothing if upper, its not an extension of anything
 
-            if (Conditions.IsSymbol(t[0])) MakeFruit(startPoint);
+                if (char.IsNumber(t[0])) MakeSplit(startPoint);
+
+                if (Conditions.IsSymbol(t[0])) MakeFruit(startPoint);
+            }
+            else
+            {
+                if (t[0] == '1') MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
+
+                // if (char.IsUpper(t[0])) // do nothing if upper, its not an extension of anything
+
+                if (t[0] == '2') MakeSplit(startPoint);
+
+                if (t[0] == '3') MakeFruit(startPoint);
+            }
         }
         else // for every other input, use the ends of the branches
         {
@@ -124,15 +140,27 @@ public class PlantPuzzle : MonoBehaviour
                         emptyBranches[i].empty = false;
                         //emptyBranches.Remove(emptyBranches[i]); // do we want to remove as we go? probably not eithr
                         branchesToBeRemoved.Add(emptyBranches[i]);
-                        if (char.IsLower(t[i])) MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
-                        // the issue is that I change empty branch amount as I make it
 
-                        if (char.IsNumber(t[i])) MakeSplit(startPoint);
+                        if (!forTesting)
+                        {
 
-                        if (Conditions.IsSymbol(t[i])) MakeFruit(startPoint); // so when I add a fruit, the fact that I add literally anything, that makes it so that I set that branch to be removed in the future
-                        // but it doesn't feel like it works
-                        // lloks like placing fruits does actually break things
-                        if (char.IsUpper(t[i])) MakeExtension(startPoint, emptyBranches[i].start); // I feel like we need to know something to either send to this function or do something with // aha startpoint is gotten from emptybranches[i], so we need to nkow empty branches[i] direction
+                            if (char.IsLower(t[i])) MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
+                                                                              // the issue is that I change empty branch amount as I make it
+
+                            if (char.IsNumber(t[i])) MakeSplit(startPoint);
+
+                            if (Conditions.IsSymbol(t[i])) MakeFruit(startPoint); // so when I add a fruit, the fact that I add literally anything, that makes it so that I set that branch to be removed in the future
+                                                                                  // but it doesn't feel like it works
+                                                                                  // lloks like placing fruits does actually break things
+                            if (char.IsUpper(t[i])) MakeExtension(startPoint, emptyBranches[i].start); // I feel like we need to know something to either send to this function or do something with // aha startpoint is gotten from emptybranches[i], so we need to nkow empty branches[i] direction
+                        }
+                        else
+                        {
+                            if (t[i] == '1') MakeStraight(startPoint);
+                            if (t[i] == '2') MakeSplit(startPoint);
+                            if (t[i] == '3') MakeFruit(startPoint);
+                            if (t[i] == '4') MakeExtension(startPoint, emptyBranches[i].start);
+                        }
                     }
                 }
             }

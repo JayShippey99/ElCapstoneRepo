@@ -225,7 +225,7 @@ public class SubmitToBoard : MonoBehaviour
 
         if (ParticlePuzzle.instance != null) ParticlePuzzle.instance.PushFrequencies(str);
 
-
+        /*
         // PUZZLE TESTING CHUNK
         if (Tesseract.instance != null)
         {
@@ -233,6 +233,7 @@ public class SubmitToBoard : MonoBehaviour
             if (Conditions.IsAlternating(str)) Tesseract.instance.StartSoundPuzzle(); //Tesseract.instance.spinX(); // change in a sec;
             // wonder if we could make the pitches match the things I used to put in
         }
+        */
 
         if (PlantPuzzle.instance != null) PlantPuzzle.instance.MakeBranches(str);
 

@@ -13,7 +13,10 @@ public class BuildTesseract : MonoBehaviour
     // https : //www.youtube.com/watch?v=l_2uGpjBMl4 // set vertices, instead of like redoing them
     // https : //gamedev.stackexchange.com/questions/136169/performance-of-manipulating-a-mesh-in-realtime // mark dynamic
 
+    bool twoCubes; // if two cubes, then don't draw the diagonal sides, agh this is so unnessesary
+
     public Transform[] pointHandles;
+
     void Start()
     {
         

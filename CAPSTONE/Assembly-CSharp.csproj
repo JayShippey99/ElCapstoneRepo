@@ -111,6 +111,7 @@
     <Compile Include="Assets\Ciconia Studio\_Shared Files\Scripts\Demo\SuperCamera.cs" />
     <Compile Include="Assets\Gameplay\Scripts\CommsBrain.cs" />
     <Compile Include="Assets\Gameplay\Scripts\FrequencyList.cs" />
+    <Compile Include="Assets\Switch.cs" />
     <Compile Include="Assets\Gameplay\Scripts\SubmitToBoard.cs" />
     <Compile Include="Assets\Gameplay\Scripts\CubeTestAnimation.cs" />
     <Compile Include="Assets\Gameplay\Scripts\BuildTesseract.cs" />

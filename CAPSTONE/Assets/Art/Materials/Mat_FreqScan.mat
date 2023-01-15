@@ -72,6 +72,8 @@ Material:
     - _Layer1Level: 1
     - _Layer2Level: -1
     - _Layer3Level: 0
+    - _QueueControl: 0
+    - _QueueOffset: 0
     - _ScanAmount: -1
     m_Colors: []
   m_BuildTextureStacks: []

@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
+public class House
+{
+    public string houseName;
+    public int sqFootage;
+}
+
+
 public class PlantPuzzle : MonoBehaviour
 {
     // based on inputs make a branch from point a to point b
@@ -56,9 +63,10 @@ public class PlantPuzzle : MonoBehaviour
 
     public GameObject[] AllPuzzles;
     List<PlantCondition> levelConditions = new List<PlantCondition>();
-    public GameObject currentLevel;
+    GameObject currentLevel;
+    public int currentLevelNum;
 
-    float branchAngleDiv = 1;
+    float branchAngleDiv = 1f;
 
     [HideInInspector]
     public int cCount;
@@ -68,7 +76,7 @@ public class PlantPuzzle : MonoBehaviour
         if (instance == null) instance = this;
         else Destroy(gameObject);
 
-        GetNewPuzzle(2);
+        GetNewPuzzle(currentLevelNum);
     }
 
     void GetNewPuzzle(int num)
@@ -89,8 +97,9 @@ public class PlantPuzzle : MonoBehaviour
 
     public void MakeBranches(string t)
     {
+
         // clear list and add
-        cCount = transform.childCount; // quick way to get child Count
+        cCount = transform.childCount; // quick way to get child Count // AHH no more children cause the level is children
 
         Vector3 startPoint = transform.position; // first branch starts at the root
 
@@ -143,7 +152,6 @@ public class PlantPuzzle : MonoBehaviour
 
                         if (!forTesting)
                         {
-
                             if (char.IsLower(t[i])) MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
                                                                               // the issue is that I change empty branch amount as I make it
 
@@ -195,7 +203,6 @@ public class PlantPuzzle : MonoBehaviour
             //print(insertAt + " insert at");
             emptyBranches.Insert(insertAt, b); // so this hopefully should make it so that we never have to do those weird long loops
             //emptyBranches.Add(b); // so NOW this makes it so that we don't have changing numbers as the things are going on
-            
         }
 
         List<BranchInitializer> tempBranches = emptyBranches;

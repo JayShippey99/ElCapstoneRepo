@@ -109,6 +109,8 @@ public class Puzzle1MiniGridBrain : MonoBehaviour
         if (winDelay <= 0)
         {
             // hide self, reverse animation
+            // instead of closing the puzzle, do that i guess, but also, spawn the next puzzle in the sequence
+            // do this tomorrow, I should go
             Tesseract.instance.CloseABCPuzzle(); // this function kills this script
             //gameObject.SetActive(false);
         }

@@ -17,6 +17,7 @@ public class BuildTesseract : MonoBehaviour
 
     public Transform[] pointHandles;
 
+    public bool show;
     void Start()
     {
         
@@ -27,16 +28,18 @@ public class BuildTesseract : MonoBehaviour
     {
         MeshFilter mf = GetComponent<MeshFilter>();
         Mesh mesh = mf.sharedMesh;
-
-        // so it seems like the issue does come from these 100+ lines of code. why though does it only tank the gpu when it runs?
-
-        // vertices
-
-        mesh.MarkDynamic();
-        // if I added more verts, would that be bad?
-        // no, technically there are only 16, but I can add more from those 16 to get all the faces working properly, the positions would still function as needed
-        Vector3[] vertices = new Vector3[]
+        if (show)
         {
+
+            // so it seems like the issue does come from these 100+ lines of code. why though does it only tank the gpu when it runs?
+
+            // vertices
+
+            mesh.MarkDynamic();
+            // if I added more verts, would that be bad?
+            // no, technically there are only 16, but I can add more from those 16 to get all the faces working properly, the positions would still function as needed
+            Vector3[] vertices = new Vector3[]
+            {
         // front face
         pointHandles[0].parent. localPosition + pointHandles[0]. localPosition, // instead of local position we need to use the parent's local, but this affects all tesseracts, maybe I can just save a version for testing or someting
         pointHandles[1].parent. localPosition + pointHandles[1]. localPosition,
@@ -201,14 +204,14 @@ public class BuildTesseract : MonoBehaviour
         pointHandles[3].parent.localPosition + pointHandles[3].localPosition,
         pointHandles[7].parent.localPosition + pointHandles[7].localPosition,
 
-            // omfg this is so insane how much of this I gotta do lmfao for each 6 sides there's 4 diagonals i gotta make, that's 24 more of these
-            // i'm not even sure how i'd go about the math, each vertex has only 4 walls coming off actually
-            // WAIT nah i only gotta do like 12 more cause id be repeating a bunch with that math
-        };
+                // omfg this is so insane how much of this I gotta do lmfao for each 6 sides there's 4 diagonals i gotta make, that's 24 more of these
+                // i'm not even sure how i'd go about the math, each vertex has only 4 walls coming off actually
+                // WAIT nah i only gotta do like 12 more cause id be repeating a bunch with that math
+            };
 
-        // triangles // 3 points, clockwise determines which side is visible
-        int[] triangles = new int[] // i'd love to be able to write some smart ass code to connect all of these for me
-        {
+            // triangles // 3 points, clockwise determines which side is visible
+            int[] triangles = new int[] // i'd love to be able to write some smart ass code to connect all of these for me
+            {
             
             
         // DIAGONALS
@@ -293,13 +296,13 @@ public class BuildTesseract : MonoBehaviour
         //back inner
         15, 14, 13,
         13, 12, 15,
-            // okay so the funky shit going on here is that when I add the rest of the tris, it seems to pull the whole mesh
-        };
+                // okay so the funky shit going on here is that when I add the rest of the tris, it seems to pull the whole mesh
+            };
 
-        // UVs 
-        // oh, i guess interestingly, i don't need to use these braces, idk that's something for later
-        Vector2[] uvs = new Vector2[] // i wonder if i could run a for loop or something modulo here
-        {
+            // UVs 
+            // oh, i guess interestingly, i don't need to use these braces, idk that's something for later
+            Vector2[] uvs = new Vector2[] // i wonder if i could run a for loop or something modulo here
+            {
 
         new Vector2(0, 1), // front
         new Vector2(1, 1),
@@ -424,21 +427,22 @@ public class BuildTesseract : MonoBehaviour
         new Vector2(1, 0),
         new Vector2(0, 0),
 
-        };
-        
-        //mesh.Clear(); // very weird, without clear, we can move the tesseract around still. I assumed it was going to just create an endless trail of meshes but its just like it stops updating the mesh point locations
+            };
+
+            //mesh.Clear(); // very weird, without clear, we can move the tesseract around still. I assumed it was going to just create an endless trail of meshes but its just like it stops updating the mesh point locations
+            mesh.Clear();
+
             mesh.vertices = vertices;
             mesh.triangles = triangles;
-
+            
             mesh.uv = uvs;
             mesh.Optimize();
             mesh.RecalculateNormals();
-    }
+        }
+        else
+        {
+            mesh.Clear();
+        }
 
-
-
-    Vector2 AddUV()
-    {
-        return new Vector2(0, 1);
     }
 }

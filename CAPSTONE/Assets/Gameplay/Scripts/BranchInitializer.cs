@@ -17,7 +17,6 @@ public class BranchInitializer : MonoBehaviour
     {
         // i think I need to make things local
 
-        print("yeah?");
         lr = GetComponent<LineRenderer>(); // ah so this never worked,
                                            
         // i think set position needs to be more local or something
@@ -39,7 +38,6 @@ public class BranchInitializer : MonoBehaviour
 
         if (Physics2D.Linecast(end, start)) // FUCK YEAH BABYY okay so this works, we can move this to the create funciton I assuem?
         {
-            print("checking?");
             RaycastHit2D r = Physics2D.Linecast(end, start); // is the branch hitting itself?? // it might just be hitting itself?
 
             LineRenderer hitBranch = r.collider.GetComponent<LineRenderer>(); 
@@ -53,12 +51,11 @@ public class BranchInitializer : MonoBehaviour
 
             if (hitBranch.GetPosition(1) != thisBranch.GetPosition(0) && hitBranch.GetPosition(1) != thisBranch.GetPosition(0))
             {
-                print("hello?");
                 //print("FOUND SOMETHING"); // okay so the trick now is that this triggers on every new branch, maybe I can ask like if the end and start points are the same
                                           // so if the start point and the end point of either thing are matching up, then its not a collision
                                           // I THINK I GOT ITTT WOOOOO
                                           // now I gotta call the end function\
-                pp.StartCoroutine(pp.ResetTimer()); //this won't always work 
+                pp.StartCoroutine(pp.DelayAndThenFunction(pp.ClearPuzzle, .5f)); //this won't always work  // ah shit so this is the parent? // Ohh okay so here I'm just saying if there is a collision, delay and then reset, no biggie
             }
         }
 
@@ -68,7 +65,6 @@ public class BranchInitializer : MonoBehaviour
 
     public void TurnOnCollider()
     {
-        print("on?");
         ec.enabled = true;
     }
 

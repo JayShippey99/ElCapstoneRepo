@@ -56,17 +56,20 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GameController.cs" />
     <Compile Include="Assets\A1_Puzzle.cs" />
     <Compile Include="Assets\Gameplay\Scripts\RewardScript.cs" />
     <Compile Include="Assets\Gameplay\Scripts\PositionWiggler.cs" />
     <Compile Include="Assets\Gameplay\Scripts\InAirPuzzle.cs" />
     <Compile Include="Assets\Ciconia Studio\_Shared Files\Scripts\Demo\UIButton_ShowNext.cs" />
     <Compile Include="Assets\Gameplay\Scripts\ParticlesTrigger.cs" />
+    <Compile Include="Assets\Gameplay\Scripts\DocumentItem.cs" />
     <Compile Include="Assets\Gameplay\Scripts\ResetButton.cs" />
     <Compile Include="Assets\Gameplay\Scripts\ParticleBrain.cs" />
     <Compile Include="Assets\Gameplay\Scripts\CommsLight.cs" />
     <Compile Include="Assets\Gameplay\Scripts\FlashWhite.cs" />
     <Compile Include="Assets\Gameplay\Scripts\Tesseract.cs" />
+    <Compile Include="Assets\InvalidCodeException.cs" />
     <Compile Include="Assets\Gameplay\Scripts\PictureMatchPuzzle.cs" />
     <Compile Include="Assets\Gameplay\Scripts\PlantPuzzle.cs" />
     <Compile Include="Assets\Gameplay\Scripts\DragObject.cs" />
@@ -75,6 +78,7 @@
     <Compile Include="Assets\Gameplay\Scripts\CursorController.cs" />
     <Compile Include="Assets\Gameplay\Scripts\SymbolMathPuzzle.cs" />
     <Compile Include="Assets\Gameplay\Scripts\TargetLights.cs" />
+    <Compile Include="Assets\Gameplay\Scripts\KnobConnector.cs" />
     <Compile Include="Assets\Gameplay\Scripts\FreqRow.cs" />
     <Compile Include="Assets\Gameplay\Scripts\StoneZone.cs" />
     <Compile Include="Assets\Gameplay\Scripts\FreqScanObject.cs" />
@@ -83,8 +87,11 @@
     <Compile Include="Assets\Gameplay\Scripts\PictureMatchSide.cs" />
     <Compile Include="Assets\Gameplay\Scripts\GameProgress.cs" />
     <Compile Include="Assets\Gameplay\Scripts\Conditions.cs" />
+    <Compile Include="Assets\Gameplay\Scripts\InteractableParent.cs" />
     <Compile Include="Assets\Gameplay\Scripts\PianoPuzzle.cs" />
+    <Compile Include="Assets\_Button.cs" />
     <Compile Include="Assets\Gameplay\Scripts\MovementPuzzle.cs" />
+    <Compile Include="Assets\SimpleEnableDisable.cs" />
     <Compile Include="Assets\Gameplay\Scripts\CommsMessage.cs" />
     <Compile Include="Assets\Gameplay\Scripts\PlantCondition.cs" />
     <Compile Include="Assets\Gameplay\Scripts\SubmitButton.cs" />
@@ -97,6 +104,7 @@
     <Compile Include="Assets\Gameplay\Scripts\MoveInnerCubePuzzle.cs" />
     <Compile Include="Assets\Gameplay\Scripts\CommsComunication.cs" />
     <Compile Include="Assets\Gameplay\Scripts\Notes.cs" />
+    <Compile Include="Assets\Gameplay\Scripts\Level.cs" />
     <Compile Include="Assets\Gameplay\Scripts\BranchInitializer.cs" />
     <Compile Include="Assets\Gameplay\Scripts\MusicDotsPuzzle.cs" />
     <Compile Include="Assets\Gameplay\Scripts\FreqScanClass.cs" />
@@ -111,16 +119,19 @@
     <Compile Include="Assets\Ciconia Studio\_Shared Files\Scripts\Demo\SuperCamera.cs" />
     <Compile Include="Assets\Gameplay\Scripts\CommsBrain.cs" />
     <Compile Include="Assets\Gameplay\Scripts\FrequencyList.cs" />
-    <Compile Include="Assets\Switch.cs" />
+    <Compile Include="Assets\_Switch.cs" />
     <Compile Include="Assets\Gameplay\Scripts\SubmitToBoard.cs" />
     <Compile Include="Assets\Gameplay\Scripts\CubeTestAnimation.cs" />
+    <Compile Include="Assets\Gameplay\Scripts\DynamicScrollView.cs" />
     <Compile Include="Assets\Gameplay\Scripts\BuildTesseract.cs" />
     <Compile Include="Assets\Gameplay\Scripts\BackspaceButton.cs" />
     <Compile Include="Assets\Ciconia Studio\_Shared Files\Scripts\Demo\FreeCamera.cs" />
     <Compile Include="Assets\Gameplay\Scripts\VertHandle.cs" />
     <Compile Include="Assets\Gameplay\Scripts\BoardLight.cs" />
     <Compile Include="Assets\Gameplay\Scripts\ParticlePuzzle.cs" />
+    <Compile Include="Assets\_Knob.cs" />
     <Compile Include="Assets\Gameplay\Scripts\InputCounter.cs" />
+    <Compile Include="Assets\BranchPuzzle.cs" />
     <Compile Include="Assets\Gameplay\Scripts\DeskObject.cs" />
     <Compile Include="Assets\Gameplay\Scripts\InputHistory.cs" />
   </ItemGroup>

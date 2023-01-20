@@ -7,13 +7,13 @@ public class PlantCondition : MonoBehaviour
     [HideInInspector]
     public bool isMet;
 
-    public bool isFruitCondition; // based on the type, true is frui
+    public bool isEndCondition; // based on the type, true is frui
     // we should just be able to know which type this condition is without needign to set it?
 
     // maybe we also have a enum it can be
     public bool CheckIfMet(List<GameObject> fruits, List<GameObject> branches) // should I send through all the fruits??
     {
-        if (isFruitCondition)
+        if (isEndCondition)
         {
             foreach (GameObject f in fruits)
             {
@@ -38,3 +38,21 @@ public class PlantCondition : MonoBehaviour
         return false;
     }
 }
+
+/*
+public class BranchCondition : PlantCondition
+{
+    public BranchCondition()
+    {
+        this.isEndCondition = false;
+    }
+}
+
+public class EndCondition : PlantCondition
+{
+    public EndCondition()
+    {
+        this.isEndCondition = true;
+    }
+}
+*/

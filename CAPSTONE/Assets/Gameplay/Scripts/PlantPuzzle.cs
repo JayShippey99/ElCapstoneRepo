@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class House
-{
-    public string houseName;
-    public int sqFootage;
-}
-
-
 public class PlantPuzzle : MonoBehaviour
 {
     // based on inputs make a branch from point a to point b
@@ -71,12 +64,22 @@ public class PlantPuzzle : MonoBehaviour
     [HideInInspector]
     public int cCount;
 
+    public delegate void FunctionAfterDelay();
+
     void Start()
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
 
         GetNewPuzzle(currentLevelNum);
+
+        // Call method, pass along delegate.
+    }
+
+    public IEnumerator DelayAndThenFunction(FunctionAfterDelay function, float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        function();
     }
 
     void GetNewPuzzle(int num)
@@ -217,20 +220,36 @@ public class PlantPuzzle : MonoBehaviour
 
         cCount = transform.childCount;
 
-        CheckIfComplete();
-        CheckIfFull();
-    }
 
-    public void CheckIfComplete()
+        /////////////////////// CHECK CODE
+        if (!CheckIfComplete()) CheckIfFull(); // Just cause a puzzle is complete doesn't mean the branches are full?
+        else
+        {
+            // okay so we need to assume that this puzzle is the end of the line, we reset the cube to the hub state, in theory the puzzle should go away
+
+            print("Puzzle is solved!");
+            print("play static now");
+            // get a noise signal and send it to the thing
+            // for now lets just set up an instance script for the noise signal box
+            FreqScanObject.instance.ChangeSignal(1);
+
+            // when puzzle is solved, wait for a longer period of time, then return to hub, 
+            StartCoroutine(DelayAndThenFunction(Tesseract.instance.ReturnToHubState, 3f)); // bro wtf this is so awesome
+        }
+    }
+    
+
+    public bool CheckIfComplete()
     {
+        // 
+
         foreach (PlantCondition pc in levelConditions) // we need to ask if at least one condition isn't met, that we don't reset? or what, lets jsut print when the puzzle is done
         {
             // for each condition, ask if its met
-            if (!pc.CheckIfMet(fruits, branches)) return; // for each level condition, I need to send through the whole list of fruits
-                
+            if (!pc.CheckIfMet(fruits, branches)) return false; // for each level condition, I need to send through the whole list of fruits
         }
 
-        print("PUZZLE IS SOLVED");
+        return true;
     }
 
     
@@ -324,11 +343,11 @@ public class PlantPuzzle : MonoBehaviour
         // maybe I can just ask if the child count is above 0
         if (cCount > 0 && emptyBranches.Count == 0)
         {
-            StartCoroutine(ResetTimer());
+            StartCoroutine(DelayAndThenFunction(ClearPuzzle, .5f));
         }
     }
 
-    void ClearPuzzle()
+    public void ClearPuzzle()
     {
         emptyBranches.Clear();
         fruits.Clear(); // just gotta clear it
@@ -343,20 +362,5 @@ public class PlantPuzzle : MonoBehaviour
         }
 
         // I mean this does destroy the fruits too right? yes AH i get it
-    }
-
-    public IEnumerator ResetTimer()
-    {
-        yield return new WaitForSeconds(.5f);
-
-        ClearPuzzle();
-    }
-
-
-    int Factorial(int i)
-    {
-        if (i <= 1)
-            return 1;
-        return i * Factorial(i - 1);
     }
 }

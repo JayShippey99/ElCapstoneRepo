@@ -38,53 +38,6 @@ public class SubmitString : MonoBehaviour
 
             InputHistory.instance.AddInput(str);
 
-            if (CheckIfFirstAndLastMatch(str)) // i need a good way to check if the function works or not while still running it?
-            {
-                //print("first and last are matching");
-                tesseract.spinZ = true;
-            }
-
-            if (HasNumbers(str))
-            {
-                //print("has numbers");
-                tesseract.spinY = true;
-            }
-
-            if (CheckIfAnyRepeatChars(str))
-            {
-                //print("there are repeating characters");
-                tesseract.spinX = true;
-            }
-
-            if (AllNumbers(str)) tesseract.Grow();
-
-            if (AllLetters(str)) tesseract.SuperShrink();
-
-            if (AllCapitalLetters(str) && AllLetters(str)) tesseract.Shrink();
-
-            if (ContainsLeftArrow(str) && !ContainsDoubleLeftArrow(str))
-            {
-                tesseract.MoveLeft();
-            }
-
-            if (ContainsDoubleLeftArrow(str))
-            {
-                tesseract.MoveUp();
-            }
-
-
-            if (ContainsRightArrow(str) && !ContainsDoubleRightArrow(str))
-            {
-                tesseract.MoveRight();
-            }
-
-            if (ContainsDoubleRightArrow(str))
-            {
-                tesseract.MoveDown();
-            }
-
-            if (InAlphabeticalOrder(str)) tesseract.MakeSound();
-
             //if (AllSameChar(str)) tesseract.MoveDown();
 
             if (isHexValue(str)) tesseract.ChangeColor(str.ToLower());

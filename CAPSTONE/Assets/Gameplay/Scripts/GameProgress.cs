@@ -9,7 +9,7 @@ public class GameProgress : MonoBehaviour
 
     static public GameProgress instance;
 
-    int newGame = 0, middleGame = 1, endGame = 2; // end game is when the end sequence plays
+    int newGame = 0, middleGame = 1, endGame = 2; // end game is when the end sequence plays // can't get rid of this script, could be good to reference
     public int currentGameState;
 
     bool[] puzzles = new bool[2];

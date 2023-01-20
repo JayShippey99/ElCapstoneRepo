@@ -23,6 +23,8 @@ public class TabletMovement : MonoBehaviour
     public GameObject Screen;
 
     public float speed = .1f;
+
+    public bool reactToClick;
     void Start()
     {
         currentState = idle;
@@ -34,23 +36,26 @@ public class TabletMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentState != idle)
+        if (reactToClick)
         {
-            if (currentState == show)
+            if (currentState != idle)
             {
-                //transform.position = showLocation;
-                transform.position = Vector3.Lerp(transform.position, showLocation, speed); // looks great tbh
-                //transform.rotation = Quaternion.Euler(showRotation);
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(showRotation), speed);
-                if (transform.position == showLocation) currentState = idle;
-            }
-            else if (currentState == hide)
-            {
-                //transform.position = hideLocation;
-                transform.position = Vector3.Lerp(transform.position, hideLocation, speed);
-                //transform.rotation = Quaternion.Euler(hideRotation);
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(hideRotation), speed);
-                if (transform.position == hideLocation) currentState = idle;
+                if (currentState == show)
+                {
+                    //transform.position = showLocation;
+                    transform.position = Vector3.Lerp(transform.position, showLocation, speed); // looks great tbh
+                                                                                                //transform.rotation = Quaternion.Euler(showRotation);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(showRotation), speed);
+                    if (transform.position == showLocation) currentState = idle;
+                }
+                else if (currentState == hide)
+                {
+                    //transform.position = hideLocation;
+                    transform.position = Vector3.Lerp(transform.position, hideLocation, speed);
+                    //transform.rotation = Quaternion.Euler(hideRotation);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(hideRotation), speed);
+                    if (transform.position == hideLocation) currentState = idle;
+                }
             }
         }
     }
@@ -58,26 +63,35 @@ public class TabletMovement : MonoBehaviour
     // but you can just always click it, I guess this just wouldn't do anything?
     void Show() // different trigger methods so different thigns
     {
-        if (currentState == idle) // will change
+        if (reactToClick)
         {
-            GetComponent<BoxCollider>().enabled = false;
-            Screen.SetActive(true);
-            currentState = show;
+            if (currentState == idle) // will change
+            {
+                GetComponent<BoxCollider>().enabled = false;
+                Screen.SetActive(true);
+                currentState = show;
+            }
         }
     }
 
     public void Hide()
     {
-        if (currentState == idle)
+        if (reactToClick)
         {
-            GetComponent<BoxCollider>().enabled = true;
-            Screen.SetActive(false);
-            currentState = hide;
+            if (currentState == idle)
+            {
+                GetComponent<BoxCollider>().enabled = true;
+                Screen.SetActive(false);
+                currentState = hide;
+            }
         }
     }
 
     private void OnMouseUpAsButton()
     {
-        Show();
+        if (reactToClick)
+        {
+            Show();
+        }
     }
 }

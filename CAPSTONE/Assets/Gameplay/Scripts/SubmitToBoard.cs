@@ -8,8 +8,10 @@ using System.Linq;
 public class SubmitToBoard : MonoBehaviour
 {
 
-    // I need to start the first puzzle when I submit something with ascending char value, could switch to
-    //
+    // new idea, instead of working with caret keys and stuff I can just make my own thing, it'll have 16 _ and then the one I'm currently on will be flashing or like hidden or something // genius
+
+
+   // i need to figure out when I start the first puzzle
 
     // okay so now I need the second puzzle to start based on something else now. I think i'll have it be based on like an alternating input
     // how am I checking for the first puzzle
@@ -20,7 +22,6 @@ public class SubmitToBoard : MonoBehaviour
     // gonna comment things out in the oscillator page
 
     //something to think about later on is that things should be triggered after the input gets read
-
 
     static public SubmitToBoard instance;
 
@@ -35,9 +36,7 @@ public class SubmitToBoard : MonoBehaviour
     int historyNumber; // this will go from the list limit, down to 0, but reset when you submit
     // when we submit we add to this list
 
-    PianoPuzzle pp; // hehe
-    SymbolMathPuzzle smp;
-    public PictureMatchPuzzle pmp; // did this a little wrong I guess
+    //PianoPuzzle pp; // hehe
 
     bool isReadingInput = false;
 
@@ -51,10 +50,9 @@ public class SubmitToBoard : MonoBehaviour
 
 
         input = GetComponent<TMP_InputField>();
-        pp = GetComponent<PianoPuzzle>();
-        smp = GetComponent<SymbolMathPuzzle>();
+        //pp = GetComponent<PianoPuzzle>();
 
-        input.caretWidth = 0; // ugh so thankful for this lol
+        input.caretWidth = 0; // ugh so thankful for this lol // this sucks though cause I can't make it a decimal which would be perfect. its like i'd need to make my own thing or idk upscale everything just to match this caret lmfao
     }
 
     // Update is called once per frame
@@ -207,26 +205,27 @@ public class SubmitToBoard : MonoBehaviour
         return numLineBreaks;
     }
 
-    void ActivateCallouts(string str) // where do I check if it should start the puzzle?
+    void ActivateCallouts(string str) // where do I check if it should start the puzzle? // this could probably be a cleaner piece of code too
     {
+        if (GameController.instance != null)
+        {
+           if ((str == "abc")) GameController.instance.StartNewLevel(0); // I basically need to just copy the code I have below but relocate it kinda, and find a cleaner system for it
+        }
+
         if (Oscillator.instance != null) Oscillator.instance.On(str);
         // for each puzzle script, we can activate them here
         if (GetComponent<MoveInnerCubePuzzle>() != null) GetComponent<MoveInnerCubePuzzle>().CheckConditions(str);
 
-        if (pp != null && pp.enabled) pp.MakeNotes(str);
-
-        if (smp != null && smp.enabled) smp.ChangeSymbols(str);
-
-        if (pmp != null) pmp.CheckConditions(str); // just for now
+        //if (pp != null && pp.enabled) pp.MakeNotes(str);
 
         if (FrequencyList.instance != null) FrequencyList.instance.AddNewChars(str); // technically this could be a slotted variable, but whatever i literally will only have one of these per scene
 
         if (Puzzle1MiniGridBrain.instance != null) Puzzle1MiniGridBrain.instance.TurnOnDots(str);
 
         if (ParticlePuzzle.instance != null) ParticlePuzzle.instance.PushFrequencies(str);
-
+        
         /*
-        // PUZZLE TESTING CHUNK
+        // PUZZLE TESTING CHUNK // HERE IT IS LMFAO DUh // again, lets just keep this for now? // modify it though
         if (Tesseract.instance != null)
         {
             if (Conditions.IsInAscendingOrder(str)) Tesseract.instance.StartABCPuzzle(); // aha
@@ -236,7 +235,6 @@ public class SubmitToBoard : MonoBehaviour
         */
 
         if (PlantPuzzle.instance != null) PlantPuzzle.instance.MakeBranches(str);
-
 
         if (A1_Puzzle.instance != null) A1_Puzzle.instance.CheckConditions(str);
         // we need to have a callout for the cue for each puzzle start, interesting, should this be here on in the tesseract class, lets do here first

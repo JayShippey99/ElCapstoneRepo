@@ -8,23 +8,11 @@ public class Tesseract : MonoBehaviour
 {
     // okay I'm trying to get it so that the progress shows up and adds to the grid for this puzzle too
 
+    // I want to come up with a good system for going from puzzle to puzzle
+    // Maybe I can make puzzle paths as lists or something
+    // so that you activate the one, and then it goes into the chain and then from there once one is solved it just adds onto that num
+
     static public Tesseract instance;
-
-    [HideInInspector]
-    public bool spinZ;
-    float spinZTime;
-
-    [HideInInspector]
-    public bool spinY;
-    float spinYTime;
-
-    [HideInInspector]
-    public bool spinX;
-    float spinXTime;
-
-    float rX, rY, rZ; // rotation of x y and z
-
-    float growScale = 2, supershrinkScale = .5f, shrinkScale = .75f;
 
     // get reference to material with script?
     public Material cubeMaterial;
@@ -45,6 +33,10 @@ public class Tesseract : MonoBehaviour
     public Sprite puzzle2Reward;
     public Image puzzle2Grid; // the gridspace on the progress page
 
+    [Header("Branch Puzzles")]
+    public GameObject puzzleBrain;
+    public GameObject puzzleList;
+
 
     void Start()
     {
@@ -60,15 +52,18 @@ public class Tesseract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        rX = transform.rotation.x;
-        rY = transform.rotation.y;
-        rZ = transform.rotation.z;
+        //if (Input.GetKeyDown(KeyCode.T)) rewardObj.SetActive(!rewardObj.activeInHierarchy);
+    }
 
-        if (spinZ) SpinZ();
-        if (spinY) SpinY();
-        if (spinX) SpinX();
+    public void ReturnToHubState()
+    {
+        print("remove all puzzles, change animation to floating in place again");
 
-        if (Input.GetKeyDown(KeyCode.T)) rewardObj.SetActive(!rewardObj.activeInHierarchy);
+        // right now this isn't running the proper animations, but it serves the purpose of getting rid of things
+        puzzle1.SetActive(false);
+        puzzle2.SetActive(false);
+        puzzleBrain.SetActive(false);
+        puzzleList.SetActive(false);
     }
 
     public void DisableAnimator()
@@ -94,6 +89,7 @@ public class Tesseract : MonoBehaviour
 
     public void ShowABCPuzzle()
     {
+        // does this even go anymore?? I'm so confused lmfao
         // turn on the puzzle
         puzzle1.SetActive(true);
     }
@@ -111,11 +107,16 @@ public class Tesseract : MonoBehaviour
     {
         // turn on the puzzle
         puzzle1.SetActive(false);
-        rewardObj.SetActive(true); // okay so we just set it to true and then it kills itself
+        //rewardObj.SetActive(true); // okay so we just set it to true and then it kills itself
         rewardBrain.SetReward(puzzle1Reward); // can't set reward with it hidden num nuts lol
         puzzle1Grid.sprite = puzzle1Reward;
         animator.SetTrigger("EndPuzzle1");
         GameProgress.instance.PuzzleSolved(0);
+
+        FreqScanObject.instance.ChangeSignal(1);
+
+        // when puzzle is solved, wait for a longer period of time, then return to hub, 
+        //StartCoroutine(DelayAndThenFunction(Tesseract.instance.ReturnToHubState, 3f)); // bro wtf this is so awesome
     }
 
     private void OnDisable()
@@ -164,46 +165,6 @@ public class Tesseract : MonoBehaviour
         puzzle2.SetActive(false);
     }
 
-    public void Grow()
-    {
-        transform.localScale = Vector3.one * growScale;
-    }
-
-    public void SuperShrink()
-    {
-        transform.localScale = Vector3.one * supershrinkScale;
-    }
-
-    public void Shrink()
-    {
-        transform.localScale = Vector3.one * shrinkScale;
-    }
-    
-    public void NormalScale()
-    {
-        transform.localScale = Vector3.one;
-    }
-    
-    public void MoveLeft()
-    {
-        transform.position = Vector3.left * 5;
-    }
-
-    public void MoveRight()
-    {
-        transform.position = Vector3.right * 5;
-    }
-
-    public void MoveUp()
-    {
-        transform.position = Vector3.up * 5;
-    }
-
-    public void MoveDown()
-    {
-        transform.position = Vector3.down * 5;
-    }
-    
     public void MakeSound()
     {
         StartCoroutine(MakeSoundTimer());
@@ -213,44 +174,5 @@ public class Tesseract : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         Oscillator.instance.On("AAAA");
-    }
-
-    void ResetAll()
-    {
-
-    }
-
-
-    void SpinZ() // maybe we can just start a coroutine or something
-    {
-        transform.rotation = Quaternion.Euler(rX, rY, spinZTime);
-        spinZTime += Time.deltaTime * 20;
-        if (spinZTime >= 90)
-        {
-            spinZ = false;
-            spinZTime = 0; // okay I'm realizing now why this is dumb lol
-        }
-    }
-
-    void SpinY()
-    {
-        transform.rotation = Quaternion.Euler(rX, spinYTime, rZ);
-        spinYTime += Time.deltaTime * 20;
-        if (spinYTime >= 90)
-        {
-            spinY = false;
-            spinYTime = 0;
-        }
-    }
-
-    void SpinX()
-    {
-        transform.rotation = Quaternion.Euler(spinXTime, rY, rZ);
-        spinXTime += Time.deltaTime * 20;
-        if (spinXTime >= 90)
-        {
-            spinX = false;
-            spinXTime = 0;
-        }
     }
 }

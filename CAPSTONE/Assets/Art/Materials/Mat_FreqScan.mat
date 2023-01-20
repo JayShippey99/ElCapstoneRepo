@@ -68,7 +68,7 @@ Material:
     m_Ints: []
     m_Floats:
     - HoldAmount: 5
-    - _HoldAmount: 2
+    - _HoldAmount: 10
     - _Layer1Level: 1
     - _Layer2Level: -1
     - _Layer3Level: 0

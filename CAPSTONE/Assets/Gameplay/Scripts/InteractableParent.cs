@@ -23,8 +23,19 @@ public class InteractableParent : MonoBehaviour
 
     }
 
+    // I don't need light specific things you dummy the light will just be the light, SO we don't use light specific ones but we keep the parent child scripts and use a different function
 
     public virtual void ChangeSomethingDial(float f)
+    {
+
+    }
+
+    public virtual void ToggleLight()
+    {
+
+    }
+
+    public virtual void TriggerLight()
     {
 
     }

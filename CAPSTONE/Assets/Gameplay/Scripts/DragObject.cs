@@ -7,6 +7,8 @@ public class DragObject : MonoBehaviour
     // lets make the stones fall unless they're in the right spot
     // dude the floating effect is ESSENTIAL to wow you
 
+    // we need to revisit this script
+
     Vector3 offset;
     float zCoordinate;
 
@@ -80,21 +82,24 @@ public class DragObject : MonoBehaviour
     {
         // on enter of the collider
         // make sure its the right colliser
-        if (other.transform.parent.name == "StoneZones" && isHeld) // we could make hasStone an int
+        /*if (other.transform.parent.name == "StoneZones" && isHeld) // we could make hasStone an int
         {
             // and becuase this is in zone, we set the stone zone to hasStone
             other.GetComponent<StoneZone>().hasStone ++;
             inZone = true; // maybe we need to do this on an update loop or something
         }
+        */
     }
 
     private void OnTriggerExit(Collider other)
     {
+        /*
         if (other.transform.parent.name == "StoneZones") // i guess we'll test if it matter if we're holding it
         {
             other.GetComponent<StoneZone>().hasStone --;
             // ohh what's happening is that if i drag one stone through this it turns it off
             inZone = false; // maybe we need to do this on an update loop or something
         }
+        */
     }
 }

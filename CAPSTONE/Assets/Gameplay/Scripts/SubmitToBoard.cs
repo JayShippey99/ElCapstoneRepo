@@ -223,7 +223,7 @@ public class SubmitToBoard : MonoBehaviour
         if (Puzzle1MiniGridBrain.instance != null) Puzzle1MiniGridBrain.instance.TurnOnDots(str);
 
         if (ParticlePuzzle.instance != null) ParticlePuzzle.instance.PushFrequencies(str);
-        
+
         /*
         // PUZZLE TESTING CHUNK // HERE IT IS LMFAO DUh // again, lets just keep this for now? // modify it though
         if (Tesseract.instance != null)
@@ -234,7 +234,11 @@ public class SubmitToBoard : MonoBehaviour
         }
         */
 
-        if (PlantPuzzle.instance != null) PlantPuzzle.instance.MakeBranches(str);
+        if (PlantPuzzle.instance != null)
+        {
+            print("instence is real");
+            PlantPuzzle.instance.MakeBranches(str);
+        }
 
         if (A1_Puzzle.instance != null) A1_Puzzle.instance.CheckConditions(str);
         // we need to have a callout for the cue for each puzzle start, interesting, should this be here on in the tesseract class, lets do here first

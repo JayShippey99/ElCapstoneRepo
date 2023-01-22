@@ -32,6 +32,10 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
 
     public GameObject intelPrefab;
 
+    public _Light strongSignalLight;
+
+    public float detectionSensitivity;
+
     void Awake()
     {
         if (instance == null) instance = this;
@@ -65,6 +69,37 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
         // so amazingly this shit runs, so that's awesome but idk if its sending the value properly
         scanFrequency = f;
         mr.material.SetFloat("_ScanAmount", scanFrequency);
+
+        // i need to ask HERE if its on a strong image
+        int i = currentSignal;
+
+        // lets not round lets instead ask if the frequency layer is a distance of .1 or less
+
+        float freq = scanFrequency; // rounds to .x
+
+        float layer1 = signals[i].layer1Level;
+        float layer2 = signals[i].layer2Level;
+        float layer3 = signals[i].layer3Level;
+
+        //print(freq + " " + layer1 + " " + layer2 + " " + layer3);
+        //print(freq); // wait no lmfao rounding like this isn't good
+
+        float layer1Distance = Mathf.Abs(freq - layer1);
+        float layer2Distance = Mathf.Abs(freq - layer2);
+        float layer3Distance = Mathf.Abs(freq - layer3);
+
+        //print(layer1Distance + " " + layer2Distance + " " + layer3Distance);
+
+        // for the sake of making it clear in the light script. I imagine this may, do I just need a specific to the lights function like set light?
+
+        if (layer1Distance > detectionSensitivity && layer2Distance > detectionSensitivity && layer3Distance > detectionSensitivity) // jesus that was a pain lmao
+        {
+            strongSignalLight.SetLight(false);
+        }
+        else
+        {
+            strongSignalLight.SetLight(true);
+        }
     }
 
     public override void ToggleSomethingSwitch(GameObject obj) // it works lets goooo
@@ -74,51 +109,55 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
 
     public override void DoSomethingButton()
     {
-        //print("I LET GO");
-        // if scanfrequency is 
+        // in the future we should check if the signal is within a float range instead. that'll make it nice
 
         int i = currentSignal;
 
-        float freq = Mathf.Round(scanFrequency * 10.0f) * 0.1f; // rounds to .x
+        float freq = scanFrequency; // rounds to .x
 
-        float layer1 = Mathf.Round(signals[i].layer1Level * 10.0f) * 0.1f;
-        float layer2 = Mathf.Round(signals[i].layer2Level * 10.0f) * 0.1f;
-        float layer3 = Mathf.Round(signals[i].layer3Level * 10.0f) * 0.1f;
+        float layer1 = signals[i].layer1Level;
+        float layer2 = signals[i].layer2Level;
+        float layer3 = signals[i].layer3Level;
 
-        print(freq + " " + layer1 + " " + layer2 + " " + layer3);
-        //print(freq); // wait no lmfao rounding like this isn't good
+        float layer1Distance = Mathf.Abs(freq - layer1);
+        float layer2Distance = Mathf.Abs(freq - layer2);
+        float layer3Distance = Mathf.Abs(freq - layer3);
 
-        if (freq == layer1) // is this even what I want? yeah it is I guess, whatever image I'm on, I gotta send that, and I can have many images at different places
+
+        if (layer1Distance < detectionSensitivity) // jesus that was a pain lmao
         {
             if (!signals[i].layer1Added)
             {
-                print("1");
+                //print("1");
                 //document.sprite = signals[i].layer1Tex; // ayo? // niceee so instead now if changing the material I need to add a new thing. lemme just scrap the tablet as it and start raw
                 AddImage(signals[i].layer1Tex);
-                // I could add a bool for each image
                 signals[i].layer1Added = true;
             }
         }
 
-        if (freq == layer2)
+        if (layer2Distance < detectionSensitivity)
         {
+            //print("yes freq matches layer 2");
             if (!signals[i].layer2Added)
             {
-                print("2");
+                //print("2");
                 //document.sprite = signals[i].layer2Tex;
                 AddImage(signals[i].layer2Tex);
                 signals[i].layer2Added = true;
+                //strongSignalLight.TriggerLight(true);
             }
         }
 
-        if (freq == layer3)
+        if (layer3Distance < detectionSensitivity)
         {
+                //print("yes freq matches layer 3");
             if (!signals[i].layer3Added)
             {
-                print("3");
+                //print("3");
                 //document.sprite = signals[i].layer3Tex;
                 AddImage(signals[i].layer3Tex);
                 signals[i].layer3Added = true;
+                //strongSignalLight.TriggerLight(true);
             }
         }
     }

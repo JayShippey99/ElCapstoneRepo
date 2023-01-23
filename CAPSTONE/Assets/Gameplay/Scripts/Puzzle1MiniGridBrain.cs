@@ -96,29 +96,6 @@ public class Puzzle1MiniGridBrain : MonoBehaviour
             if (input.Contains(dot.name)) dot.sprite = on;
         }
 
-        if (IsPuzzleSolved()) solved = true;
+        if (IsPuzzleSolved()) GameController.instance.GoToNextSection();
     }
-
-    void Update()
-    {
-        if (solved)
-        {
-            winDelay -= Time.deltaTime;
-        }
-
-        if (winDelay <= 0)
-        {
-            // instead of closing the puzzle, do that i guess, but also, spawn the next puzzle in the sequence
-            // do this tomorrow, I should go
-            //Tesseract.instance.CloseABCPuzzle(); // this function kills this script
-            //gameObject.SetActive(false);
-
-            // so instead of going back to the tesseract I need instead to get the game conrtoller now
-            // could I make a next in the sequence function?
-            GameController.instance.GoToNextSection();
-
-            // okay so the issue now is getting the plant puzzles to work with the current system, cause I'm only making one visible at a time
-        }
-    }
-
 }

@@ -16,6 +16,9 @@ public class TabletMovement : MonoBehaviour
     [HideInInspector]
     public int currentState;
 
+    [HideInInspector]
+    public bool docked;
+
     public Vector3 faceLocation;
     public Vector3 faceRotation; // I just just have a reference transform, but eh fuck it
     public Vector3 deskLocation;
@@ -32,6 +35,7 @@ public class TabletMovement : MonoBehaviour
     {
         currentState = idle;
 
+        docked = true;
         dockLocation = transform.position;
         dockRotation = transform.rotation.eulerAngles;
 
@@ -52,7 +56,7 @@ public class TabletMovement : MonoBehaviour
                     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(faceRotation), speed);
                     if (Vector3.Distance(transform.position, faceLocation) < .01f)
                     {
-                        print("idle");
+                        //print("idle");
                         currentState = idle;
                     }
                 }
@@ -65,8 +69,9 @@ public class TabletMovement : MonoBehaviour
 
                     if (Vector3.Distance(transform.position, dockLocation) < .01f)
                     {
-                        print("idle");
+                        //print("idle");
                         currentState = idle;
+                        docked = true;
                     }
                 }
                 else if (currentState == desk)
@@ -78,7 +83,7 @@ public class TabletMovement : MonoBehaviour
 
                     if (Vector3.Distance(transform.position, deskLocation) < .01f)
                     {
-                        print("idle");
+                        //print("idle");
                         currentState = idle;
                     }
                 }
@@ -91,10 +96,11 @@ public class TabletMovement : MonoBehaviour
         
         if (reactToClick)
         {
-            print("desk!");
+            //print("desk!");
             if (currentState == idle)
             {
-                print("desk?");
+                docked = false;
+                //print("desk?");
                 GetComponent<BoxCollider>().enabled = true;
                 Screen.SetActive(true);
                 dockButton.SetActive(false);
@@ -109,10 +115,11 @@ public class TabletMovement : MonoBehaviour
     {
         if (reactToClick)
         {
-        print("face!");
+        //print("face!");
             if (currentState == idle) // will change
             {
-                print("face?");
+                docked = false;
+                //print("face?");
                 GetComponent<BoxCollider>().enabled = false;
                 Screen.SetActive(true);
                 dockButton.SetActive(true);
@@ -126,10 +133,11 @@ public class TabletMovement : MonoBehaviour
     {
         if (reactToClick)
         {
-            print("dock!");
+            //print("dock!");
             if (currentState == idle)
             {
-                print("dock?");
+                docked = false;
+                //print("dock?");
                 GetComponent<BoxCollider>().enabled = true;
                 Screen.SetActive(false); // this should only happen when the thing is docked actually
                 dockButton.SetActive(false);

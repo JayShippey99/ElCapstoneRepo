@@ -14,6 +14,10 @@ public class GameController : MonoBehaviour
 
     int[][] levelAndSection; // this will keep track of what current level and section I'm on, if level is -1, then i'm in the hub?
 
+    public _Light micLight;
+
+    public delegate void FunctionAfterDelay();
+
     public void Awake()
     {
         if (instance == null) instance = this;
@@ -36,10 +40,15 @@ public class GameController : MonoBehaviour
     }
 
     // does this mean I need to keep track of where I am in the puzzle list?
-    public void GoToNextSection()
+    public void GoToNextSection() // maybe I can phrase this as "puzzle done"
+    {
+        StartCoroutine(DelayAndThenFunction(ChangeSection, 2f));
+    }
+
+    void ChangeSection()
     {
         // OOO wait loop through the levels[] and then the sections[] if a section is active, set the next one to be active and this one off, if there is no next one, then run a level done function
-        foreach (Level l in levels)
+        foreach (Level l in levels) // for each level is levels? shouldn't it just be for this section? we'll we don't know which section is currently going
         {
             for (int i = 0; i < l.sections.Length; i++)
             {
@@ -51,23 +60,12 @@ public class GameController : MonoBehaviour
                     if (i + 1 < l.sections.Length)
                     {
                         // meaning there is another one in the list of sections
-                        s.SetActive(false);
+                        s.SetActive(false); // how do I move this code to something with no input?
                         l.sections[i + 1].SetActive(true);
 
-                        /*
-                        if (l.sections[i + 1].CompareTag("BranchPuzzle")) // we can maybe do different things for different level tags, not totally elegant but it gets it done I suppose
-                        {
-                            // do something
-                            // what do we want to do again?
-                            // we want to send a thing to the branch parent
-                            // we should just send that object to the branch brain parent?
-                            // this is how we set the puzzle?
-                            // okay I'm just lost then, i'd rather not have a script on all of these puzzles, especially for how many there are. I guess this works.
-                            //PlantPuzzle.instance.currentLevel = l.sections[i + 1];
-                        }
-                        */
-                        
-                        break;
+                        //print("This puzzle name is: " + s.name + " and the next puzzle name is: " + l.sections[i+1]);
+                        //print("turn on new section");
+                        return; // AAAH this might not break all the way out of the loop, maybe that's the issue i feel like level done must still run after some time in the loop
                     }
                     else
                     {
@@ -77,11 +75,40 @@ public class GameController : MonoBehaviour
                 }
             }
         }
+    }
 
+    void TurnOffFinalPuzzle()
+    {
+        foreach (Level l in levels)
+        {
+            foreach (GameObject s in l.sections)
+            {
+                if (s.activeInHierarchy)
+                {
+                    s.SetActive(false);
+                    FreqScanObject.instance.ChangeSignal(1);
+                    return;
+                }
+            }
+        }
     }
 
     public void LevelDone()
     {
-        print("LEVEL DONE");
+        // when the level is done, close all the puzzles
+        // I could make it so that the light goes off here too and I have a cleaner list of references
+        micLight.TriggerLight(); // trigger goes for 2 seconds, lets do a 2 second delay before we leave all the puzzles
+
+        // I need to just turn all puzzles off? or relly just the one actully. lets get a direct reference to it instead of looping? // lets loop for now
+        StartCoroutine(DelayAndThenFunction(TurnOffFinalPuzzle, 2f));
+
+         // this should also happen in the game controller probably
+        // do this though after the light is done recording
+    }
+
+    public IEnumerator DelayAndThenFunction(FunctionAfterDelay function, float delayTime) // wonder if I can put this in its own script somewhere, could be a static function or something
+    {
+        yield return new WaitForSeconds(delayTime);
+        function();
     }
 }

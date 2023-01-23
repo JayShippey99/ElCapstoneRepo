@@ -93,28 +93,20 @@ public class PlantPuzzle : MonoBehaviour
     private void OnEnable() // noice, feels wrong for some reoson lmao
     {
         instance = this; // i think I need to know the level conditions though, this can be done on start
-    }
-
-    void Start()
-    {
-        //print("hello");
-        // niceeee
-
-        // so start I assume happens when it gets enabled
-
-        //instance = this; // no matter what, this becomes the instance
-
-        //if (instance == null) instance = this;
-        //else Destroy(gameObject);
-
-        //GetNewPuzzle(currentLevelNum);
-
-        // Call method, pass along delegate.
+        print(instance.gameObject.name);
 
         for (int i = 0; i < transform.childCount; i++)
         {
             levelConditions.Add(transform.GetChild(i).GetComponent<PlantCondition>());
+            //print("adding level conditions");
         }
+    }
+
+    void Start()
+    {
+        // god this is so fucked up lmfao the functions below were running before start lmao
+
+        
     }
 
     public IEnumerator DelayAndThenFunction(FunctionAfterDelay function, float delayTime) // wonder if I can put this in its own script somewhere, could be a static function or something
@@ -143,7 +135,7 @@ public class PlantPuzzle : MonoBehaviour
 
     public void MakeBranches(string t)
     {
-
+        //print("making branches");
         // clear list and add
         cCount = transform.childCount; // quick way to get child Count // AHH no more children cause the level is children
 
@@ -191,14 +183,14 @@ public class PlantPuzzle : MonoBehaviour
         }
         else // for every other input, use the ends of the branches
         {
-            print("if more than one child");
+           // print("if more than one child");
             // for each index in the input, i need to start with the list of empty branches
             for (int i = 0; i < cStr.Length; i ++) // no actually, its for the amount of empty branches, or actually etiher way works
             {
-                print("for each letter in the string");
+                //print("for each letter in the string");
                 if (i < emptyBranches.Count) // I mean this should work so idk
                 {
-                    print("if the amount of empty spots is greater than the amount of characters"); // my guess is that its not running here or something
+                    //print("if the amount of empty spots is greater than the amount of characters"); // my guess is that its not running here or something
 
                     // spawn a branch at the empty point
                     if (emptyBranches[i].empty)
@@ -212,7 +204,7 @@ public class PlantPuzzle : MonoBehaviour
 
                         if (!forTesting)
                         {
-                            print("if for testing");
+                            //print("if for testing");
 
                             if (char.IsLower(t[i])) MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
                                                                               // the issue is that I change empty branch amount as I make it
@@ -281,19 +273,10 @@ public class PlantPuzzle : MonoBehaviour
 
 
         /////////////////////// CHECK CODE
-        if (!CheckIfComplete()) CheckIfFull(); // Just cause a puzzle is complete doesn't mean the branches are full?
-        else
+        if (CheckIfComplete()) GameController.instance.GoToNextSection(); // if the puzzle is complete, finish,s
+        else // no this is only running if the puzzle is not not complete
         {
-            // okay so we need to assume that this puzzle is the end of the line, we reset the cube to the hub state, in theory the puzzle should go away
-
-            print("Puzzle is solved!");
-            print("play static now");
-            // get a noise signal and send it to the thing
-            // for now lets just set up an instance script for the noise signal box
-            FreqScanObject.instance.ChangeSignal(1);
-
-            // when puzzle is solved, wait for a longer period of time, then return to hub, 
-            StartCoroutine(DelayAndThenFunction(Tesseract.instance.ReturnToHubState, 3f)); // bro wtf this is so awesome
+            CheckIfFull(); // Just cause a puzzle is complete doesn't mean the branches are full?
         }
     }
     
@@ -301,9 +284,10 @@ public class PlantPuzzle : MonoBehaviour
     public bool CheckIfComplete()
     {
         // 
-
+       // print("in the check for completion function");
         foreach (PlantCondition pc in levelConditions) // we need to ask if at least one condition isn't met, that we don't reset? or what, lets jsut print when the puzzle is done
         {
+            //print("checking plant conditions");
             // for each condition, ask if its met
             if (!pc.CheckIfMet(fruits, branches)) return false; // for each level condition, I need to send through the whole list of fruits
         }

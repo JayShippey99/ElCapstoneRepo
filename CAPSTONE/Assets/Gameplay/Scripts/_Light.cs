@@ -22,7 +22,8 @@ public class _Light : InteractableParent
 
     //public bool startOn;
 
-    float toggleTimer;
+    float toggleTimer; // time before it toggles again
+    float timer; // since I can't progress the time in the middle of a frame I gotta count it this way
     int blinkCounter;
 
     // get ref to material so that it can change individually
@@ -31,6 +32,9 @@ public class _Light : InteractableParent
     private void Start()
     {
         lMat = GetComponent<MeshRenderer>();
+
+        lMat.material.SetColor("_PhysicalLightColor", physicalColor);
+        lMat.material.SetColor("_EmissiveLightColor", lightColor);
         //if (startOn) TurnOn();
     }
 
@@ -39,10 +43,19 @@ public class _Light : InteractableParent
     
     private void Update()
     {
-        if (onTime > 0 && blinkCounter < blinkAmount && toggleTimer >= 0) // we actually do need this last condition because we need a way to trigger it on a command since bc will start at 0
+        //print(onTime + " " + blinkCounter + " "  +toggleTimer);
+
+        if (onTime > 0 && blinkCounter < blinkAmount && toggleTimer > timer) // we actually do need this last condition because we need a way to trigger it on a command since bc will start at 0
         {
-            if (Time.time > toggleTimer)
+            timer += Time.deltaTime;
+            
+            //print("running updates!" + onTime + " " + blinkCounter + " " + toggleTimer);
+
+            // ohh okay I think I get it, time can't increase in the middle of a frame so the first condition will always be off before it can trigger again. no biggie, need to use deltatime
+
+            if (timer > toggleTimer)
             {
+                //print("running this part too");
                 Toggle(); // after the toggle, but it should still add up though
 
                 if (IsOn()) // if its on,
@@ -91,9 +104,12 @@ public class _Light : InteractableParent
         }
         else // otherwise
         {
+            //print("not a toggle light");
             TurnOn(); // start the blink cycle. turn it on and reset all variables
             blinkCounter = 0;
-            toggleTimer = Time.time + onTime; // when the time reaches the time + the amount of time it should be on
+            timer = 0;
+            toggleTimer = onTime; // when the time reaches the time + the amount of time it should be on
+
         }
     }
 
@@ -101,12 +117,16 @@ public class _Light : InteractableParent
     {
         if (IsOn())
         {
-            TurnOn();
+            TurnOff();
         }
         else
         {
-            TurnOff();
+            TurnOn();
         }
+    }
+    void TurnOff()
+    {
+        lMat.material.SetInt("_On", 0);
     }
 
     void TurnOn()
@@ -114,10 +134,6 @@ public class _Light : InteractableParent
         lMat.material.SetInt("_On", 1);
     }
 
-    void TurnOff()
-    {
-        lMat.material.SetInt("_On", 0);
-    }
 
     bool IsOn()
     {

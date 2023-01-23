@@ -207,6 +207,11 @@ public class SubmitToBoard : MonoBehaviour
 
     void ActivateCallouts(string str) // where do I check if it should start the puzzle? // this could probably be a cleaner piece of code too
     {
+        if (PlantPuzzle.instance != null)
+        {
+            print("instence is real");
+            PlantPuzzle.instance.MakeBranches(str);
+        }
         if (GameController.instance != null)
         {
            if ((str == "abc")) GameController.instance.StartNewLevel(0); // I basically need to just copy the code I have below but relocate it kinda, and find a cleaner system for it
@@ -234,15 +239,12 @@ public class SubmitToBoard : MonoBehaviour
         }
         */
 
-        if (PlantPuzzle.instance != null)
-        {
-            print("instence is real");
-            PlantPuzzle.instance.MakeBranches(str);
-        }
+        
 
         if (A1_Puzzle.instance != null) A1_Puzzle.instance.CheckConditions(str);
         // we need to have a callout for the cue for each puzzle start, interesting, should this be here on in the tesseract class, lets do here first
         //print(Conditions.IsInAscendingOrder(str) + " ascending order return");
-        
+
+        if (SingleDotPuzzle.instance != null) SingleDotPuzzle.instance.GetInput(str);
     }
 }

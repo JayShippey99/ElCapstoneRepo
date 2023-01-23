@@ -33,8 +33,13 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
     public GameObject intelPrefab;
 
     public _Light strongSignalLight;
+    public _Light signalSentLight;
+    public _Light tabletNotDockedLight;
+    
+    public TabletMovement tablet;
 
     public float detectionSensitivity;
+
 
     void Awake()
     {
@@ -107,9 +112,14 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
         obj.SetActive(!obj.activeInHierarchy);
     }
 
-    public override void DoSomethingButton()
+    public override void DoSomethingButton() // we need to know if the tablet is docked or not
     {
         // in the future we should check if the signal is within a float range instead. that'll make it nice
+
+        // i think we should just ignore EVERYTHing is the tablet isn't docked. now we need a ref which is annoying
+        // if any signal is higlighted, then we run this 
+        // if the tablet is docked and the button is pressed and there is a strong signal, trigger green light
+        // if the tablet is not docked and the button is pressed and there is a strong signl trigger the red light
 
         int i = currentSignal;
 
@@ -123,41 +133,68 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
         float layer2Distance = Mathf.Abs(freq - layer2);
         float layer3Distance = Mathf.Abs(freq - layer3);
 
+       
 
         if (layer1Distance < detectionSensitivity) // jesus that was a pain lmao
         {
-            if (!signals[i].layer1Added)
+            // only if the tablet is docked do we worry abotu this
+            if (tablet.docked)
             {
-                //print("1");
-                //document.sprite = signals[i].layer1Tex; // ayo? // niceee so instead now if changing the material I need to add a new thing. lemme just scrap the tablet as it and start raw
-                AddImage(signals[i].layer1Tex);
-                signals[i].layer1Added = true;
+                if (!signals[i].layer1Added)
+                {
+                    //print("1");
+                    //document.sprite = signals[i].layer1Tex; // ayo? // niceee so instead now if changing the material I need to add a new thing. lemme just scrap the tablet as it and start raw
+                    AddImage(signals[i].layer1Tex);
+                    signals[i].layer1Added = true;
+
+                    // do green light here, cause it should only be sent once right?
+                    signalSentLight.TriggerLight();
+                }
+            }
+            else
+            {
+                // do redlight regardless of whether it was added or not
+                tabletNotDockedLight.TriggerLight();
             }
         }
 
         if (layer2Distance < detectionSensitivity)
         {
-            //print("yes freq matches layer 2");
-            if (!signals[i].layer2Added)
+            if (tablet.docked)
             {
-                //print("2");
-                //document.sprite = signals[i].layer2Tex;
-                AddImage(signals[i].layer2Tex);
-                signals[i].layer2Added = true;
-                //strongSignalLight.TriggerLight(true);
+                if (!signals[i].layer2Added)
+                {
+                    //print("2");
+                    //document.sprite = signals[i].layer2Tex;
+                    AddImage(signals[i].layer2Tex);
+                    signals[i].layer2Added = true;
+                    
+                    signalSentLight.TriggerLight();
+                }
+            }
+            else
+            {
+                tabletNotDockedLight.TriggerLight();
             }
         }
 
         if (layer3Distance < detectionSensitivity)
         {
-                //print("yes freq matches layer 3");
-            if (!signals[i].layer3Added)
+            if (tablet.docked)
             {
-                //print("3");
-                //document.sprite = signals[i].layer3Tex;
-                AddImage(signals[i].layer3Tex);
-                signals[i].layer3Added = true;
-                //strongSignalLight.TriggerLight(true);
+                if (!signals[i].layer3Added)
+                {
+                    //print("3");
+                    //document.sprite = signals[i].layer3Tex;
+                    AddImage(signals[i].layer3Tex);
+                    signals[i].layer3Added = true;
+
+                    signalSentLight.TriggerLight();
+                }
+            }
+            else
+            {
+                tabletNotDockedLight.TriggerLight();
             }
         }
     }

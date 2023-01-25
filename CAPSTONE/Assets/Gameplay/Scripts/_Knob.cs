@@ -15,16 +15,6 @@ public class _Knob : MonoBehaviour
 
     public InteractableParent obj;
 
-    MethodInfo changeDialFunction;
-    MethodInfo letGoFunction;
-
-    [System.Serializable]
-    public class InteractableObjectEvent : UnityEvent<FreqScanObject> { }
-
-    [System.Serializable]
-    public delegate void Test();
-
-
     [Tooltip("A percent, 0 is left, 1 is right")]
     public float startAngle; // start angle will be clamped within turn amount later, but it will be in degrees, 0 is up
 

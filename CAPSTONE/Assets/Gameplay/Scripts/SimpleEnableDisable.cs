@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SimpleEnableDisable : InteractableParent
 {
-    public override void ToggleSomethingSwitch(GameObject obj)
+    public override void ToggleSomethingButton(GameObject obj)
     {
         obj.SetActive(!obj.activeInHierarchy);
     }

@@ -21,6 +21,6 @@ public class ClearButton : MonoBehaviour
 
     void Clear()
     {
-        SubmitToBoard.instance.Clear();
+        //SubmitToBoard.instance.Clear();
     }
 }

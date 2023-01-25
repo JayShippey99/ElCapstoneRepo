@@ -30,6 +30,6 @@ public class VisualKey : MonoBehaviour
 
     public void SendToInputBox()
     {
-        SubmitToBoard.instance.AddToInput(value);
+        //SubmitToBoard.instance.AddToInput(value);
     }
 }

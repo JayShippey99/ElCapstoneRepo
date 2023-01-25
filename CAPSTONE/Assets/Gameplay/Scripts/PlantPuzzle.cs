@@ -38,7 +38,14 @@ public class PlantPuzzle : MonoBehaviour
     // I'm just gonna start with asking if everything visible has its win condiition met
     // I guess it can be a script that I throw on each prefab
 
-    // I need system now for me to easily make levels, lowkey... zack
+    // make a system so that when this spawns , and each time is is enabled it chooses the puzzle based on the number
+    // but then from the gamecontroller we need to know specifically when you're doing a plant puzzle
+
+    // i wonder if I should put this script on each puzzle, seems a little excessive but idk
+    // i wonder if I could make a dynamic thing in the inspector where if something is a plant puzzle then it also asks for which one?
+    // nah
+
+    // I could do something that watches out for each object and if its active then it'll get triggered to play it or something?
 
     public bool forTesting; // if for testing, then just use 1234 in the input, if not, stay normal game
 
@@ -54,36 +61,63 @@ public class PlantPuzzle : MonoBehaviour
     List<GameObject> fruits = new List<GameObject>();
     List<GameObject> branches = new List<GameObject>();
 
-    public GameObject[] AllPuzzles;
+    //public GameObject[] AllPuzzles;
     List<PlantCondition> levelConditions = new List<PlantCondition>();
-    GameObject currentLevel;
-    public int currentLevelNum;
 
-    float branchAngleDiv = 1f;
+    //[HideInInspector]
+    //public GameObject currentLevel;
+    //public int currentLevelNum;
+
+    float branchAngleDiv = 1f; // wonder if we can use some stuff to affect the children with this? idk
 
     [HideInInspector]
     public int cCount;
 
     public delegate void FunctionAfterDelay();
 
-    void Start()
+    // its feeling more and more like I should just make it be a script on each thing
+    // how can I set this up so that just turning on the thing does the thing. maybe I should just put this script on all of the objects. yeah
+    // easily
+    // seems like the best idea
+    // need to rework this script. yay
+
+    // oo wait okay that's a little odd because then how do we clear all the children but the things
+    // maybe we add another tag?
+    // yeah I like that idea a lot, get rid of the first tag, add another one for plant condition and then we can just
+    // go through all of the children and
+    // WAIIIT this script is an instance. I don't think I can do this actually.
+    // but I can certainlty build off the idea of using tags to do things I believe
+    // or we can throw it on all the scripts but chgne the singleton code so tht no matter what the solo script becomes what the instance is
+    // actually this is interesting if each script is its own thing, then each script can have its own rules. damn okay lets try that
+
+    private void OnEnable() // noice, feels wrong for some reoson lmao
     {
-        if (instance == null) instance = this;
-        else Destroy(gameObject);
+        instance = this; // i think I need to know the level conditions though, this can be done on start
+        print(instance.gameObject.name);
 
-        GetNewPuzzle(currentLevelNum);
-
-        // Call method, pass along delegate.
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            levelConditions.Add(transform.GetChild(i).GetComponent<PlantCondition>());
+            //print("adding level conditions");
+        }
     }
 
-    public IEnumerator DelayAndThenFunction(FunctionAfterDelay function, float delayTime)
+    void Start()
+    {
+        // god this is so fucked up lmfao the functions below were running before start lmao
+
+        
+    }
+
+    public IEnumerator DelayAndThenFunction(FunctionAfterDelay function, float delayTime) // wonder if I can put this in its own script somewhere, could be a static function or something
     {
         yield return new WaitForSeconds(delayTime);
         function();
     }
 
-    void GetNewPuzzle(int num)
+    void GetNewPuzzle(int num) // don't need this anymore cause it is what it is
     {
+        /*
         if (num > AllPuzzles.Length - 1) print("Puzzle Index out of range");
         else
         {
@@ -96,11 +130,12 @@ public class PlantPuzzle : MonoBehaviour
                 levelConditions.Add(currentLevel.transform.GetChild(i).GetComponent<PlantCondition>());
             }
         }
+        */
     }
 
     public void MakeBranches(string t)
     {
-
+        //print("making branches");
         // clear list and add
         cCount = transform.childCount; // quick way to get child Count // AHH no more children cause the level is children
 
@@ -113,7 +148,17 @@ public class PlantPuzzle : MonoBehaviour
         branchesToBeAdded.Clear(); // clear the new branches
         branchesToBeRemoved.Clear(); // clear the branches that will be removed
 
-        if (cCount == 0) // for the first input, use the root
+        // okay so for the first puzzle the child count is 1, 
+        // this doesn't run
+        // we need to say if the child count is == 1
+        // ccount == to ccount?
+        // inital childcount?
+        // no, the amount of plant conditions
+        // that should work?
+        // but no, each time you add to the puzzle you get more children
+        // idk lets see if this works
+
+        if (cCount == levelConditions.Count) // for the first input, use the root // there is more than one child, hence why it doesn't go, I think
         {
             if (!forTesting)
             {
@@ -138,15 +183,19 @@ public class PlantPuzzle : MonoBehaviour
         }
         else // for every other input, use the ends of the branches
         {
+           // print("if more than one child");
             // for each index in the input, i need to start with the list of empty branches
             for (int i = 0; i < cStr.Length; i ++) // no actually, its for the amount of empty branches, or actually etiher way works
             {
-                
+                //print("for each letter in the string");
                 if (i < emptyBranches.Count) // I mean this should work so idk
                 {
+                    //print("if the amount of empty spots is greater than the amount of characters"); // my guess is that its not running here or something
+
                     // spawn a branch at the empty point
                     if (emptyBranches[i].empty)
                     {
+
                         //print(i + " placing here");
                         startPoint = emptyBranches[i].end; // there are no empty branches yet
                         emptyBranches[i].empty = false;
@@ -155,6 +204,8 @@ public class PlantPuzzle : MonoBehaviour
 
                         if (!forTesting)
                         {
+                            //print("if for testing");
+
                             if (char.IsLower(t[i])) MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
                                                                               // the issue is that I change empty branch amount as I make it
 
@@ -222,19 +273,10 @@ public class PlantPuzzle : MonoBehaviour
 
 
         /////////////////////// CHECK CODE
-        if (!CheckIfComplete()) CheckIfFull(); // Just cause a puzzle is complete doesn't mean the branches are full?
-        else
+        if (CheckIfComplete()) GameController.instance.GoToNextSection(); // if the puzzle is complete, finish,s
+        else // no this is only running if the puzzle is not not complete
         {
-            // okay so we need to assume that this puzzle is the end of the line, we reset the cube to the hub state, in theory the puzzle should go away
-
-            print("Puzzle is solved!");
-            print("play static now");
-            // get a noise signal and send it to the thing
-            // for now lets just set up an instance script for the noise signal box
-            FreqScanObject.instance.ChangeSignal(1);
-
-            // when puzzle is solved, wait for a longer period of time, then return to hub, 
-            StartCoroutine(DelayAndThenFunction(Tesseract.instance.ReturnToHubState, 3f)); // bro wtf this is so awesome
+            CheckIfFull(); // Just cause a puzzle is complete doesn't mean the branches are full?
         }
     }
     
@@ -242,9 +284,10 @@ public class PlantPuzzle : MonoBehaviour
     public bool CheckIfComplete()
     {
         // 
-
+       // print("in the check for completion function");
         foreach (PlantCondition pc in levelConditions) // we need to ask if at least one condition isn't met, that we don't reset? or what, lets jsut print when the puzzle is done
         {
+            //print("checking plant conditions");
             // for each condition, ask if its met
             if (!pc.CheckIfMet(fruits, branches)) return false; // for each level condition, I need to send through the whole list of fruits
         }
@@ -358,9 +401,12 @@ public class PlantPuzzle : MonoBehaviour
         {
             // remove from list first? what list? heheh nice // actually lol I still think we need to do that
             
-            Destroy(transform.GetChild(i).gameObject);
+            if (!transform.GetChild(i).CompareTag("BranchPuzzleCondition")) Destroy(transform.GetChild(i).gameObject);
         }
 
         // I mean this does destroy the fruits too right? yes AH i get it
+
+        // because this script is
+        // it deletes all the puzzles
     }
 }

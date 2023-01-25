@@ -10,7 +10,8 @@ public class SymbolMathPuzzle : MonoBehaviour
     // so we need a place to send us that information
     // is that still just easy as hell
 
-    public SymbolChanger sc;
+    
+    //public SymbolChanger sc;
     void Start()
     {
         
@@ -24,6 +25,6 @@ public class SymbolMathPuzzle : MonoBehaviour
 
     public void ChangeSymbols(string t)
     {
-        sc.StartSymbolSwitch(t); // weird stupid way of doing this but it works
+        //sc.StartSymbolSwitch(t); // weird stupid way of doing this but it works
     }
 }

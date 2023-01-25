@@ -22,6 +22,6 @@ public class BackspaceButton : MonoBehaviour
 
     void Delete()
     {
-        SubmitToBoard.instance.Backspace();
+        //SubmitToBoard.instance.Backspace();
     }
 }

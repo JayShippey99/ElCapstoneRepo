@@ -33,8 +33,7 @@ public class Tesseract : MonoBehaviour
     public Sprite puzzle2Reward;
     public Image puzzle2Grid; // the gridspace on the progress page
 
-    [Header("Branch Puzzles")]
-    public GameObject puzzleBrain;
+    [Header("Branch Puzzles")] // this might go honestly
     public GameObject puzzleList;
 
 
@@ -62,7 +61,7 @@ public class Tesseract : MonoBehaviour
         // right now this isn't running the proper animations, but it serves the purpose of getting rid of things
         puzzle1.SetActive(false);
         puzzle2.SetActive(false);
-        puzzleBrain.SetActive(false);
+        //puzzleBrain.SetActive(false);
         puzzleList.SetActive(false);
     }
 

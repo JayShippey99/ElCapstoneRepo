@@ -56,114 +56,9 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\GameController.cs" />
-    <Compile Include="Assets\A1_Puzzle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\RewardScript.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\PositionWiggler.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\InAirPuzzle.cs" />
-    <Compile Include="Assets\Ciconia Studio\_Shared Files\Scripts\Demo\UIButton_ShowNext.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\ParticlesTrigger.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\DocumentItem.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\ResetButton.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\ParticleBrain.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\CommsLight.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\FlashWhite.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\Tesseract.cs" />
-    <Compile Include="Assets\InvalidCodeException.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\PictureMatchPuzzle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\PlantPuzzle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\DragObject.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\Oscillator.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\FloatZone.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\CursorController.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\SymbolMathPuzzle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\TargetLights.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\KnobConnector.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\FreqRow.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\StoneZone.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\FreqScanObject.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\Puzzle1MiniGridBrain.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\SymbolChanger.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\PictureMatchSide.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\GameProgress.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\Conditions.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\InteractableParent.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\PianoPuzzle.cs" />
-    <Compile Include="Assets\_Button.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\MovementPuzzle.cs" />
-    <Compile Include="Assets\SimpleEnableDisable.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\CommsMessage.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\PlantCondition.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\SubmitButton.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\VisualKey.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\SubmitString.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\DropPuzzle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\Puzzle1BigGridBrain.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\ReturnZone.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\CommsDialogue.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\MoveInnerCubePuzzle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\CommsComunication.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\Notes.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\Level.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\BranchInitializer.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\MusicDotsPuzzle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\FreqScanClass.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\DiscoverSymbol.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\GetAnimationNumbers.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\TouchDot.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\PianoRoll.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\ClearButton.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\TabletMovement.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\Hologram.cs" />
-    <Compile Include="Assets\Ciconia Studio\_Shared Files\Scripts\Demo\FreeCam.cs" />
-    <Compile Include="Assets\Ciconia Studio\_Shared Files\Scripts\Demo\SuperCamera.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\CommsBrain.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\FrequencyList.cs" />
-    <Compile Include="Assets\_Switch.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\SubmitToBoard.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\CubeTestAnimation.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\DynamicScrollView.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\BuildTesseract.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\BackspaceButton.cs" />
-    <Compile Include="Assets\Ciconia Studio\_Shared Files\Scripts\Demo\FreeCamera.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\VertHandle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\BoardLight.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\ParticlePuzzle.cs" />
-    <Compile Include="Assets\_Knob.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\InputCounter.cs" />
-    <Compile Include="Assets\BranchPuzzle.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\DeskObject.cs" />
-    <Compile Include="Assets\Gameplay\Scripts\InputHistory.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
-    <None Include="Assets\Ciconia Studio\Shaders\Standard Shaders\BuiltIn\CS_Standard (Specular setup) Opaque.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
-    <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
-    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
-    <None Include="Assets\Ciconia Studio\Shaders\Standard Shaders\BuiltIn\CS_Standard (Specular setup) Transparent.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
-    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
-    <None Include="Assets\Ciconia Studio\Shaders\Standard Shaders\BuiltIn\CS_Lite Standard (Specular setup) Transparent.shader" />
-    <None Include="Assets\Ciconia Studio\Shaders\Standard Shaders\Readme.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
-    <None Include="Assets\Ciconia Studio\Shaders\Standard Shaders\BuiltIn\CS_Lite Standard (Specular setup) Opaque.shader" />
-    <None Include="Assets\Ciconia Studio\Shaders\Standard Shaders\BuiltIn\CS_Lite Standard (Specular setup) Cutout.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
-    <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
-    <None Include="Assets\Ciconia Studio\Shaders\Standard Shaders\BuiltIn\CS_Standard (Specular setup) Cutout.shader" />
-    <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
+    <Compile Include="Assets\DotPuzzleMaker.cs" />
+    <Compile Include="Assets\Dot.cs" />
+    <Compile Include="Assets\SingleDotPuzzle.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -894,6 +789,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Gameplay.Scripts.csproj">
+      <Project>{2FF20328-004D-F15A-5ACD-F16251043B49}</Project>
+      <Name>Gameplay.Scripts</Name>
+    </ProjectReference>
+    <ProjectReference Include="Project.External.csproj">
+      <Project>{3F685350-9367-C1B8-6E67-1E2A8BC725A6}</Project>
+      <Name>Project.External</Name>
+    </ProjectReference>
+    <ProjectReference Include="Gameplay.OldAndForgotten.csproj">
+      <Project>{53E06C9A-9B07-81B1-826F-A1125C17FD9B}</Project>
+      <Name>Gameplay.OldAndForgotten</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

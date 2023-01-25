@@ -92,8 +92,9 @@ public class PictureMatchPuzzle : MonoBehaviour
         }
     }
 
-    public void CheckConditions(string t) // should only one thing happen at a time?
+    public void CheckConditions(string t) // should only one thing happen at a time? // this whole script is a train wreck
     {
+        /*
         if (Conditions.HasThisChar(t, ">"))
         {
             SpinRight();
@@ -115,7 +116,7 @@ public class PictureMatchPuzzle : MonoBehaviour
         {
             Swap();
         }
-
+        */
 
     }
 

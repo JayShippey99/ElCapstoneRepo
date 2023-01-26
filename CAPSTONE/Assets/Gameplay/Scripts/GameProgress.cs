@@ -26,7 +26,7 @@ public class GameProgress : MonoBehaviour
         SaveGame();
 
         // check if all puzzles are solved
-        if (AreAllPuzzlesSolved()) CommsDialogue.instance.Outro();
+        //if (AreAllPuzzlesSolved()) CommsDialogue.instance.Outro();
     }
 
     bool AreAllPuzzlesSolved()
@@ -52,6 +52,6 @@ public class GameProgress : MonoBehaviour
     public void ResetGame()
     {
         currentGameState = 0;
-        CommsDialogue.instance.Introduction();
+        //CommsDialogue.instance.Introduction();
     }
 }

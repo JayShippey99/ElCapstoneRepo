@@ -9,18 +9,24 @@ public class TabletMovement : MonoBehaviour
     // need click code
 
     int idle = 0;
-    int show = 1;
-    int hide = 2;
+    int face = 1; // when its going to move toward your face
+    int dock = 2; // when its going to move to the dock
+    int desk = 3; // when its going to move to the desk;
 
     [HideInInspector]
     public int currentState;
 
-    public Vector3 showLocation;
-    public Vector3 showRotation;
-    Vector3 hideLocation;
-    Vector3 hideRotation;
+    [HideInInspector]
+    public bool docked;
 
-    public GameObject Screen;
+    public Vector3 faceLocation;
+    public Vector3 faceRotation; // I just just have a reference transform, but eh fuck it
+    public Vector3 deskLocation;
+    public Vector3 deskRotation;
+    Vector3 dockLocation;
+    Vector3 dockRotation;
+
+    public GameObject Screen, dockButton, deskButton;
 
     public float speed = .1f;
 
@@ -29,33 +35,77 @@ public class TabletMovement : MonoBehaviour
     {
         currentState = idle;
 
-        hideLocation = transform.position;
-        hideRotation = transform.rotation.eulerAngles;
+        docked = true;
+        dockLocation = transform.position;
+        dockRotation = transform.rotation.eulerAngles;
+
+        Screen.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (reactToClick)
         {
-            if (currentState != idle)
+            if (currentState != idle) // honestly I think once you get this system its really nice
             {
-                if (currentState == show)
+                if (currentState == face)
                 {
                     //transform.position = showLocation;
-                    transform.position = Vector3.Lerp(transform.position, showLocation, speed); // looks great tbh
+                    transform.position = Vector3.Lerp(transform.position, faceLocation, speed); // looks great tbh
                                                                                                 //transform.rotation = Quaternion.Euler(showRotation);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(showRotation), speed);
-                    if (transform.position == showLocation) currentState = idle;
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(faceRotation), speed);
+                    if (Vector3.Distance(transform.position, faceLocation) < .01f)
+                    {
+                        //print("idle");
+                        currentState = idle;
+                    }
                 }
-                else if (currentState == hide)
+                else if (currentState == dock)
                 {
                     //transform.position = hideLocation;
-                    transform.position = Vector3.Lerp(transform.position, hideLocation, speed);
+                    transform.position = Vector3.Lerp(transform.position, dockLocation, speed);
                     //transform.rotation = Quaternion.Euler(hideRotation);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(hideRotation), speed);
-                    if (transform.position == hideLocation) currentState = idle;
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(dockRotation), speed);
+
+                    if (Vector3.Distance(transform.position, dockLocation) < .01f)
+                    {
+                        //print("idle");
+                        currentState = idle;
+                        docked = true;
+                    }
                 }
+                else if (currentState == desk)
+                {
+                    //transform.position = hideLocation;
+                    transform.position = Vector3.Lerp(transform.position, deskLocation, speed);
+                    //transform.rotation = Quaternion.Euler(hideRotation);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(deskRotation), speed);
+
+                    if (Vector3.Distance(transform.position, deskLocation) < .01f)
+                    {
+                        //print("idle");
+                        currentState = idle;
+                    }
+                }
+            }
+        }
+    }
+
+    public void Desk()
+    {
+        
+        if (reactToClick)
+        {
+            //print("desk!");
+            if (currentState == idle)
+            {
+                docked = false;
+                //print("desk?");
+                GetComponent<BoxCollider>().enabled = true;
+                Screen.SetActive(true);
+                dockButton.SetActive(false);
+                deskButton.SetActive(false);
+                currentState = desk;
             }
         }
     }
@@ -65,24 +115,34 @@ public class TabletMovement : MonoBehaviour
     {
         if (reactToClick)
         {
+        //print("face!");
             if (currentState == idle) // will change
             {
+                docked = false;
+                //print("face?");
                 GetComponent<BoxCollider>().enabled = false;
                 Screen.SetActive(true);
-                currentState = show;
+                dockButton.SetActive(true);
+                deskButton.SetActive(true);
+                currentState = face;
             }
         }
     }
 
-    public void Hide()
+    public void Dock()
     {
         if (reactToClick)
         {
+            //print("dock!");
             if (currentState == idle)
             {
+                docked = false;
+                //print("dock?");
                 GetComponent<BoxCollider>().enabled = true;
-                Screen.SetActive(false);
-                currentState = hide;
+                Screen.SetActive(false); // this should only happen when the thing is docked actually
+                dockButton.SetActive(false);
+                deskButton.SetActive(false);
+                currentState = dock;
             }
         }
     }

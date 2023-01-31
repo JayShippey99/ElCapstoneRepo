@@ -98,4 +98,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMet: 0
-  isEndCondition: 1
+  isEndCondition: 0

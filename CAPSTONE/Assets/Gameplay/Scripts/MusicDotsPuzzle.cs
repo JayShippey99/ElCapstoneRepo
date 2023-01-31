@@ -31,7 +31,7 @@ public class MusicDotsPuzzle : MonoBehaviour
         if (solved)
         {
             winDelay -= Time.deltaTime;
-            //if (winDelay <= 0) Tesseract.instance.EndSoundPuzzle();
+            if (winDelay <= 0) Tesseract.instance.EndSoundPuzzle();
         }
     }
 

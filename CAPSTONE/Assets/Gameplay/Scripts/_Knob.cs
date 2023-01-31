@@ -69,7 +69,7 @@ public class _Knob : MonoBehaviour
         // 0 * 90 * 2 = 0 - 90 // is -90, but its at the right side when its like this
 
         transform.rotation = originalRotation;
-        transform.RotateAroundLocal(transform.forward, Mathf.Deg2Rad * totalOffset);
+        transform.RotateAroundLocal(transform.up, Mathf.Deg2Rad * totalOffset);
 
         // how do we want to calculate value now?
         // Its like I need to turn total offset back into a percent sort of situation
@@ -133,7 +133,7 @@ public class _Knob : MonoBehaviour
 
 
                 transform.rotation = originalRotation;
-                transform.RotateAroundLocal(transform.forward, Mathf.Deg2Rad * totalOffset);
+                transform.RotateAroundLocal(transform.up, Mathf.Deg2Rad * totalOffset);
 
                 //value = 
                 value = Remap(totalOffset, -turnAmount, turnAmount, minValue, maxValue);

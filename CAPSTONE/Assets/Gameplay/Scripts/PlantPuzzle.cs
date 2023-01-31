@@ -93,7 +93,7 @@ public class PlantPuzzle : MonoBehaviour
     private void OnEnable() // noice, feels wrong for some reoson lmao
     {
         instance = this; // i think I need to know the level conditions though, this can be done on start
-        print(instance.gameObject.name);
+        //print(instance.gameObject.name);
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -102,35 +102,15 @@ public class PlantPuzzle : MonoBehaviour
         }
     }
 
-    void Start()
+    private void OnDisable()
     {
-        // god this is so fucked up lmfao the functions below were running before start lmao
-
-        
+        instance = null;
     }
 
     public IEnumerator DelayAndThenFunction(FunctionAfterDelay function, float delayTime) // wonder if I can put this in its own script somewhere, could be a static function or something
     {
         yield return new WaitForSeconds(delayTime);
         function();
-    }
-
-    void GetNewPuzzle(int num) // don't need this anymore cause it is what it is
-    {
-        /*
-        if (num > AllPuzzles.Length - 1) print("Puzzle Index out of range");
-        else
-        {
-            currentLevel = AllPuzzles[num];
-
-            currentLevel.SetActive(true);
-            // need to get how many level conditions are there, that is by number of children, and then populating each of the indices with that child
-            for (int i = 0; i < currentLevel.transform.childCount; i++)
-            {
-                levelConditions.Add(currentLevel.transform.GetChild(i).GetComponent<PlantCondition>());
-            }
-        }
-        */
     }
 
     public void MakeBranches(string t)
@@ -303,7 +283,7 @@ public class PlantPuzzle : MonoBehaviour
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + Vector3.up, this); // this was working the whole time i'm pretty sure
+        bi.Initialize(start, start + (Vector3.up * transform.localScale.x), this); // this was working the whole time i'm pretty sure
         branchesToBeAdded.Add(bi);
         branches.Add(b);
         bi.TurnOnCollider();
@@ -316,7 +296,7 @@ public class PlantPuzzle : MonoBehaviour
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + (Vector3.up / branchAngleDiv) + Vector3.left, this); // this was working the whole time i'm pretty sure
+        bi.Initialize(start, start + (((Vector3.up * transform.localScale.x) / branchAngleDiv)) + (Vector3.left * transform.localScale.x), this); // this was working the whole time i'm pretty sure
         branchesToBeAdded.Add(bi);
         branches.Add(b);
 
@@ -330,7 +310,7 @@ public class PlantPuzzle : MonoBehaviour
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + (Vector3.up / branchAngleDiv) + Vector3.right, this); // this was working the whole time i'm pretty sure
+        bi.Initialize(start, start + (((Vector3.up * transform.localScale.x) / branchAngleDiv)) + (Vector3.right * transform.localScale.x), this); // this was working the whole time i'm pretty sure
         branchesToBeAdded.Add(bi);
         branches.Add(b);
 
@@ -374,6 +354,7 @@ public class PlantPuzzle : MonoBehaviour
     public void MakeFruit(Vector3 start) // start point is right actually
     {
         GameObject f = Instantiate(fruitPrefab, transform.position, Quaternion.identity);
+        f.transform.localScale = transform.localScale;
         f.transform.SetParent(transform);
         f.transform.position = start;
 

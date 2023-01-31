@@ -18,6 +18,8 @@ public class GameController : MonoBehaviour
 
     public delegate void FunctionAfterDelay();
 
+    Level currentLevel;
+
     public void Awake()
     {
         if (instance == null) instance = this;
@@ -33,25 +35,33 @@ public class GameController : MonoBehaviour
         // but for now lets just say fuck it
 
         // idk just making stuff up at this point
+        if (currentLevel == null)
+        {
+            levels[i].sections[0].SetActive(true); // this starts the first puzzle in the list // do this actually lol
 
-        levels[i].sections[0].SetActive(true); // this starts the first puzzle in the list
-
+            currentLevel = levels[i];
+        }
+        //print("start new level");
+        Tesseract.instance.animator.SetTrigger("MoveToProject");
         // so the puzzle runs now, very good, that should mean that it knows when it won now too
     }
 
     // does this mean I need to keep track of where I am in the puzzle list?
     public void GoToNextSection() // maybe I can phrase this as "puzzle done"
     {
+        //print("go to next section more than once?");
         StartCoroutine(DelayAndThenFunction(ChangeSection, 2f));
     }
 
     void ChangeSection()
     {
+        //print("how many times does this run?");
         // OOO wait loop through the levels[] and then the sections[] if a section is active, set the next one to be active and this one off, if there is no next one, then run a level done function
         foreach (Level l in levels) // for each level is levels? shouldn't it just be for this section? we'll we don't know which section is currently going
         {
             for (int i = 0; i < l.sections.Length; i++)
             {
+                //print(i);
                 GameObject s = l.sections[i];
 
                 if (s.activeInHierarchy)
@@ -63,18 +73,23 @@ public class GameController : MonoBehaviour
                         s.SetActive(false); // how do I move this code to something with no input?
                         l.sections[i + 1].SetActive(true);
 
+                       // print("changing sections");
                         //print("This puzzle name is: " + s.name + " and the next puzzle name is: " + l.sections[i+1]);
                         //print("turn on new section");
                         return; // AAAH this might not break all the way out of the loop, maybe that's the issue i feel like level done must still run after some time in the loop
                     }
                     else
                     {
+                        //print("level done");
                         LevelDone();
+                        return;
                     }
-
+                    
                 }
             }
+            //print("is any of this running?");
         }
+        //print("is even this running?");
     }
 
     void TurnOffFinalPuzzle()
@@ -85,8 +100,12 @@ public class GameController : MonoBehaviour
             {
                 if (s.activeInHierarchy)
                 {
+                    //print(s.name + " turning this off");
                     s.SetActive(false);
-                    FreqScanObject.instance.ChangeSignal(1);
+                    //print(l.noiseSignal.layer1Tex);
+                    //print(l.noiseSignal);
+                    currentLevel = null;
+                    Tesseract.instance.animator.SetTrigger("ReturnToHub");
                     return;
                 }
             }
@@ -95,10 +114,11 @@ public class GameController : MonoBehaviour
 
     public void LevelDone()
     {
+        //print("level done!");
         // when the level is done, close all the puzzles
         // I could make it so that the light goes off here too and I have a cleaner list of references
         micLight.TriggerLight(); // trigger goes for 2 seconds, lets do a 2 second delay before we leave all the puzzles
-
+        FreqScanObject.instance.ChangeSignal(currentLevel.noiseSignal); // when we set signal lets just send this levels' freqscan class
         // I need to just turn all puzzles off? or relly just the one actully. lets get a direct reference to it instead of looping? // lets loop for now
         StartCoroutine(DelayAndThenFunction(TurnOffFinalPuzzle, 2f));
 
@@ -108,7 +128,9 @@ public class GameController : MonoBehaviour
 
     public IEnumerator DelayAndThenFunction(FunctionAfterDelay function, float delayTime) // wonder if I can put this in its own script somewhere, could be a static function or something
     {
+        //print("how many times does the delay happen?");
         yield return new WaitForSeconds(delayTime);
+        //print("and what happens when I put this down here?");
         function();
     }
 }

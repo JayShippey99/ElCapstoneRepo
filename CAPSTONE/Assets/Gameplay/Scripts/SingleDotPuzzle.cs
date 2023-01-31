@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingleDotPuzzle : MonoBehaviour
+public class SingleDotPuzzle : MonoBehaviour, IDotPuzzle
 {
     // This code will control the first dot puzzle, and hopefully, it will give me some insight on a script for more puzzles
     // What will this script ask for?
@@ -16,6 +16,8 @@ public class SingleDotPuzzle : MonoBehaviour
     public static SingleDotPuzzle instance;
     public Dot dot;
 
+
+
     private void Start()
     {
         if (instance == null) instance = this;
@@ -24,7 +26,7 @@ public class SingleDotPuzzle : MonoBehaviour
 
     public void GetInput(string t)
     {
-        // okay do this but also change the image // I could grab that resource file with a dot puzzle parent too // THE DELAY COULD BE IN THE GAME CONTROLLER CLASSS
+        //print("AM I STILL RUNNING??");
         if (t.Length >= 1)
         {
             // set the correct child to on
@@ -32,5 +34,15 @@ public class SingleDotPuzzle : MonoBehaviour
             GameController.instance.GoToNextSection(); // that's the win condition, A WIN CONDITION parent function
             // I also need a pause first
         }
+    }
+
+    public bool CheckIfSolved()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool IsMatchingReferenceGrid(Transform rg)
+    {
+        throw new System.NotImplementedException();
     }
 }

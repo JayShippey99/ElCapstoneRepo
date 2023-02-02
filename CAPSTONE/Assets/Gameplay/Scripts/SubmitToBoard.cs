@@ -43,6 +43,8 @@ public class SubmitToBoard : MonoBehaviour
     int thisChar;
     int pastChar;
 
+    public _Light radarLight;
+
     void Start()
     {
         if (instance == null) instance = this;
@@ -59,8 +61,9 @@ public class SubmitToBoard : MonoBehaviour
     void Update()
     {
 
-        if (input.text != "" && Input.GetKeyDown(KeyCode.Return))
+        if (input.text != "" && !input.readOnly && Input.GetKeyDown(KeyCode.Return))
         {
+            //print(input.text);
             Submit(); // Submit, here it is
         }
 
@@ -88,6 +91,7 @@ public class SubmitToBoard : MonoBehaviour
                 thisChar = Oscillator.instance.charIndex; // okay wtf so charIndex is not right
                                                           // so this char is counting up as we expect
 
+                //input.DeactivateInputField();
                 input.interactable = false; // we need to disable adding new inputs now
                 input.readOnly = true;
 
@@ -137,6 +141,9 @@ public class SubmitToBoard : MonoBehaviour
         {
             if (isReadingInput && Oscillator.instance.isOn == false) // this is working so far, I just need to make it so that you can't edit it while its playing, but first, lets make it so the chars change color
             {
+                // this is when it turns off, this is when we send out the signals
+                //print("when does this run");
+                if (!string.IsNullOrEmpty(text)) ActivateCallouts(text);
                 isReadingInput = false;
                 Clear();
                 input.interactable = true;
@@ -166,7 +173,7 @@ public class SubmitToBoard : MonoBehaviour
 
         text = input.text;
 
-        if (!string.IsNullOrEmpty(text)) ActivateCallouts(text);
+        if (!string.IsNullOrEmpty(text)) PlayOscillator(text);
 
         // get pastinputs text
         if (pastInputs.text == "") pastInputs.text = text;
@@ -187,7 +194,7 @@ public class SubmitToBoard : MonoBehaviour
 
         ogInput = input.text;
 
-        input.ActivateInputField();
+        input.ActivateInputField(); // do I ever set it to not interactabel?
 
         //InputCounter.instance.count++; // this can be reworked, for now we'll comment it out
     }
@@ -205,14 +212,34 @@ public class SubmitToBoard : MonoBehaviour
         return numLineBreaks;
     }
 
+    void PlayOscillator(string str)
+    {
+        if (Oscillator.instance != null)
+        {
+            radarLight.onTime = str.Length * .2f;
+            radarLight.TriggerLight(); // i want to be able to set the length of on time
+            Oscillator.instance.On(str);
+        }
+    }
+
     void ActivateCallouts(string str) // where do I check if it should start the puzzle? // this could probably be a cleaner piece of code too
     {
+        //print("when is this running callouts");
+        if (PlantPuzzle.instance != null)
+        {
+            //print("instence is real");
+            PlantPuzzle.instance.MakeBranches(str);
+        }
         if (GameController.instance != null)
         {
-           if ((str == "abc")) GameController.instance.StartNewLevel(0); // I basically need to just copy the code I have below but relocate it kinda, and find a cleaner system for it
+            if (str == "first") GameController.instance.StartNewLevel(0); // I basically need to just copy the code I have below but relocate it kinda, and find a cleaner system for it
+            if (str == "second") GameController.instance.StartNewLevel(1);
+            if (str == "third") GameController.instance.StartNewLevel(2);
+
+            // maybe later I can have something like "run current level script"
         }
 
-        if (Oscillator.instance != null) Oscillator.instance.On(str);
+        
         // for each puzzle script, we can activate them here
         if (GetComponent<MoveInnerCubePuzzle>() != null) GetComponent<MoveInnerCubePuzzle>().CheckConditions(str);
 
@@ -220,25 +247,42 @@ public class SubmitToBoard : MonoBehaviour
 
         if (FrequencyList.instance != null) FrequencyList.instance.AddNewChars(str); // technically this could be a slotted variable, but whatever i literally will only have one of these per scene
 
-        if (Puzzle1MiniGridBrain.instance != null) Puzzle1MiniGridBrain.instance.TurnOnDots(str);
-
         if (ParticlePuzzle.instance != null) ParticlePuzzle.instance.PushFrequencies(str);
-        
-        /*
-        // PUZZLE TESTING CHUNK // HERE IT IS LMFAO DUh // again, lets just keep this for now? // modify it though
-        if (Tesseract.instance != null)
-        {
-            if (Conditions.IsInAscendingOrder(str)) Tesseract.instance.StartABCPuzzle(); // aha
-            if (Conditions.IsAlternating(str)) Tesseract.instance.StartSoundPuzzle(); //Tesseract.instance.spinX(); // change in a sec;
-            // wonder if we could make the pitches match the things I used to put in
-        }
-        */
-
-        if (PlantPuzzle.instance != null) PlantPuzzle.instance.MakeBranches(str);
 
         if (A1_Puzzle.instance != null) A1_Puzzle.instance.CheckConditions(str);
         // we need to have a callout for the cue for each puzzle start, interesting, should this be here on in the tesseract class, lets do here first
         //print(Conditions.IsInAscendingOrder(str) + " ascending order return");
-        
+
+        if (SingleDotPuzzle.instance != null)
+        {
+            if (SingleDotPuzzle.instance.gameObject.activeInHierarchy)
+            {
+                SingleDotPuzzle.instance.GetInput(str); // okay so insanely stupidly idk if its from the interfaces but the things keep doing the thing
+            }
+        }
+
+        if (EightDotPuzzle.instance != null)
+        {
+            if (EightDotPuzzle.instance.gameObject.activeInHierarchy)
+            {
+                EightDotPuzzle.instance.GetInput(str); // okay so insanely stupidly idk if its from the interfaces but the things keep doing the thing
+            }
+        }
+
+        if (ThreeTypesPuzzle.instance != null) // yeah this is not gonna be a good way for this for longevities sake. maybe I can just do a siimlar thing with the plant puzzles ehre?
+        {
+            if (ThreeTypesPuzzle.instance.gameObject.activeInHierarchy)
+            {
+                ThreeTypesPuzzle.instance.GetInput(str); // okay so insanely stupidly idk if its from the interfaces but the things keep doing the thing
+            }
+        }
+
+        if (Puzzle1MiniGridBrain.instance != null)
+        {
+            if (Puzzle1MiniGridBrain.instance.gameObject.activeInHierarchy)
+            {
+                Puzzle1MiniGridBrain.instance.TurnOnDots(str); // okay so insanely stupidly idk if its from the interfaces but the things keep doing the thing
+            }
+        }
     }
 }

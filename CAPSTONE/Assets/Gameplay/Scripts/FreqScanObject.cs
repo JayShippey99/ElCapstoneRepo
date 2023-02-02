@@ -20,51 +20,131 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
 
     MeshRenderer mr;
 
-    public FreqScanClass[] signals;
+    //public FreqScanClass[] signals;
+    [HideInInspector]
+    public FreqScanClass currentSignal;
 
     float scanFrequency; // 
 
+    [HideInInspector]
     public bool isHighlightingSomething;
 
-    int currentSignal = 0;
+    //int currentSignal = 0;
 
     public Transform documentList;
 
     public GameObject intelPrefab;
 
+    public _Light strongSignalLight;
+    public _Light signalSentLight;
+    public _Light tabletNotDockedLight;
+    
+    public TabletMovement tablet;
+
+    public float detectionSensitivity;
+
+    public AnimationCurve showNewNoiseCurve;
+    float showProgress;
+
     void Awake()
     {
+        
         if (instance == null) instance = this;
         else Destroy(gameObject);
         
+        
         mr = GetComponent<MeshRenderer>();
 
-        mr.material.SetTexture("_Layer1Tex", signals[0].layer1Tex.texture);
-        mr.material.SetTexture("_Layer2Tex", signals[0].layer2Tex.texture);
-        mr.material.SetTexture("_Layer3Tex", signals[0].layer3Tex.texture);
+        currentSignal = null;
 
-        mr.material.SetFloat("_Layer1Level", signals[0].layer1Level);
-        mr.material.SetFloat("_Layer2Level", signals[0].layer2Level);
-        mr.material.SetFloat("_Layer3Level", signals[0].layer3Level);
+        //print(currentSignal);
+        /*
+        mr.material.SetTexture("_Layer1Tex", currentSignal.layer1Tex.texture);
+        mr.material.SetTexture("_Layer2Tex", currentSignal.layer2Tex.texture);
+        mr.material.SetTexture("_Layer3Tex", currentSignal.layer3Tex.texture);
+
+        mr.material.SetFloat("_Layer1Level", currentSignal.layer1Level);
+        mr.material.SetFloat("_Layer2Level", currentSignal.layer2Level);
+        mr.material.SetFloat("_Layer3Level", currentSignal.layer3Level);
+        */
+        
     }
-    public void ChangeSignal(int i)
+    public void ChangeSignal(FreqScanClass newSignal)
     {
-        currentSignal = i;
+        currentSignal = newSignal;
 
-        mr.material.SetTexture("_Layer1Tex", signals[i].layer1Tex.texture);
-        mr.material.SetTexture("_Layer2Tex", signals[i].layer2Tex.texture);
-        mr.material.SetTexture("_Layer3Tex", signals[i].layer3Tex.texture);
+        //print(currentSignal);
 
-        mr.material.SetFloat("_Layer1Level", signals[i].layer1Level);
-        mr.material.SetFloat("_Layer2Level", signals[i].layer2Level);
-        mr.material.SetFloat("_Layer3Level", signals[i].layer3Level);
+        //print(mr);
+
+        // lets just set these things and restart the animstion
+
+        mr.material.SetTexture("_Layer1Tex", currentSignal.layer1Tex.texture);
+        mr.material.SetTexture("_Layer2Tex", currentSignal.layer2Tex.texture);
+        mr.material.SetTexture("_Layer3Tex", currentSignal.layer3Tex.texture);
+
+        mr.material.SetFloat("_Layer1Level", currentSignal.layer1Level);
+        mr.material.SetFloat("_Layer2Level", currentSignal.layer2Level);
+        mr.material.SetFloat("_Layer3Level", currentSignal.layer3Level);
+
+        StartCoroutine(ShowSignal());
+    }
+
+    IEnumerator ShowSignal()
+    {
+        float progress = 0;
+
+        while (progress < 1)
+        {
+
+            progress += Time.deltaTime;
+
+            mr.material.SetFloat("_OverallVisibility", showNewNoiseCurve.Evaluate(progress));
+
+            yield return null;
+        }
     }
 
     public override void ChangeSomethingDial(float f) // I need to make it so that when I let go, if a thing is on an image, 
     {
-        // so amazingly this shit runs, so that's awesome but idk if its sending the value properly
-        scanFrequency = f;
-        mr.material.SetFloat("_ScanAmount", scanFrequency);
+        //print(currentSignal);
+        if (currentSignal != null)
+        {
+            // so amazingly this shit runs, so that's awesome but idk if its sending the value properly
+            scanFrequency = f;
+            mr.material.SetFloat("_ScanAmount", scanFrequency);
+
+            // i need to ask HERE if its on a strong image
+            //int i = currentSignal;
+
+            // lets not round lets instead ask if the frequency layer is a distance of .1 or less
+
+            float freq = scanFrequency; // rounds to .x
+
+            float layer1 = currentSignal.layer1Level;
+            float layer2 = currentSignal.layer2Level;
+            float layer3 = currentSignal.layer3Level;
+
+            //print(freq + " " + layer1 + " " + layer2 + " " + layer3);
+            //print(freq); // wait no lmfao rounding like this isn't good
+
+            float layer1Distance = Mathf.Abs(freq - layer1);
+            float layer2Distance = Mathf.Abs(freq - layer2);
+            float layer3Distance = Mathf.Abs(freq - layer3);
+
+            //print(layer1Distance + " " + layer2Distance + " " + layer3Distance);
+
+            // for the sake of making it clear in the light script. I imagine this may, do I just need a specific to the lights function like set light?
+
+            if (layer1Distance > detectionSensitivity && layer2Distance > detectionSensitivity && layer3Distance > detectionSensitivity) // jesus that was a pain lmao
+            {
+                strongSignalLight.SetLight(false);
+            }
+            else
+            {
+                strongSignalLight.SetLight(true);
+            }
+        }
     }
 
     public override void ToggleSomethingSwitch(GameObject obj) // it works lets goooo
@@ -72,53 +152,94 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
         obj.SetActive(!obj.activeInHierarchy);
     }
 
-    public override void DoSomethingButton()
+    public override void DoSomethingButton() // we need to know if the tablet is docked or not
     {
-        //print("I LET GO");
-        // if scanfrequency is 
+        // in the future we should check if the signal is within a float range instead. that'll make it nice
 
-        int i = currentSignal;
+        // i think we should just ignore EVERYTHing is the tablet isn't docked. now we need a ref which is annoying
+        // if any signal is higlighted, then we run this 
+        // if the tablet is docked and the button is pressed and there is a strong signal, trigger green light
+        // if the tablet is not docked and the button is pressed and there is a strong signl trigger the red light
 
-        float freq = Mathf.Round(scanFrequency * 10.0f) * 0.1f; // rounds to .x
+        //int i = currentSignal;
 
-        float layer1 = Mathf.Round(signals[i].layer1Level * 10.0f) * 0.1f;
-        float layer2 = Mathf.Round(signals[i].layer2Level * 10.0f) * 0.1f;
-        float layer3 = Mathf.Round(signals[i].layer3Level * 10.0f) * 0.1f;
-
-        print(freq + " " + layer1 + " " + layer2 + " " + layer3);
-        //print(freq); // wait no lmfao rounding like this isn't good
-
-        if (freq == layer1) // is this even what I want? yeah it is I guess, whatever image I'm on, I gotta send that, and I can have many images at different places
+        if (currentSignal != null)
         {
-            if (!signals[i].layer1Added)
+
+
+            float freq = scanFrequency; // rounds to .x
+
+            float layer1 = currentSignal.layer1Level;
+            float layer2 = currentSignal.layer2Level;
+            float layer3 = currentSignal.layer3Level;
+
+            float layer1Distance = Mathf.Abs(freq - layer1);
+            float layer2Distance = Mathf.Abs(freq - layer2);
+            float layer3Distance = Mathf.Abs(freq - layer3);
+
+       
+
+            if (layer1Distance < detectionSensitivity) // jesus that was a pain lmao
             {
-                print("1");
-                //document.sprite = signals[i].layer1Tex; // ayo? // niceee so instead now if changing the material I need to add a new thing. lemme just scrap the tablet as it and start raw
-                AddImage(signals[i].layer1Tex);
-                // I could add a bool for each image
-                signals[i].layer1Added = true;
+                // only if the tablet is docked do we worry abotu this
+                if (tablet.docked)
+                {
+                    if (!currentSignal.layer1Added)
+                    {
+                        //print("1");
+                        //document.sprite = signals[i].layer1Tex; // ayo? // niceee so instead now if changing the material I need to add a new thing. lemme just scrap the tablet as it and start raw
+                        AddImage(currentSignal.layer1Tex);
+                        currentSignal.layer1Added = true;
+
+                        // do green light here, cause it should only be sent once right?
+                        signalSentLight.TriggerLight();
+                    }
+                }
+                else
+                {
+                    // do redlight regardless of whether it was added or not
+                    tabletNotDockedLight.TriggerLight();
+                }
             }
-        }
 
-        if (freq == layer2)
-        {
-            if (!signals[i].layer2Added)
+            if (layer2Distance < detectionSensitivity)
             {
-                print("2");
-                //document.sprite = signals[i].layer2Tex;
-                AddImage(signals[i].layer2Tex);
-                signals[i].layer2Added = true;
+                if (tablet.docked)
+                {
+                    if (!currentSignal.layer2Added)
+                    {
+                        //print("2");
+                        //document.sprite = signals[i].layer2Tex;
+                        AddImage(currentSignal.layer2Tex);
+                        currentSignal.layer2Added = true;
+                    
+                        signalSentLight.TriggerLight();
+                    }
+                }
+                else
+                {
+                    tabletNotDockedLight.TriggerLight();
+                }
             }
-        }
 
-        if (freq == layer3)
-        {
-            if (!signals[i].layer3Added)
+            if (layer3Distance < detectionSensitivity)
             {
-                print("3");
-                //document.sprite = signals[i].layer3Tex;
-                AddImage(signals[i].layer3Tex);
-                signals[i].layer3Added = true;
+                if (tablet.docked)
+                {
+                    if (!currentSignal.layer3Added)
+                    {
+                        //print("3");
+                        //document.sprite = signals[i].layer3Tex;
+                        AddImage(currentSignal.layer3Tex);
+                        currentSignal.layer3Added = true;
+
+                        signalSentLight.TriggerLight();
+                    }
+                }
+                else
+                {
+                    tabletNotDockedLight.TriggerLight();
+                }
             }
         }
     }

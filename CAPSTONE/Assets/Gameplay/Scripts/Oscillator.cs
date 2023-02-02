@@ -21,7 +21,7 @@ public class Oscillator : MonoBehaviour
     public double frequency = 440.0;
     private double increment;
     private double phase; // is [hase period?
-    private double sampling_frequency = 48000.0; // 48000 // ow at 480
+    private double sampling_frequency = 48000; // 48000 // ow at 480
 
     public float gain;
     public float volume = 0.05f;
@@ -34,6 +34,8 @@ public class Oscillator : MonoBehaviour
     [HideInInspector]
     public bool isOn;
     public int charIndex;
+
+    public float readTime;
 
     private void Start()
     {
@@ -65,7 +67,11 @@ public class Oscillator : MonoBehaviour
         for (int i = 0; i < charStr.Length; i++) // hmm okay to map I need to already have like a min and max, maybe we could take a break from this for now, i think i like this system of making quick proof of concepts just to be sure I got all of the basics down
         {
             //print(((byte)charStr[i]) * 10);
-            newFrequencies[i] = ((byte)charStr[i]) * 10;
+            //float f = Map((byte)charStr[i], (byte)'a', (byte)')', 600, 1600);
+
+            float f = (byte)charStr[i] * 10f;
+
+            newFrequencies[i] = f; // map function will be used here
         }
 
         frequencies = newFrequencies;
@@ -88,7 +94,7 @@ public class Oscillator : MonoBehaviour
         gain = 0;
     }
 
-    float Map(float s, float a1, float a2, float b1, float b2)
+    float Map(byte s, byte a1, byte a2, float b1, float b2)
     {
         return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
     }
@@ -102,7 +108,7 @@ public class Oscillator : MonoBehaviour
             //print(i); // so this is working how I'd expect, which sucks lol
             charIndex = i;
             frequency = frequencies[i];
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(readTime);
         }
 
         Off();
@@ -116,7 +122,7 @@ public class Oscillator : MonoBehaviour
         for (int i = 0; i < data.Length; i += channels)
         {
             phase += increment;
-            data[i] = (float)(gain * Mathf.Sin((float)phase));
+            data[i] = (float)(gain * Mathf.Sin((float)phase)); // sinwave. wonder if I can do some other math to get different wave forms, wonder how absolute would sound? probbly like tri // and maybe rounding would give me square
 
             if (channels == 2) // this makes sure it plays from both speakers and not just one
             {

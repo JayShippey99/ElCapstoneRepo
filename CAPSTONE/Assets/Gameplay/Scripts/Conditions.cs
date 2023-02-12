@@ -104,7 +104,7 @@ static public class Conditions
 
     static public bool IsHigherValueThan(char str1, string str2)
     {
-        
+
         char[] c = str2.ToCharArray();
         //Debug.Log(c[0] + " ayooo");
         return str1 > c[0];
@@ -242,3 +242,4 @@ static public class Conditions
         return str.Length < n;
     }
 }
+

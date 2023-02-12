@@ -8,20 +8,7 @@ using System.Linq;
 public class SubmitToBoard : MonoBehaviour
 {
 
-    // new idea, instead of working with caret keys and stuff I can just make my own thing, it'll have 16 _ and then the one I'm currently on will be flashing or like hidden or something // genius
-
-
-   // i need to figure out when I start the first puzzle
-
-    // okay so now I need the second puzzle to start based on something else now. I think i'll have it be based on like an alternating input
-    // how am I checking for the first puzzle
-
-    // I'm very confused why pressing the puzzle made things break
-
-    // so its playing thigns based on what's in the last input?
-    // gonna comment things out in the oscillator page
-
-    //something to think about later on is that things should be triggered after the input gets read
+    // At this point we may not even need this thing
 
     static public SubmitToBoard instance;
 
@@ -239,50 +226,6 @@ public class SubmitToBoard : MonoBehaviour
             // maybe later I can have something like "run current level script"
         }
 
-        
-        // for each puzzle script, we can activate them here
-        if (GetComponent<MoveInnerCubePuzzle>() != null) GetComponent<MoveInnerCubePuzzle>().CheckConditions(str);
-
-        //if (pp != null && pp.enabled) pp.MakeNotes(str);
-
         if (FrequencyList.instance != null) FrequencyList.instance.AddNewChars(str); // technically this could be a slotted variable, but whatever i literally will only have one of these per scene
-
-        if (ParticlePuzzle.instance != null) ParticlePuzzle.instance.PushFrequencies(str);
-
-        if (A1_Puzzle.instance != null) A1_Puzzle.instance.CheckConditions(str);
-        // we need to have a callout for the cue for each puzzle start, interesting, should this be here on in the tesseract class, lets do here first
-        //print(Conditions.IsInAscendingOrder(str) + " ascending order return");
-
-        if (SingleDotPuzzle.instance != null)
-        {
-            if (SingleDotPuzzle.instance.gameObject.activeInHierarchy)
-            {
-                SingleDotPuzzle.instance.GetInput(str); // okay so insanely stupidly idk if its from the interfaces but the things keep doing the thing
-            }
-        }
-
-        if (EightDotPuzzle.instance != null)
-        {
-            if (EightDotPuzzle.instance.gameObject.activeInHierarchy)
-            {
-                EightDotPuzzle.instance.GetInput(str); // okay so insanely stupidly idk if its from the interfaces but the things keep doing the thing
-            }
-        }
-
-        if (ThreeTypesPuzzle.instance != null) // yeah this is not gonna be a good way for this for longevities sake. maybe I can just do a siimlar thing with the plant puzzles ehre?
-        {
-            if (ThreeTypesPuzzle.instance.gameObject.activeInHierarchy)
-            {
-                ThreeTypesPuzzle.instance.GetInput(str); // okay so insanely stupidly idk if its from the interfaces but the things keep doing the thing
-            }
-        }
-
-        if (Puzzle1MiniGridBrain.instance != null)
-        {
-            if (Puzzle1MiniGridBrain.instance.gameObject.activeInHierarchy)
-            {
-                Puzzle1MiniGridBrain.instance.TurnOnDots(str); // okay so insanely stupidly idk if its from the interfaces but the things keep doing the thing
-            }
-        }
     }
 }

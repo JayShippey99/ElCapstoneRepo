@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 
-public class Tesseract : MonoBehaviour
+public class Tesseract : InteractableParent
 {
     // okay I'm trying to get it so that the progress shows up and adds to the grid for this puzzle too
 
@@ -14,14 +14,13 @@ public class Tesseract : MonoBehaviour
 
     static public Tesseract instance;
 
-    // get reference to material with script?
-    public Material cubeMaterial;
-
     [HideInInspector]
     public Animator animator;
 
     public GameObject projectorScreen, projectorBeam;
 
+    public float speed; // turn speed
+    float turnRightAmount, turnUpAmount;
     void Start()
     {
         if (instance == null) instance = this;
@@ -29,6 +28,14 @@ public class Tesseract : MonoBehaviour
 
         animator = GetComponent<Animator>();
     }
+
+    private void Update()
+    {
+        TurnRight();
+        TurnUp();
+    }
+
+
 
     // i need to make it so that it only goes through once all the colliders have a stone in them
 
@@ -48,7 +55,7 @@ public class Tesseract : MonoBehaviour
     public void ReturnToHubState()
     {
         //print("remove all puzzles, change animation to floating in place again");
-        TurnOffProjectorStuff();
+        //TurnOffProjectorStuff();
     }
 
     public void DisableAnimator()
@@ -56,53 +63,27 @@ public class Tesseract : MonoBehaviour
         animator.enabled = false;
     }
 
-    private void OnDisable()
-    {        
-        Color newColor;
+    void TurnRight()
+    {
+        transform.RotateAroundLocal(Vector3.up, turnRightAmount * speed * Time.deltaTime);
+    }
 
-        if (ColorUtility.TryParseHtmlString("#56e5ff", out newColor))
+    void TurnUp()
+    {
+        transform.RotateAroundLocal(Vector3.right, turnUpAmount * speed * Time.deltaTime);
+    }
+
+    public override void ChangeSomethingDial(float f) // i gotta redo the movement code woof
+    {
+        if (f < 0)
         {
-            cubeMaterial.SetColor("_Color", newColor);
+            turnRightAmount = f + 30;
+        }
+
+        if (f > 0)
+        {
+            turnUpAmount = f - 30;
         }
     }
 
-    public void Flash() // how do we want to do this, do
-    {
-        StartCoroutine(FlashFade());
-    }
-
-    IEnumerator FlashFade() // What I could do is make it so that I'm not affecting the flash of the whole thing but instead just use an image with the same material on, and make tht flash, but wait the material is universal oops
-    {
-        float progress = .1f; // i wonder if i can know the upper limit to the slider
-
-        while (progress > 0)
-        {
-            cubeMaterial.SetFloat("_FlashAmount", progress);
-
-            progress -= Time.deltaTime * .5f;
-
-            yield return null;
-        }
-    }
-
-    public void ChangeColor(string str)
-    {
-        string strWithHash = "#" + str;
-        Color newColor;
-
-        if (ColorUtility.TryParseHtmlString(strWithHash, out newColor))
-        {
-            cubeMaterial.SetColor("_Color", newColor);
-        }
-    } 
-    public void MakeSound()
-    {
-        StartCoroutine(MakeSoundTimer());
-    }
-
-    IEnumerator MakeSoundTimer()
-    {
-        yield return new WaitForSeconds(1);
-        Oscillator.instance.On("AAAA");
-    }
 }

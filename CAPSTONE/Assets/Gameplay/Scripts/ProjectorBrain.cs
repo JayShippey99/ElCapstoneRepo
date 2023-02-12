@@ -8,8 +8,8 @@ public class ProjectorBrain : MonoBehaviour
 
     private void Start()
     {
-        if (instance == null) instance = this;
-        else Destroy(gameObject);
+        //if (instance == null) instance = this;
+        //else Destroy(gameObject);
     }
 
    

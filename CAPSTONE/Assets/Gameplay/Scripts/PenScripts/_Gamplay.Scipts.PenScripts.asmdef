@@ -1,0 +1,16 @@
+{
+    "name": "_Gamplay.Scipts.PenScripts",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4669ff6e5dc6de44ebb5a3ac9b492f1d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

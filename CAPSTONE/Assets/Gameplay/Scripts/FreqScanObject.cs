@@ -147,12 +147,14 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
         }
     }
 
+    /*
     public override void ToggleSomethingSwitch(GameObject obj) // it works lets goooo
     {
         obj.SetActive(!obj.activeInHierarchy);
     }
+    */
 
-    public override void DoSomethingButton() // we need to know if the tablet is docked or not
+    public override void DoSomethingButton(GameObject theButton) // we need to know if the tablet is docked or not
     {
         // in the future we should check if the signal is within a float range instead. that'll make it nice
 

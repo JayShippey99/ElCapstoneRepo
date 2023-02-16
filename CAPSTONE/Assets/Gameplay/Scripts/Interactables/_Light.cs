@@ -72,7 +72,7 @@ public class _Light : InteractableParent
     }
    
 
-    public override void DoSomethingButton() // this is what happen if a button is hooked up to it, we need a function for each thing that could be hooked up to it
+    public override void DoSomethingButton(GameObject theButton) // this is what happen if a button is hooked up to it, we need a function for each thing that could be hooked up to it
     {
         Toggle();
     }

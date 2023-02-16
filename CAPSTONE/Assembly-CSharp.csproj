@@ -56,7 +56,8 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\FindClosestSide.cs" />
+    <Compile Include="Assets\BinaryInputBrain.cs" />
+    <Compile Include="Assets\FullInputController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -791,13 +792,13 @@
       <Project>{2FF20328-004D-F15A-5ACD-F16251043B49}</Project>
       <Name>Gameplay.Scripts</Name>
     </ProjectReference>
-    <ProjectReference Include="Project.External.csproj">
-      <Project>{3F685350-9367-C1B8-6E67-1E2A8BC725A6}</Project>
-      <Name>Project.External</Name>
+    <ProjectReference Include="_Gamplay.Scipts.PenScripts.csproj">
+      <Project>{E4A6B2E0-1DDA-4177-7C0F-C83CAF017417}</Project>
+      <Name>_Gamplay.Scipts.PenScripts</Name>
     </ProjectReference>
-    <ProjectReference Include="Gameplay.OldAndForgotten.csproj">
-      <Project>{53E06C9A-9B07-81B1-826F-A1125C17FD9B}</Project>
-      <Name>Gameplay.OldAndForgotten</Name>
+    <ProjectReference Include="_Gameplay.External.csproj">
+      <Project>{E129B6D1-E526-2BEE-FD26-73791BEDD6C8}</Project>
+      <Name>_Gameplay.External</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

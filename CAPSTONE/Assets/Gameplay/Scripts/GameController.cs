@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    // i might need a way to let each puzzle know where in the list is falls
-    // how to go to the next one is really interesting
-    
-    // okay for now I'm just gonna set it up so that it recognizes abc
+
     public static GameController instance;
 
     public Level[] levels;
@@ -19,6 +16,8 @@ public class GameController : MonoBehaviour
     public delegate void FunctionAfterDelay();
 
     Level currentLevel;
+
+
 
     public void Awake()
     {

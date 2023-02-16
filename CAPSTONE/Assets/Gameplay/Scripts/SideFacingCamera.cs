@@ -7,17 +7,9 @@ public class SideFacingCamera : MonoBehaviour
 
     // this might just be a general controller for this stuff actually? maybe I should put it in game controller though?
 
-    List<Transform> sides = new List<Transform>();
-
     Transform closestSide, prevClosestSide;
 
-    private void Start()
-    {
-        foreach (Transform child in transform)
-        {
-            sides.Add(child);
-        }
-    }
+    public Transform[] sides;
 
     private void Update()
     {

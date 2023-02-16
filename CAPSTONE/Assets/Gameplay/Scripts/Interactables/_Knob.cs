@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class _Knob : MonoBehaviour
+public class _Knob : InteractableParent
 {
     // im getting lost in these numbers
 
@@ -13,7 +13,7 @@ public class _Knob : MonoBehaviour
     // or would it be freq scan class?
     // I guess if I want to change specific variables would I need to get a class reference?
 
-    public InteractableParent obj;
+    public InteractableParent[] objs;
 
     [Tooltip("A percent, 0 is left, 1 is right")]
     public float startAngle; // start angle will be clamped within turn amount later, but it will be in degrees, 0 is up
@@ -46,9 +46,17 @@ public class _Knob : MonoBehaviour
     // so in a way is this oldoffset?
     // this is the stupidest way to do this
     float value;
-    
+
     // now how do I make it so that I can just expose a specific variable from a script to be hooked up to something else
     // wonder if i could make like a specific class for it or something, for now lets keep it simple
+
+
+    // I NEED TO MAKE IT SO YOU CAN'T CLICK WHILE ITS GOING BACK TO NORMAL
+
+    bool returnToNeutral = false;
+    float returnTime;
+    public float returnSpeed;
+    float startOffset;
 
     void Start()
     {
@@ -71,26 +79,13 @@ public class _Knob : MonoBehaviour
         transform.rotation = originalRotation;
         transform.RotateAroundLocal(transform.forward, Mathf.Deg2Rad * totalOffset);
 
-        // how do we want to calculate value now?
-        // Its like I need to turn total offset back into a percent sort of situation
-        // -90 = 0 // okay the issue is that i'd love to just say that the value is the angle / the turn angle. or like make it go // aaaa
-
-        // if I take a -90 to 90 angle and turn that into a percent, then 0 is -90 and 1 is 90, but then taking that number and * by 1, my max value, doesn't completetly fit because what if my minimum value was -1
-        // then I would 
-        // but I can get the difference between by max and mix value, so like -1 to 1 is a range of 2, -90 means -1
-        // map duh?
-
         value = Remap(totalOffset, -turnAmount, turnAmount, minValue, maxValue);
 
-        //FreqScanObject.instance.ChangeFrequency(value);
-        //ChangeDialFunction.Invoke(value);
+        foreach (InteractableParent ip in objs)
+        {
+            ip.ChangeSomethingDial(value);
+        }
 
-        // crazy stuff.jpg
-        //object[] arguments = new object[] { value };
-        //changeDialFunction.Invoke(obj, arguments);
-
-        // sane stuff .jpg?
-        obj.ChangeSomethingDial(value);
     }
 
     public static float Remap(float from, float fromMin, float fromMax, float toMin, float toMax)
@@ -111,25 +106,50 @@ public class _Knob : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //print(returnToNeutral);
         // I need to grab and drag, 0 + 10 drag. I've gone 10 away from the center point
-
-        if (isHeld)
+        if (!returnToNeutral)
         {
-            if (Input.GetMouseButtonUp(0))
+            //print("am i not returning to normal");
+            if (isHeld)
             {
-                isHeld = false;
+                if (Input.GetMouseButtonUp(0))
+                {
+                    isHeld = false;
 
-                //obj.OnUp();
-            } else
+                    //obj.OnUp();
+                }
+                else
+                {
+                    Vector2 mp = Input.mousePosition;
+                    totalOffset = (mp.x - initialHoldOffset) * turnSpeed;
+                    totalOffset = Mathf.Clamp(totalOffset, -turnAmount, turnAmount);
+
+
+                    transform.rotation = originalRotation;
+                    transform.RotateAroundLocal(transform.forward, Mathf.Deg2Rad * totalOffset);
+
+                    //value = 
+                    value = Remap(totalOffset, -turnAmount, turnAmount, minValue, maxValue);
+
+                    foreach (InteractableParent ip in objs)
+                    {
+                        ip.ChangeSomethingDial(value);
+                    }
+                }
+            }
+        }
+        else
+        {
+            //print("or am i returning to normal");
+            if (returnTime < 1)
             {
-                Vector2 mp = Input.mousePosition;
-                totalOffset = (mp.x - initialHoldOffset) * turnSpeed; // so if turnspeed is .5 it goes halfway to 0
-                // so we grab on and then drag left and right, how far we drag left and right will add to an overall total
-                // this is the difference from the first grab
-                //print(totalOffset);
-                //totalOffset *= turnSpeed;
-                // this is gonna constantly rotate
-                // dumb way of doing this is resetting the rotation and then just adding this new rotation on
+                returnTime += Time.deltaTime * returnSpeed;
+
+                totalOffset = Mathf.Lerp(startOffset, (startAngle * (turnAmount * 2)) - turnAmount, returnTime);
+
+                    //totalOffset = (startAngle * (turnAmount * 2)) - turnAmount;
+
                 totalOffset = Mathf.Clamp(totalOffset, -turnAmount, turnAmount);
 
 
@@ -139,21 +159,30 @@ public class _Knob : MonoBehaviour
                 //value = 
                 value = Remap(totalOffset, -turnAmount, turnAmount, minValue, maxValue);
 
-                //FreqScanObject.instance.ChangeFrequency(value);
-
-                //ChangeDialFunction.Invoke(value); // omg maybe this will work???
-                //object[] arguments = new object[] { value };
-                //changeDialFunction.Invoke(obj, arguments);
-
-                obj.ChangeSomethingDial(value);
+                foreach (InteractableParent ip in objs)
+                {
+                    ip.ChangeSomethingDial(value);
+                }
             }
+            else returnToNeutral = false;
         }
+    }
+
+
+    public override void DoSomethingButton(GameObject theButton) // LMFAO sick
+    {
+        //print("does this get run for some reason?");
+        returnToNeutral = true;
+        returnTime = 0;
+        startOffset = totalOffset;
     }
 
     private void OnMouseDown()
     {
-        isHeld = true;
-        initialHoldOffset = Input.mousePosition.x - (totalOffset / turnSpeed); // - totalOffset // the inital hold offset always puts me back at the middle // okay my hold offset is the mouse position, and then in the function I'm getting the difference btween mouse position and mouse position which is 0 until I move again
-        // for whatever reason I gotta counter act the intial cutting in half by doing this lmfao
+        if (!returnToNeutral)
+        {
+            isHeld = true;
+            initialHoldOffset = Input.mousePosition.x - (totalOffset / turnSpeed); // - totalOffset // the inital hold offset always puts me back at the middle // okay my hold offset is the mouse position, and then in the function I'm getting the difference btween mouse position and mouse position which is 0 until I move again
+        }
     }
 }

@@ -11,7 +11,7 @@ public class _Button : MonoBehaviour
         foreach(InteractableParent ip in objs)
         {
             ip.ToggleSomethingButton(ip.gameObject);
-            ip.DoSomethingButton();
+            ip.DoSomethingButton(this.gameObject);
         }
     }
 }

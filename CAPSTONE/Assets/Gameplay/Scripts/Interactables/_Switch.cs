@@ -7,11 +7,47 @@ public class _Switch : MonoBehaviour
     // Start is called before the first frame update
     public InteractableParent[] objs; // I'm gonna add multiple parents
 
-    private void OnMouseDown() // I wonder if I could use delegates again to just say run whatever function
+    bool isOn;
+
+    public GameObject flipper;
+
+    public float speed;
+    float progress = 0;
+
+    public AnimationCurve ac;
+
+    private void Update()
     {
-        foreach(InteractableParent ip in objs)
+        Vector3 rot = transform.rotation.eulerAngles;
+
+        if (isOn)
         {
-            ip.ToggleSomethingSwitch(ip.gameObject);
+            if (progress < 1)
+            {
+                progress += Time.deltaTime * speed;
+            }
+        }
+        else
+        {
+            if (progress > 0)
+            {
+                progress -= Time.deltaTime * speed;
+            }
+        }
+
+        flipper.transform.rotation = Quaternion.Euler(rot.x + ac.Evaluate(progress), rot.y, rot.z);
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        print("clicking");
+
+        isOn = !isOn;
+
+
+        foreach (InteractableParent ip in objs)
+        {
+            ip.SetSwitch(isOn);
         }
     }
 

@@ -104,17 +104,28 @@ public class SideManager : InteractableParent
 
     public override void ChangeSomethingDial(float f) // i need to make it so that when I touch the dial while its focused it unfocuses, the issue here is that I need to know if the dials are being touched cause of me or not, like are they resetting
     {
-        if (Tesseract.instance != null)
-        {
-            if (!Tesseract.instance.needsToUpright)
-            {
-                if (focused)
-                {
-                    focused = false;
+        // i can ask though if the value of f is a distance from 0
+        float n = Mathf.Abs(f) - 30;
 
-                    if (projecting)
+        print(n);
+
+        // this code is supposed to unfocus the cube when you move the dials, the goal is to make it so that you need to move the dials a certain amount before things happen
+
+        if (Mathf.Abs(n) > .5f)
+        {
+            if (Tesseract.instance != null)
+            {
+                if (!Tesseract.instance.needsToUpright)
+                {
+                    if (focused)
                     {
-                        TurnOnAll(); // ugh okay this is not going to work
+                        focused = false;
+
+                        if (projecting)
+                        {
+                            TurnOnAll(); // ugh okay this is not going to work
+                                         // this is probably what is turning everything back on
+                        }
                     }
                 }
             }

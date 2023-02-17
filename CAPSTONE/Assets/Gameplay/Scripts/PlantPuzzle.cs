@@ -11,6 +11,10 @@ public class PlantPuzzle : MonoBehaviour
     // the sides manager has the each projectorbrain class which has the puzzle houser variable
     // I need a way to send a message from this page back out to the side manager
 
+    // I wonder if I should keep track of the highest piece
+    // YOOO no actually, in the branch initializer, I'll get the end point's distance and if its too high then I kill it?
+    // ORRRR I just make the lever to reset the puzzle?
+
     int counter;
 
     static public PlantPuzzle instance;
@@ -90,8 +94,8 @@ public class PlantPuzzle : MonoBehaviour
         {
             // lowkey thugh t is just a character at this point idk if we need then [0]
 
-            print(emptyBranches.Count);
-            print("is this run enough times " + ind);
+            //print(emptyBranches.Count);
+            //print("is this run enough times " + ind);
             if (ind < emptyBranches.Count) // if the 
             {
                 if (emptyBranches[ind].empty)
@@ -171,12 +175,12 @@ public class PlantPuzzle : MonoBehaviour
         // omg wait it might a be <= vs < situation
         foreach (BranchInitializer b in emptyBranches)
         {
-            print(b.end + " " + b.empty);
+            //print(b.end + " " + b.empty);
         }
 
         ind = 0;
 
-        print("by the end there are this many empty branches " + emptyBranches.Count);
+        //print("by the end there are this many empty branches " + emptyBranches.Count);
 
 
         //List<BranchInitializer> tempBranches = emptyBranches; // I don't think we use this line
@@ -289,8 +293,8 @@ public class PlantPuzzle : MonoBehaviour
         // maybe I can just ask if the child count is above 0
         if (cCount > 0 && emptyBranches.Count == 0)
         {
-            print("do we clear the puzzle?");
-            print(cCount + " " + emptyBranches.Count);
+            //print("do we clear the puzzle?");
+            //print(cCount + " " + emptyBranches.Count);
             StartCoroutine(DelayAndThenFunction(ClearPuzzle, .5f));
         }
     }
@@ -308,7 +312,7 @@ public class PlantPuzzle : MonoBehaviour
         {
             // remove from list first? what list? heheh nice // actually lol I still think we need to do that
 
-            print("is this going?");
+            //print("is this going?");
             if (!transform.GetChild(i).CompareTag("BranchPuzzleCondition")) Destroy(transform.GetChild(i).gameObject);
         }
 

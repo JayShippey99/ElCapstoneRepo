@@ -57,7 +57,7 @@ public class SideBrain : InteractableParent
 
     private void Update()
     {
-        print(m.GetFloat("_FlickerAmount"));
+        //print(m.GetFloat("_FlickerAmount"));
 
         if (!idle) {
 

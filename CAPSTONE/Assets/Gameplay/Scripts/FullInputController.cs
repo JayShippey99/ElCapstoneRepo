@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class FullInputController : InteractableParent
 {
@@ -29,8 +30,6 @@ public class FullInputController : InteractableParent
     private void Update()
     {
         
-
-
         if (readingInput)
         {
             //print("hello?");
@@ -49,10 +48,19 @@ public class FullInputController : InteractableParent
                 }
 
                 print(output[currentIndex]);
-                if (sm.focused) sm.currentlyActivePuzzle.MakeBranches(output[currentIndex].ToString());
+                if (sm.focused)
+                {
+                    //FMODUnity
+                    RuntimeManager.PlayOneShot("event:/LaserFire");
+                    print("should be doing the noise");
+                    
+                    sm.currentlyActivePuzzle.MakeBranches(output[currentIndex].ToString());
+                }
                 else
                 {
                     sm.FlickerSides();
+                    RuntimeManager.PlayOneShot("event:/LaserFire");
+                    print("should be doing the noise");
                 }
             }
         }
@@ -69,7 +77,7 @@ public class FullInputController : InteractableParent
                     l.SetLight(true);
                 }
 
-                lightsOnNum = 8;
+                lightsOnNum = 8; // it seems like this part of the code is running when I hit the focus button?
             }
             else
             {
@@ -104,9 +112,10 @@ public class FullInputController : InteractableParent
 
     public override void DoSomethingButton(GameObject theButton) // the button click is only once, we then need it to start reading
     {
+        // omg if there are no lights on this breaks
+
         if (!readingInput)
         {
-            readingInput = true;
 
             output = "";
 
@@ -122,17 +131,22 @@ public class FullInputController : InteractableParent
                 bib.Clear();
             }
 
-            currentIndex = 0;
-
-            print(output[currentIndex]);
-            if (sm.focused) sm.currentlyActivePuzzle.MakeBranches(output[currentIndex].ToString());
-            else // if NOT focused, flicker everything
+            if (output.Length > 0)
             {
-                sm.FlickerSides();
+                readingInput = true;
+
+                currentIndex = 0;
+
+                print(output[currentIndex]);
+                if (sm.focused) sm.currentlyActivePuzzle.MakeBranches(output[currentIndex].ToString());
+                else // if NOT focused, flicker everything
+                {
+                    sm.FlickerSides();
+                }
+
+                RuntimeManager.PlayOneShot("event:/LaserFire");
+                print("should be doing the noise");
             }
-            //if (sm.focused) sm.currentlyActivePuzzle.MakeBranches(output); // so instead of the instance, maybe we just apply one directly
-            // get the currently active puzzle
-            // why does this not work after doing it on one side?
         }
 
     }

@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
 
     Level currentLevel;
 
-
+    public GameObject mainMenu;
 
     public void Awake()
     {
@@ -27,6 +27,17 @@ public class GameController : MonoBehaviour
         // each levels has .section number?
         //print(levels[0].sections.Length);
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // bring up menu again
+            mainMenu.SetActive(true);
+        }
+    }
+
+
 
     public void StartNewLevel(int i)
     {

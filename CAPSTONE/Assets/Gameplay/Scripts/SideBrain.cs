@@ -35,6 +35,12 @@ public class SideBrain : InteractableParent
     float flickerAmount;
     public float flickerSpeed;
 
+    // lets actually do it so that when the puzzles are solved we just turn on a game object and that on start plays a show image animation
+
+    GameObject alienIntel;
+
+    public Animator stickyNote;
+
     private void Start()
     {
         //if (instance == null) instance = this;
@@ -47,12 +53,14 @@ public class SideBrain : InteractableParent
         m.SetFloat("_Visibility", 0f);
         //m.SetFloat("_FlickerAmount", 0f);
 
-        puzzles = new PlantPuzzle[puzzleHouser.childCount];
+        puzzles = new PlantPuzzle[puzzleHouser.childCount - 1];
 
-        for (int i = 0; i < puzzleHouser.childCount; i ++)
+        for (int i = 0; i < puzzleHouser.childCount - 1; i++)
         {
             puzzles[i] = puzzleHouser.GetChild(i).GetComponent<PlantPuzzle>();
         }
+
+        alienIntel = puzzleHouser.GetChild(puzzleHouser.childCount - 1).gameObject;
     }
 
     private void Update()
@@ -105,10 +113,12 @@ public class SideBrain : InteractableParent
         }
     }
 
-    public void GoToNextPuzzle() // how do I get access to this though from the plant script?
+    // 
+    /*
+    public void GoToNextPuzzle() // we've moved this
     {
         // turn off current puzzle, turn on the next puzzle
-        for (int i = 0; i < puzzles.Length - 1; i++)
+        for (int i = 0; i < puzzles.Length - 1; i++) // puzzles will be the right length to only check for the puzzles
         {
             if (puzzles[i].gameObject.activeInHierarchy)
             {
@@ -116,6 +126,8 @@ public class SideBrain : InteractableParent
                 puzzles[i + 1].gameObject.SetActive(true);
                 // well fuck now we also need to tell the side manager what's the current puzzle
                 SideManager.instance.currentlyActivePuzzle = puzzles[i + 1];
+
+                // okay so the issue with this is that puzzles can't contain the alien image in the list
                 return;
             }
         }
@@ -125,8 +137,14 @@ public class SideBrain : InteractableParent
         // here is where we would run the sequence for solving the side
         // and here is where we would show the constellation
         puzzles[puzzles.Length - 1].gameObject.SetActive(false);
-    }
+        SideManager.instance.currentlyActivePuzzle = null;
+        alienIntel.SetActive(true); // lowkey with the way that I did these sticky notes, I might as well have just done the same thing for theese
 
+        // get sticky note, play the animation
+
+        stickyNote.SetTrigger("Release");
+    }
+    */
 
     public void SetState(bool on)
     {

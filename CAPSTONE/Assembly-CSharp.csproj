@@ -56,8 +56,7 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\BinaryInputBrain.cs" />
-    <Compile Include="Assets\FullInputController.cs" />
+    <Compile Include="Assets\LaserBrain.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -306,20 +305,20 @@
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.16f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Burst.Cecil.Mdb">
-      <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Burst.Cecil.Pdb">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Cecil.Mdb">
+      <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Mdb.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
       <HintPath>Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.16f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
@@ -792,6 +791,10 @@
       <Project>{2FF20328-004D-F15A-5ACD-F16251043B49}</Project>
       <Name>Gameplay.Scripts</Name>
     </ProjectReference>
+    <ProjectReference Include="FMODUnityResonanceEditor.csproj">
+      <Project>{F775DD2D-6B9E-C573-6D38-AE221D218283}</Project>
+      <Name>FMODUnityResonanceEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="_Gamplay.Scipts.PenScripts.csproj">
       <Project>{E4A6B2E0-1DDA-4177-7C0F-C83CAF017417}</Project>
       <Name>_Gamplay.Scipts.PenScripts</Name>
@@ -799,6 +802,18 @@
     <ProjectReference Include="_Gameplay.External.csproj">
       <Project>{E129B6D1-E526-2BEE-FD26-73791BEDD6C8}</Project>
       <Name>_Gameplay.External</Name>
+    </ProjectReference>
+    <ProjectReference Include="FMODUnity.csproj">
+      <Project>{3263134D-84B2-DCAA-3A26-B162F48D5F73}</Project>
+      <Name>FMODUnity</Name>
+    </ProjectReference>
+    <ProjectReference Include="FMODUnityEditor.csproj">
+      <Project>{D07EFC67-D01C-7016-92BE-C4FE0B20A189}</Project>
+      <Name>FMODUnityEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="FMODUnityResonance.csproj">
+      <Project>{93A12D28-BFB8-F7E8-A6ED-60673DD77CCB}</Project>
+      <Name>FMODUnityResonance</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

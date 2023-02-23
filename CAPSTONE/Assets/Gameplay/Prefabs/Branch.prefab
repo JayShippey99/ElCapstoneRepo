@@ -136,7 +136,7 @@ LineRenderer:
     textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
-  m_UseWorldSpace: 1
+  m_UseWorldSpace: 0
   m_Loop: 0
 --- !u!114 &8899288930970284836
 MonoBehaviour:
@@ -153,6 +153,7 @@ MonoBehaviour:
   start: {x: 0, y: 0, z: 0}
   end: {x: 0, y: 0, z: 0}
   empty: 0
+  type: 
 --- !u!68 &7570041490735649580
 EdgeCollider2D:
   m_ObjectHideFlags: 0

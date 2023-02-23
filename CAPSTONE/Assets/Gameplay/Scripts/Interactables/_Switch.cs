@@ -40,7 +40,7 @@ public class _Switch : MonoBehaviour
 
     private void OnMouseUpAsButton()
     {
-        print("clicking");
+        //print("clicking");
 
         isOn = !isOn;
 

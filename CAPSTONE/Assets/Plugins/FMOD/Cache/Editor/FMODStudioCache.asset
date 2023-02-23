@@ -1,5 +1,60 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8551322396676407335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/ButtonPress
+  m_EditorClassIdentifier: 
+  Path: event:/ButtonPress
+  Guid:
+    Data1: -1807471830
+    Data2: 1219119329
+    Data3: -660693331
+    Data4: 603777761
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7658334422726449952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/TurningSoundsLR
+  m_EditorClassIdentifier: 
+  Path: event:/TurningSoundsLR
+  Guid:
+    Data1: 36279183
+    Data2: 1202640980
+    Data3: 1440186283
+    Data4: -1847066845
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 3989163658569318466}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4642326135883949864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,6 +82,111 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-3565344432160570652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Side5Solved
+  m_EditorClassIdentifier: 
+  Path: event:/Side5Solved
+  Guid:
+    Data1: 1406624565
+    Data2: 1310270012
+    Data3: 466855827
+    Data4: -2135734750
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2041081355740379151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Side6Solved
+  m_EditorClassIdentifier: 
+  Path: event:/Side6Solved
+  Guid:
+    Data1: -823717773
+    Data2: 1341503289
+    Data3: -146843238
+    Data4: -1761166367
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-1100801535858742336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Side3Solved
+  m_EditorClassIdentifier: 
+  Path: event:/Side3Solved
+  Guid:
+    Data1: 1588022105
+    Data2: 1085877672
+    Data3: -621050182
+    Data4: -123823864
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-835802062340819016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/TurningSoundsUD/TurnAmountUD
+  m_EditorClassIdentifier: 
+  Name: TurnAmountUD
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 3734769347
+    data2: 887352065
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,13 +205,155 @@ MonoBehaviour:
   EditorEvents:
   - {fileID: -4642326135883949864}
   - {fileID: 4197665586334083783}
+  - {fileID: -8551322396676407335}
+  - {fileID: 78715104449089100}
+  - {fileID: -7658334422726449952}
+  - {fileID: 2529529147420381586}
+  - {fileID: 948139393658925636}
+  - {fileID: -3565344432160570652}
+  - {fileID: 2986902362478729654}
+  - {fileID: -1100801535858742336}
+  - {fileID: -2041081355740379151}
   EditorParameters: []
   MasterBanks:
   - {fileID: 5758709198969958138}
   StringsBanks:
   - {fileID: 6745569315438918278}
-  cacheTime: 638121878940000000
+  cacheTime: 638126829460000000
   cacheVersion: 131601
+--- !u!114 &78715104449089100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/TurningSoundsUD
+  m_EditorClassIdentifier: 
+  Path: event:/TurningSoundsUD
+  Guid:
+    Data1: -1692638664
+    Data2: 1187350600
+    Data3: 875934100
+    Data4: 817286296
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -835802062340819016}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &948139393658925636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Side1Solved
+  m_EditorClassIdentifier: 
+  Path: event:/Side1Solved
+  Guid:
+    Data1: -1477614573
+    Data2: 1309210713
+    Data3: -723587961
+    Data4: -1680392408
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2529529147420381586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Side2Solved
+  m_EditorClassIdentifier: 
+  Path: event:/Side2Solved
+  Guid:
+    Data1: 1945976586
+    Data2: 1096971583
+    Data3: 1366883732
+    Data4: 60139953
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &2986902362478729654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Side4Solved
+  m_EditorClassIdentifier: 
+  Path: event:/Side4Solved
+  Guid:
+    Data1: -1302833344
+    Data2: 1146109237
+    Data3: -41717317
+    Data4: -1543675751
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3989163658569318466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/TurningSoundsLR/TurnAmountLR
+  m_EditorClassIdentifier: 
+  Name: TurnAmountLR
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1156158618
+    data2: 3669831941
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &4197665586334083783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +396,7 @@ MonoBehaviour:
   Path: Assets/Audio/FMODBanks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638121878940000000
+  lastModified: 638126829460000000
   FileSizes: []
   Exists: 1
 --- !u!114 &6745569315438918278
@@ -112,8 +414,8 @@ MonoBehaviour:
   Path: Assets/Audio/FMODBanks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638121878940000000
+  lastModified: 638126829460000000
   FileSizes:
   - Name: 
-    Value: 812
+    Value: 1300
   Exists: 1

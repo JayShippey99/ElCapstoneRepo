@@ -40,7 +40,8 @@ public class Tesseract : InteractableParent
     Quaternion startRot, targetRot;
     public float uprightSpeed;
 
-    Vector3 rotateTo;
+    [HideInInspector]
+    public Vector3 rotateTo;
 
     float uprightTimer;
 
@@ -53,12 +54,21 @@ public class Tesseract : InteractableParent
     [HideInInspector]
     public bool projecting;
 
+    bool playingSoundLR, playingSoundUD;
+    FMOD.Studio.EventInstance turnSoundLR;
+    FMOD.Studio.EventInstance turnSoundUD;
+
     void Start()
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
 
-        animator = GetComponent<Animator>();
+        animator = transform.GetChild(0).GetComponent<Animator>();
+
+
+        turnSoundLR = FMODUnity.RuntimeManager.CreateInstance("event:/TurningSoundsLR");
+        turnSoundUD = FMODUnity.RuntimeManager.CreateInstance("event:/TurningSoundsUD");
+        //print(animator);
     }
 
     private void Update()
@@ -79,6 +89,17 @@ public class Tesseract : InteractableParent
 
             if (uprightTimer >= 1) needsToUpright = false;
         }
+    }
+
+    public void ManualUpright(Vector3 rTo, Side s)
+    {
+        needsToUpright = true;
+        startRot = transform.rotation;
+        uprightTimer = 0;
+        rotateTo = rTo;
+
+        sm.closestSide = s.projection.transform;
+        GameController.instance.focusedSide = s;
     }
 
     public override void DoSomethingButton(GameObject theButton)
@@ -129,8 +150,52 @@ public class Tesseract : InteractableParent
         transform.RotateAroundLocal(Vector3.right, turnUpAmount * speed * Time.deltaTime);
     }
 
+    void StartTurnSound(float f, bool LR)
+    {
+        if (LR)
+        {
+            if (playingSoundLR == false && Time.time > .1)
+            {
+                //print("playing???");
+                playingSoundLR = true;
+                turnSoundLR.start();
+            }
+        }
+        else
+        {
+            if (playingSoundUD == false && Time.time > .1)
+            {
+                //print("playing???");
+                playingSoundUD = true;
+                turnSoundUD.start();
+            }
+        }
+    }
+
+    void StopTurnSound(bool LR)
+    {
+        if (LR)
+        {
+            if (playingSoundLR == true)
+            {
+                turnSoundLR.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                playingSoundLR = false;
+            }
+        }
+        else
+        {
+            if (playingSoundUD == true)
+            {
+                turnSoundUD.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                playingSoundUD = false;
+            }
+        }
+    }
+
     public override void ChangeSomethingDial(float f) // i gotta redo the movement code woof
     {
+
+        
        // print("hello???");
 
         // if I set unfocus here I think that'll break things right?
@@ -138,11 +203,34 @@ public class Tesseract : InteractableParent
         if (f < 0)
         {
             turnRightAmount = f + 30;
+
+            if (Mathf.Abs(turnRightAmount) > 1f)
+            {
+                StartTurnSound(turnRightAmount, true);
+                turnSoundLR.setParameterByName("TurnAmountLR", Mathf.Abs(turnRightAmount) / 20f);
+            }
+            else
+            {
+                StopTurnSound(true);
+                turnRightAmount = 0;
+            }
         }
 
         if (f > 0)
         {
             turnUpAmount = f - 30;
+            //turnSound.setParameterByName("TurnAmount", turnUpAmount / 20);
+
+            if (Mathf.Abs(turnUpAmount) > 1f)
+            {
+                StartTurnSound(turnUpAmount, false);
+                turnSoundUD.setParameterByName("TurnAmountUD", Mathf.Abs(turnUpAmount) / 20f);
+            }
+            else
+            {
+                StopTurnSound(false);
+                turnUpAmount = 0;
+            }
         }
     }
 

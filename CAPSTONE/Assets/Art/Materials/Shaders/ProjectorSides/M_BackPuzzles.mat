@@ -71,6 +71,6 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Roundedness: 5.01
-    - _Visibility: 0
+    - _Visibility: 1
     m_Colors: []
   m_BuildTextureStacks: []

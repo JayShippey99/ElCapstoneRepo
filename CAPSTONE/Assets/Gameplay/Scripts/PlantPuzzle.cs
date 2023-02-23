@@ -15,6 +15,10 @@ public class PlantPuzzle : MonoBehaviour
     // YOOO no actually, in the branch initializer, I'll get the end point's distance and if its too high then I kill it?
     // ORRRR I just make the lever to reset the puzzle?
 
+    // this is gonna need a lot of reworking for when I want to add more interactions
+
+    // FUCK man I can't scale the puzzles now or else the ends don't place correctly
+
     int counter;
 
     static public PlantPuzzle instance;
@@ -45,6 +49,9 @@ public class PlantPuzzle : MonoBehaviour
     int ind;
 
     public SideBrain sideOwner;
+
+    [HideInInspector]
+    public bool shouldResetWhenDone;
 
     private void OnEnable() // noice, feels wrong for some reoson lmao
     {
@@ -79,7 +86,9 @@ public class PlantPuzzle : MonoBehaviour
     {
         cCount = transform.childCount; // quick way to get child Count // AHH no more children cause the level is children
 
-        Vector3 startPoint = transform.position; // first branch starts at the root
+        //Vector3 startPoint = transform.position; // first branch starts at the root
+
+        Vector3 startPoint = Vector3.zero;
 
         char[] cStr = t.ToCharArray();
 
@@ -100,6 +109,9 @@ public class PlantPuzzle : MonoBehaviour
             {
                 if (emptyBranches[ind].empty)
                 {
+                    // nah man I think the whole issue is that its just a global thing, we're even setting up the math to be that way
+
+                    //print(emptyBranches[ind].end);
                     startPoint = emptyBranches[ind].end; // I think this is a thing
                     emptyBranches[ind].empty = false; // okay maybe it has to do with being false and stuff too?
 
@@ -107,8 +119,12 @@ public class PlantPuzzle : MonoBehaviour
 
                     if (t[0] == '0') MakeStraight(startPoint);
                     if (t[0] == '1') MakeSplit(startPoint);
-                    if (t[0] == '2') MakeFruit(startPoint);
-                    if (t[0] == '3') MakeExtension(startPoint, emptyBranches[ind].start);
+                    if (t[0] == '2') MakeEnd(startPoint);
+                    if (t[0] == '3') MakeExtension(startPoint, emptyBranches[ind].type); // does sending local position mess things up? // wait maybe instead of doing this based on location I can just send a result of what the branch was
+
+                    // shit, the issue is that my lines need to be in world space cause they just stay there
+                    // wait a minute, I'm not actually working with any rotation for the branches and I wonder if that's part of it?
+                    // Like i'm hard setting a start and end and I'm wondering if it'll just autpomatically rotate for me.
                 }
             }
 
@@ -130,9 +146,6 @@ public class PlantPuzzle : MonoBehaviour
         //print(emptyBranches.Count);
 
         cCount = transform.childCount;
-
-
-        
     }
 
     public void UpdateEmptyBranches()
@@ -148,23 +161,47 @@ public class PlantPuzzle : MonoBehaviour
         // these are all of the new branches that we just made and organizes them from left to right
         foreach (BranchInitializer b in branchesToBeAdded)
         {
-            int insertAt = emptyBranches.Count;
+            int insertAt = emptyBranches.Count; // if the branch's x is not left than anything it'll just stay like this
 
-            for (int i = emptyBranches.Count; i > 0; i--)
+            for (int i = emptyBranches.Count; i > 0; i--) // I need this to consider the flippedness // THIS STILL ISN"T FLIPPING
             {
-                if (b.end.x < emptyBranches[i - 1].end.x) insertAt = i - 1;
+                // ideally i can just get local variables here?
+
+                //Vector3 temp1 = Vector3.RotateTowards(b.end, transform.parent.up, Mathf.Deg2Rad * 360, 0);
+
+                //Vector3 temp2 = Vector3.RotateTowards(emptyBranches[i - 1].end, transform.parent.up, Mathf.Deg2Rad * 360, 0);
+
+                Vector3 temp1 = b.transform.localPosition;
+                Vector3 temp2 = emptyBranches[i - 1].transform.localPosition;
+
+               // print(temp1.x + " " + temp2.x); // i think i did it omg // Fuck meee // after a certain point it gets all loop again // bro wtff
+                if (temp1.x < temp2.x) insertAt = i - 1; // wtf no matter the sign is does the same thing
+
+                // what if I do some dumb shit and rotate the vector? actually? not bad
             }
            
             emptyBranches.Insert(insertAt, b);
         }
 
-
-        /////////////////////// CHECK CODE
-        if (CheckIfComplete()) sideOwner.GoToNextPuzzle(); // here is where we set up the code to go to the next section. what's a clean way to get the side brain that houses this puzzle?
-        else // no this is only running if the puzzle is not not complete
+        if (shouldResetWhenDone)
         {
-            CheckIfFull(); // Just cause a puzzle is complete doesn't mean the branches are full?
+            ClearPuzzle();
         }
+        else
+        {
+            /////////////////////// CHECK CODE
+            ///
+
+            // soooo instead of sideowner. we now want to revert back to game controller
+            // the game controller will know the current side that is activated
+            if (CheckIfComplete()) GameController.instance.GoToNextPuzzle(); // here is where we set up the code to go to the next section. what's a clean way to get the side brain that houses this puzzle?
+            else // no this is only running if the puzzle is not not complete
+            {
+                CheckIfFull(); // Just cause a puzzle is complete doesn't mean the branches are full?
+            }
+        }
+
+        shouldResetWhenDone = false;
 
         // these need to be reset, we reset them once they get used the last time
         branchesToBeAdded.Clear();
@@ -193,10 +230,14 @@ public class PlantPuzzle : MonoBehaviour
        // print("in the check for completion function");
         foreach (PlantCondition pc in levelConditions) // we need to ask if at least one condition isn't met, that we don't reset? or what, lets jsut print when the puzzle is done
         {
+            print("how many times does this run"); // okay wait it makes sense i guess to only go once cause that just means that the very first thing isn't being solved
             //print("checking plant conditions");
             // for each condition, ask if its met
             if (!pc.CheckIfMet(fruits, branches)) return false; // for each level condition, I need to send through the whole list of fruits
+            print("does this run");
         }
+
+        print("do we return with true?");
 
         return true;
     }
@@ -209,7 +250,7 @@ public class PlantPuzzle : MonoBehaviour
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + (Vector3.up * transform.localScale.x), this); // this was working the whole time i'm pretty sure
+        bi.Initialize(start, start + (transform.up * transform.localScale.x), "straight", this); // shit okay so we can use just this transform.up and it doesn't change much
         branchesToBeAdded.Add(bi);
         branches.Add(b);
         bi.TurnOnCollider();
@@ -222,7 +263,7 @@ public class PlantPuzzle : MonoBehaviour
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + (((Vector3.up * transform.localScale.x) / branchAngleDiv)) + (Vector3.left * transform.localScale.x), this); // this was working the whole time i'm pretty sure
+        bi.Initialize(start, start + (((transform.up * transform.localScale.x) / branchAngleDiv)) + (-transform.right * transform.localScale.x), "left", this); // this was working the whole time i'm pretty sure
         branchesToBeAdded.Add(bi);
         branches.Add(b);
 
@@ -236,7 +277,7 @@ public class PlantPuzzle : MonoBehaviour
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + (((Vector3.up * transform.localScale.x) / branchAngleDiv)) + (Vector3.right * transform.localScale.x), this); // this was working the whole time i'm pretty sure
+        bi.Initialize(start, start + (((transform.up * transform.localScale.x) / branchAngleDiv)) + (transform.right * transform.localScale.x), "right", this); // this was working the whole time i'm pretty sure
         branchesToBeAdded.Add(bi);
         branches.Add(b);
 
@@ -247,19 +288,20 @@ public class PlantPuzzle : MonoBehaviour
     {
         // maybe I could make an instantiator that ignores the previous branch buddy in the pair
 
-        BranchInitializer b1 = MakeRight(start);
         BranchInitializer b2 = MakeLeft(start);
+        BranchInitializer b1 = MakeRight(start);
         
-        b1.TurnOnCollider();
         b2.TurnOnCollider();
+        b1.TurnOnCollider();
     }
 
-    public void MakeExtension(Vector3 start, Vector3 oldStart) // start is where this new branch will start, old start, is the start position of the branch this one is spawning from, used to decide if this branch should go left right or straight up
+    // omg the extensions don't collide
+    public void MakeExtension(Vector3 start, string oldType) // start is where this new branch will start, old start, is the start position of the branch this one is spawning from, used to decide if this branch should go left right or straight up
     {
         //print("Extension");
         // ask if old start and start are the same
         // if they are, then make a straight branch
-        if (oldStart.x == start.x)
+        if (oldType == "straight") 
         {
             MakeStraight(start);
         }
@@ -268,21 +310,38 @@ public class PlantPuzzle : MonoBehaviour
             BranchInitializer bi = null;
 
             // if oldstart has a bigger x than start, then its going to the left, make a left branch
-            if (oldStart.x > start.x) bi = MakeLeft(start);
-            if (oldStart.x < start.x) bi = MakeRight(start);
+
+            // ah yeah i think this math now needs to look at the right vector of the parent
+
+            //print(start + " " + oldStart);
+
+            //print(start.x);
+            //print(oldStart.x);
+
+            if (oldType == "left") bi = MakeLeft(start);
+            if (oldType == "right") bi = MakeRight(start);
             // i'm making the branches, but not turning on the colliders yet
+
+            //print("this is bi " + bi);
 
             bi.TurnOnCollider();
             // ohh is this why
         }
     }
 
-    public void MakeFruit(Vector3 start) // start point is right actually
+    public void MakeEnd(Vector3 start) // start point is right actually
     {
+        // shit now the fruits are all over the place when it goes upside 
+
         GameObject f = Instantiate(fruitPrefab, transform.position, Quaternion.identity);
         f.transform.localScale = transform.localScale;
         f.transform.SetParent(transform);
-        f.transform.position = start;
+        //print(start + " this is start"); // i'm silly I was just doing things * 0
+        f.transform.localPosition = new Vector3(start.x * transform.right.x, start.y * transform.up.y, 0); // so why is this being all fucky?
+
+        // start is the end of the last branch right?
+
+        // the thing isn't being placed based on the thing anymore
 
         fruits.Add(f); // nice
         // normally I add to the branches to be added list, that could be messing things up? but why?
@@ -305,8 +364,6 @@ public class PlantPuzzle : MonoBehaviour
         fruits.Clear(); // just gotta clear it
         branches.Clear();
 
-        
-
         cCount = transform.childCount;
         for (int i = cCount - 1; i >= 0; i--) // start from the highest child, count down to 0
         {
@@ -314,6 +371,7 @@ public class PlantPuzzle : MonoBehaviour
 
             //print("is this going?");
             if (!transform.GetChild(i).CompareTag("BranchPuzzleCondition")) Destroy(transform.GetChild(i).gameObject);
+            // instead of destroy we set them to fizzle, but the arrays do clear
         }
 
         ind = 0;

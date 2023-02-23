@@ -13,22 +13,22 @@ public class SideManager : InteractableParent
     // I'll need a reference to the input thing with a list of lights
     // i'll get the number and then use that with a for loop
 
+    // Is there a place where I can know if all sides are completed
+
     static public SideManager instance;
 
-    public Transform frontSide, backSide, rightSide, leftSide, topSide, bottomSide;
+    //public Transform frontSide, backSide, rightSide, leftSide, topSide, bottomSide; // but i feel like its smarter to have them segmented out like this?
+    Side[] sides;
     Transform[] tsides;
     SideBrain[] psides;
 
     [HideInInspector]
     public Transform closestSide;
 
-    [HideInInspector]
-    public bool projecting;
-    [HideInInspector]
-    public bool focused;
-
     // this is utter chaos but I think its good for now
-    public PlantPuzzle currentlyActivePuzzle;
+    //public PlantPuzzle currentlyActivePuzzle;
+
+    Tesseract t;
 
     // I wonder if this is where we need to do our game controller code now?
 
@@ -37,12 +37,38 @@ public class SideManager : InteractableParent
         if (instance == null) instance = this;
         else Destroy(gameObject);
 
+        t = GameController.instance.tesseract;
 
+        sides = new Side[6];
+
+        for (int i = 0; i < 6; i++)
+        {
+            sides[i] = GameController.instance.sides[i];
+        }
+
+        psides = new SideBrain[6];
+
+        for (int i = 0; i < 6; i++)
+        {
+            psides[i] = sides[i].projection;
+        }
+
+        tsides = new Transform[6];
+
+        for (int i = 0; i < 6; i ++)
+        {
+            tsides[i] = sides[i].projection.transform;
+        }
+
+        /*
         tsides = new Transform[]
         {
             frontSide, backSide, rightSide, leftSide, topSide, bottomSide
         };
 
+        */
+       
+        /*
         psides = new SideBrain[]
         {
             frontSide.GetComponent<SideBrain>(),
@@ -52,6 +78,7 @@ public class SideManager : InteractableParent
             topSide.GetComponent<SideBrain>(),
             bottomSide.GetComponent<SideBrain>()
         };
+        */
     }
 
     public void FlickerSides()
@@ -65,11 +92,11 @@ public class SideManager : InteractableParent
     public override void SetSwitch(bool on)
     {
         // here's where we turn on the stuff again
-        projecting = on;
+        t.projecting = on;
 
-        if (projecting)
+        if (t.projecting)
         {
-            if (focused)
+            if (t.focused)
             {
                 TurnOnFocusedSide();
             }
@@ -87,11 +114,11 @@ public class SideManager : InteractableParent
     public override void DoSomethingButton(GameObject theButton)
     {
         // focus or up focus
-        focused = !focused;
+        t.focused = !t.focused;
 
-        if (projecting)
+        if (t.projecting)
         {
-            if (focused)
+            if (t.focused)
             {   
                 TurnOnFocusedSide();
             }
@@ -107,25 +134,22 @@ public class SideManager : InteractableParent
         // i can ask though if the value of f is a distance from 0
         float n = Mathf.Abs(f) - 30;
 
-        print(n);
+        //print(n);
 
         // this code is supposed to unfocus the cube when you move the dials, the goal is to make it so that you need to move the dials a certain amount before things happen
 
         if (Mathf.Abs(n) > .5f)
         {
-            if (Tesseract.instance != null)
+            if (!t.needsToUpright)
             {
-                if (!Tesseract.instance.needsToUpright)
+                if (t.focused)
                 {
-                    if (focused)
-                    {
-                        focused = false;
+                    t.focused = false;
 
-                        if (projecting)
-                        {
-                            TurnOnAll(); // ugh okay this is not going to work
-                                         // this is probably what is turning everything back on
-                        }
+                    if (t.projecting)
+                    {
+                        TurnOnAll(); // ugh okay this is not going to work
+                                        // this is probably what is turning everything back on
                     }
                 }
             }
@@ -152,15 +176,15 @@ public class SideManager : InteractableParent
 
     void TurnOnFocusedSide()
     {
+        // right, all that it comes down to is setting the currently active PUZZZLE and then turning on that side, so we can maybe call these functions from the game controller? at some point we need to get the side brain in the gc scripts
         foreach (SideBrain pb in psides)
         {
             if (closestSide != pb.transform) pb.SetState(false);
             else
             {
-
                 foreach (PlantPuzzle pp in pb.puzzles) // very gross but this is how we can set the currently active puzzle
                 {
-                    if (pp.gameObject.activeInHierarchy) currentlyActivePuzzle = pp;
+                    if (pp.gameObject.activeInHierarchy) GameController.instance.currentPuzzle = pp; // this should never run, which I think is good
                 }
 
                 pb.SetState(true);
@@ -172,17 +196,21 @@ public class SideManager : InteractableParent
     {
         float shortestDistance = 9999;
         closestSide = null;
+        GameController.instance.focusedSide = null;
 
         Vector3 cameraPos = Camera.main.transform.position;
 
-        foreach (Transform side in tsides)
+        for (int i = 0; i < sides.Length; i ++)
         {
-            if (Vector3.Distance(side.position, cameraPos) < shortestDistance)
+            if (Vector3.Distance(tsides[i].position, cameraPos) < shortestDistance)
             {
-                closestSide = side;
-                shortestDistance = Vector3.Distance(side.position, cameraPos);
+                GameController.instance.focusedSide = sides[i];
+                closestSide = tsides[i];
+                shortestDistance = Vector3.Distance(tsides[i].position, cameraPos);
             }
         }
+        // this can't work anymore
+        //GameController.instance.focusedSide = closestSide;
     }
 
     public Vector3 GetRotationToClosestSide()

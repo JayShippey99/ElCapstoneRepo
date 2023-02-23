@@ -23,13 +23,32 @@ public class FullInputController : InteractableParent
 
     //  I wanna make it so that there's no final blips that give more signals
 
+    // if you are focused and looking at the intel, there are no lights on
+
     public SideManager sm;
+    public GameObject laser;
+    LaserBrain lb;
+
+    bool laserOn;
+    float laserTimer = .25f;
+
+    Tesseract t;
 
     int lightsOnNum;
 
+    PlantPuzzle currentPuzzle;
+
+    private void Start()
+    {
+        t = GameController.instance.tesseract;
+
+        lb = laser.GetComponent<LaserBrain>();
+    }
+
     private void Update()
     {
-        
+        currentPuzzle = GameController.instance.currentPuzzle;
+
         if (readingInput)
         {
             //print("hello?");
@@ -39,38 +58,57 @@ public class FullInputController : InteractableParent
             {
                 //print("does this ever go?");
                 readTimer = 0;
-                if (currentIndex + 1 < output.Length) currentIndex++;
-                else
-                {
-                    //print("is this possibly a one time thing?");
-                    DoneReadingInput();
-                    return;
-                }
 
-                print(output[currentIndex]);
-                if (sm.focused)
+                //print(output[currentIndex]);
+                if (t.focused)
                 {
                     //FMODUnity
                     RuntimeManager.PlayOneShot("event:/LaserFire");
-                    print("should be doing the noise");
-                    
-                    sm.currentlyActivePuzzle.MakeBranches(output[currentIndex].ToString());
+                    //print("enable");
+                    lb.SetColor(output[currentIndex]);
+                    EnableLaser();
+                    //print("should be doing the noise");
+
+                    if (currentPuzzle != null) currentPuzzle.MakeBranches(output[currentIndex].ToString());
                 }
                 else
                 {
                     sm.FlickerSides();
                     RuntimeManager.PlayOneShot("event:/LaserFire");
-                    print("should be doing the noise");
+                    lb.SetColor(output[currentIndex]);
+                    EnableLaser();
+                    //print("should be doing the noise");
                 }
+
+                if (currentIndex + 1 < output.Length) currentIndex++;
+                else
+                {
+
+                    //print("is this possibly a one time thing?");
+                    DoneReadingInput();
+                    return;
+                }
+
+                
             }
         }
 
-        if (sm.projecting)
+        if (t.projecting) // ah okay so this is controlling how many lights are on and runs all the time
         {
-            if (!sm.focused)
+            if (t.focused)
             {
-                // do a constant check of which side is toward the camera
-                // NO because it only matters when I focus and then when I focus i know
+                // when you're focused and projecting
+                TurnAllLightsOff();
+                if (currentPuzzle != null) // this needs to be here though
+                {
+                    lightsOnNum = currentPuzzle.emptyBranches.Count;
+                    if (currentPuzzle.emptyBranches.Count == 0) lightsOnNum = 1;
+                    TurnLightsOnForEmpties(lightsOnNum);
+                }
+            }
+            else
+            {
+                // when you're projecting but not focused, set all lights to on and lightonnum to 8
 
                 foreach (_Light l in lights)
                 {
@@ -79,19 +117,35 @@ public class FullInputController : InteractableParent
 
                 lightsOnNum = 8; // it seems like this part of the code is running when I hit the focus button?
             }
-            else
-            {
-                // here we need to know the empty branch amount of the current puzzle
-                TurnAllLightsOff();
-                lightsOnNum = sm.currentlyActivePuzzle.emptyBranches.Count;
-                if (sm.currentlyActivePuzzle.emptyBranches.Count == 0) lightsOnNum = 1;
-                TurnLightsOnForEmpties(lightsOnNum);
-            }
         }
         else
         {
             TurnAllLightsOff();
         }
+
+        if (laserOn)
+        {
+            //print("should be on");
+            if (laserTimer > 0) laserTimer -= Time.deltaTime;
+            else
+            {
+                //print("turn off");
+                DisableLaser();
+            }
+        }
+    }
+
+    void EnableLaser()
+    {
+        laser.SetActive(true);
+        laserOn = true;
+        laserTimer = .25f;
+    }
+
+    void DisableLaser()
+    {
+        laser.SetActive(false);
+        laserOn = false;
     }
 
     void TurnLightsOnForEmpties(int n)
@@ -108,6 +162,8 @@ public class FullInputController : InteractableParent
         {
             l.SetLight(false);
         }
+
+        lightsOnNum = 0;
     }
 
     public override void DoSomethingButton(GameObject theButton) // the button click is only once, we then need it to start reading
@@ -119,33 +175,23 @@ public class FullInputController : InteractableParent
 
             output = "";
 
-            for (int i = 0; i < lightsOnNum; i++) // I guess we can just hardwire this to 8
+            for (int i = 0; i < lightsOnNum; i++) // when you click the send button, you ask how many lights are on and only get that length of output
             {
                 output = output + inputs[i].tmp.text;
             }
 
             //print(output);
 
-            foreach (BinaryInputBrain bib in inputs)
+            foreach (BinaryInputBrain bib in inputs) // you clear the inputs back to displaying 0s
             {
                 bib.Clear();
             }
 
-            if (output.Length > 0)
+            // technically I don't really want any of this to run yet
+            if (lightsOnNum > 0)
             {
                 readingInput = true;
-
                 currentIndex = 0;
-
-                print(output[currentIndex]);
-                if (sm.focused) sm.currentlyActivePuzzle.MakeBranches(output[currentIndex].ToString());
-                else // if NOT focused, flicker everything
-                {
-                    sm.FlickerSides();
-                }
-
-                RuntimeManager.PlayOneShot("event:/LaserFire");
-                print("should be doing the noise");
             }
         }
 
@@ -154,7 +200,7 @@ public class FullInputController : InteractableParent
     void DoneReadingInput()
     {
         readingInput = false;
-        sm.currentlyActivePuzzle.UpdateEmptyBranches();
+        if (currentPuzzle != null) currentPuzzle.UpdateEmptyBranches();
     }
 
 }

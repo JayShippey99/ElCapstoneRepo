@@ -10,17 +10,21 @@ public class _Button : MonoBehaviour
     public Animator anim;
     private void OnMouseDown()
     {
-        foreach(InteractableParent ip in objs)
+        if (GameController.instance.cutscene == false)
         {
-            ip.ToggleSomethingButton(ip.gameObject);
-            ip.DoSomethingButton(this.gameObject);
+            foreach (InteractableParent ip in objs)
+            {
+                ip.ToggleSomethingButton(ip.gameObject);
+                ip.DoSomethingButton(this.gameObject);
 
-           
+
+            }
+
+            RuntimeManager.PlayOneShot("event:/ButtonPress");
+
+            //print("button");
+            anim.SetTrigger("Press");
+
         }
-
-        RuntimeManager.PlayOneShot("event:/ButtonPress");
-
-        //print("button");
-        anim.SetTrigger("Press");
     }
-}
+    }

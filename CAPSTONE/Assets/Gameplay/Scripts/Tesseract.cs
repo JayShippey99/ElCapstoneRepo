@@ -29,8 +29,6 @@ public class Tesseract : InteractableParent
     [HideInInspector]
     public Animator animator;
 
-    public GameObject projectorScreen, projectorBeam;
-
     public float speed; // turn speed
     float turnRightAmount, turnUpAmount;
 
@@ -51,8 +49,6 @@ public class Tesseract : InteractableParent
 
     [HideInInspector]
     public bool focused; // we need to know WHICH side its focused on too I feel like
-    [HideInInspector]
-    public bool projecting;
 
     bool playingSoundLR, playingSoundUD;
     FMOD.Studio.EventInstance turnSoundLR;
@@ -76,8 +72,8 @@ public class Tesseract : InteractableParent
         if (needsToUpright == false)
         {
             // I now need to make it so that the thing unfocuses the moment that I move the thing around
-            TurnRight();
-            TurnUp();
+            //TurnRight();
+            //TurnUp();
         } else
         {
             //print("is this running for some reason?");
@@ -87,7 +83,12 @@ public class Tesseract : InteractableParent
 
             uprightTimer += Time.deltaTime * uprightSpeed;
 
-            if (uprightTimer >= 1) needsToUpright = false;
+            if (uprightTimer >= 1)
+            {
+                // send out the focus function to the full input controller?
+                FullInputController.instance.PuzzleReady();
+                needsToUpright = false;
+            }
         }
     }
 
@@ -110,35 +111,17 @@ public class Tesseract : InteractableParent
         uprightTimer = 0;
 
         rotateTo = sm.GetRotationToClosestSide();
+        FullInputController.instance.Uprighting();
     }
 
     public override void SetSwitch(bool on)
     {
-        projecting = on;
+        //projecting = on;
+        // if true, set trigger one way, if false set trigger for reverse? no, there's only the one
+        animator.enabled = true;
     }
 
-    public void TurnOnProjectorStuff()
-    {
-        projectorScreen.SetActive(true);
-        projectorBeam.SetActive(true);
-    }
 
-    public void TurnOffProjectorStuff()
-    {
-        projectorScreen.SetActive(false);
-        projectorBeam.SetActive(false);
-    }
-
-    public void ReturnToHubState()
-    {
-        //print("remove all puzzles, change animation to floating in place again");
-        //TurnOffProjectorStuff();
-    }
-
-    public void DisableAnimator()
-    {
-        animator.enabled = false;
-    }
 
     void TurnRight()
     {
@@ -204,6 +187,7 @@ public class Tesseract : InteractableParent
         {
             turnRightAmount = f + 30;
 
+            TurnRight();
             if (Mathf.Abs(turnRightAmount) > 1f)
             {
                 StartTurnSound(turnRightAmount, true);
@@ -211,6 +195,7 @@ public class Tesseract : InteractableParent
             }
             else
             {
+               
                 StopTurnSound(true);
                 turnRightAmount = 0;
             }
@@ -220,7 +205,7 @@ public class Tesseract : InteractableParent
         {
             turnUpAmount = f - 30;
             //turnSound.setParameterByName("TurnAmount", turnUpAmount / 20);
-
+            TurnUp();
             if (Mathf.Abs(turnUpAmount) > 1f)
             {
                 StartTurnSound(turnUpAmount, false);

@@ -29,7 +29,7 @@ public class _Light : InteractableParent
     // get ref to material so that it can change individually
     MeshRenderer lMat;
 
-    private void Start()
+    public void Awake()
     {
         lMat = GetComponent<MeshRenderer>();
 
@@ -109,7 +109,6 @@ public class _Light : InteractableParent
             blinkCounter = 0;
             timer = 0;
             toggleTimer = onTime; // when the time reaches the time + the amount of time it should be on
-
         }
     }
 

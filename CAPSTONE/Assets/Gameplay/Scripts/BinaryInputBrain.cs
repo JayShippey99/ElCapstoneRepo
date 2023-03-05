@@ -1,42 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class BinaryInputBrain : InteractableParent
 {
+    public _Light light;
+
     [HideInInspector]
-    public TextMeshProUGUI tmp;
+    public Image img;
+
+    public Sprite[] particles;
+    [HideInInspector]
+    public int counter;
+
+    [HideInInspector]
+    public bool showing;
     
     void Start()
     {
-        tmp = GetComponent<TextMeshProUGUI>();
-        Clear();
+        img = GetComponent<Image>();
+        Hide();
     }
 
     public override void DoSomethingButton(GameObject theButton)
     {
-        string t = tmp.text;
-        if (t == "0")
-        {
-            tmp.text = "1";
-        }
-        else if (t == "1")
-        {
-            tmp.text = "2";
-        }
-        else if (t == "2")
-        {
-            tmp.text = "3";
-        }
-        else if (t == "3")
-        {
-            tmp.text = "0";
-        }
+        counter++;
+        if (counter >= particles.Length) counter = 0;
+
+        print(particles.Length + " " + particles[counter]);
+        img.sprite = particles[counter];
     }
 
     public void Clear()
     {
-        tmp.text = "0";
+        counter = 0;
+        img.sprite = particles[0];
+    }
+
+    public void Show() // What we'll do is just send in which image from the input controller
+    {
+        showing = true;
+        light.SetLight(true);
+        img.enabled = true;
+    }
+
+    public void ResetIt()
+    {
+        Clear();
+        Show();
+    }
+
+    public void Hide()
+    {
+        showing = false;
+        light.SetLight(false);
+        img.enabled = false;
     }
 }

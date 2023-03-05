@@ -24,7 +24,7 @@ public class BranchInitializer : MonoBehaviour
         //localEnd = end;
 
         lr = GetComponent<LineRenderer>(); // ah so this never worked,
-                                           
+
         // i think set position needs to be more local or something
         lr.SetPosition(0, start); // issue now is gonna be having them change based on ui vs world, but what I could do is either use some screen to world point math OR ,just make it a world canvas because in the end that's what it'll be on our cube
         lr.SetPosition(1, end); // instead of 1 lets have it be scale
@@ -59,7 +59,7 @@ public class BranchInitializer : MonoBehaviour
             RaycastHit2D r = Physics2D.Linecast(end + transform.parent.position, start + transform.parent.position); // is the branch hitting itself?? // it might just be hitting itself?
 
             LineRenderer hitBranch = r.collider.GetComponent<LineRenderer>();  // ohhh I'm doing it here that's what's going on
-            
+
             LineRenderer thisBranch = GetComponent<LineRenderer>();
 
             //print(hitBranch.gameObject.name + " this was hit by " + gameObject.name); // its hitting itself wtf
@@ -76,10 +76,8 @@ public class BranchInitializer : MonoBehaviour
                 pp.shouldResetWhenDone = true;
             }
         }
-        else
-        {
-           //print("no hit?");
-        }
+
+        StartCoroutine(Fizzle(1));
 
         // maybe we just turn off the collider until its like here // aha noice okay so this does work a little bit
         // i think the next issue is making it so that the branching actually works when its right up against the pixel
@@ -90,5 +88,27 @@ public class BranchInitializer : MonoBehaviour
         ec.enabled = true;
     }
 
-    
+    public IEnumerator Fizzle(float dir) // 1 or -1
+    {
+        float progress = -1;
+
+        if (dir < 0) progress = 1;
+        else progress = 0;
+
+        Material m = GetComponent<LineRenderer>().material;
+
+        while ((progress < 1 && dir == 1) || (progress > 0 && dir == -1))
+        {
+            //print("run me! " + progress + " " + dir);
+            progress += Time.deltaTime * dir;
+            m.SetFloat("_FizzleAmount", progress);
+
+            yield return null;
+        }
+
+        //print("below everything");
+        // this will only come out to 0 when its going away
+        //print(gameObject + " is this goddamn null?"); // it seems to be wanting to go away twice
+        if (progress <= 0) Destroy(gameObject);
+    }
 }

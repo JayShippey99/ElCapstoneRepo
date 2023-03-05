@@ -39,7 +39,7 @@ public class PlantCondition : MonoBehaviour
 
                 middle = new Vector3(middle.x * transform.parent.right.x, middle.y * transform.parent.up.y, middle.z * transform.parent.forward.z);
 
-                print(Vector3.Distance(transform.localPosition, middle) + " " + transform.localPosition + " " + middle); // yeah I think I gotta factor in the middle being calculated too using the angle
+                //print(Vector3.Distance(transform.localPosition, middle) + " " + transform.localPosition + " " + middle); // yeah I think I gotta factor in the middle being calculated too using the angle
 
                 if (Vector3.Distance(transform.localPosition, middle) < .01) return true; // honestly we don't need to worry about what it is, we can just ask for both points right? // actually holy shit I think we can still just use the middle rule for the branches too, but wait no
             }

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class TesseractAnimationEvents : MonoBehaviour
 {
+    public void EndIntroSeq()
+    {
+        GameController.instance.EndIntroSeq();
+    }
+
     public void ShowEndScreen()
     {
         GameController.instance.ShowEndScreen();

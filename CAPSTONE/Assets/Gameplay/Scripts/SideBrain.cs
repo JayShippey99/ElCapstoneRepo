@@ -8,12 +8,14 @@ public class SideBrain : InteractableParent
 
     ParticleSystem particles;
 
-    float visLev, prevVisLev;
+    [HideInInspector]
+    public bool unlocked;
 
     float pbOn = .53f;
     float pOn = 1f;
 
-    bool isOn;
+    [HideInInspector]
+    public bool isOn;
     float progress;
 
     public float speedOn, speedOff;
@@ -67,8 +69,8 @@ public class SideBrain : InteractableParent
     {
         //print(m.GetFloat("_FlickerAmount"));
 
-        if (!idle) {
-
+        if (!idle)
+        {
             if (isOn)
             {
                 //print("do it?");
@@ -79,7 +81,7 @@ public class SideBrain : InteractableParent
                     particles.Play();
                     idle = true;
                 }
-        }
+            }
             else
             {
                 if (progress > 0) progress -= Time.deltaTime * speedOff;
@@ -100,7 +102,6 @@ public class SideBrain : InteractableParent
 
         if (flicker)
         {
-
             flickerAmount = Mathf.Clamp(flickerAmount, 0, 1);
 
             Flicker();
@@ -113,51 +114,12 @@ public class SideBrain : InteractableParent
         }
     }
 
-    // 
-    /*
-    public void GoToNextPuzzle() // we've moved this
-    {
-        // turn off current puzzle, turn on the next puzzle
-        for (int i = 0; i < puzzles.Length - 1; i++) // puzzles will be the right length to only check for the puzzles
-        {
-            if (puzzles[i].gameObject.activeInHierarchy)
-            {
-                puzzles[i].gameObject.SetActive(false);
-                puzzles[i + 1].gameObject.SetActive(true);
-                // well fuck now we also need to tell the side manager what's the current puzzle
-                SideManager.instance.currentlyActivePuzzle = puzzles[i + 1];
-
-                // okay so the issue with this is that puzzles can't contain the alien image in the list
-                return;
-            }
-        }
-
-        // if its the last puzzle then this will run
-        print("ALL PUZZLES FOR THIS SIDE ARE DONE");
-        // here is where we would run the sequence for solving the side
-        // and here is where we would show the constellation
-        puzzles[puzzles.Length - 1].gameObject.SetActive(false);
-        SideManager.instance.currentlyActivePuzzle = null;
-        alienIntel.SetActive(true); // lowkey with the way that I did these sticky notes, I might as well have just done the same thing for theese
-
-        // get sticky note, play the animation
-
-        stickyNote.SetTrigger("Release");
-    }
-    */
-
     public void SetState(bool on)
     {
+        print("turning on");
         isOn = on;
         idle = false;
     }
-
-    // how do we now get it to react to the button press so that it knows to turn on or off
-    // okay set switch doesn't ONLY need to come from a switch, we CAN also call it from other things
-
-    // should we make a connection to the button here?
-    // and put all these things in the list of the focus button?
-    // that means that like each one of them would be asking the 
 
     public override void DoSomethingButton(GameObject theButton) // This is for focus button
     {

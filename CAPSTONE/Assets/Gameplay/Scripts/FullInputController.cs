@@ -5,123 +5,79 @@ using FMODUnity;
 
 public class FullInputController : InteractableParent
 {
-    public BinaryInputBrain[] inputs;
-    public _Light[] lights;
+    // so what's the new strcutre here. we send the output string in the end. which is just all of the things put together into one, in order. so we need to update output as we send a new one to the screen
+
+
+
+    static public FullInputController instance;
+
+    public BinaryInputBrain[] screens;
+    public ClusterScreenBrain csb;
 
     string output;
 
     bool readingInput;
+    bool canInput;
     float readTimer;
     public float timeForEachInput;
     int currentIndex; // counter to get each binary at a time
 
-    // I kind of want to just hook up the interactions now instead of working on the delays and stuff
-    // With the input string thing, I needed a instance ref to the puzzles
-    // I guess I can still do that??
-
-    // lets put a delay on each thing being sent even though that means it'll only place on the end
-
-    //  I wanna make it so that there's no final blips that give more signals
-
-    // if you are focused and looking at the intel, there are no lights on
-
     public SideManager sm;
     public GameObject laser;
     LaserBrain lb;
+    public _Light canSendLight;
+
 
     bool laserOn;
     float laserTimer = .25f;
 
     Tesseract t;
 
-    int lightsOnNum;
+    int screensOnNum;
 
     PlantPuzzle currentPuzzle;
 
+    public bool sendWithoutFocus;
+
     private void Start()
     {
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+
         t = GameController.instance.tesseract;
 
         lb = laser.GetComponent<LaserBrain>();
+
+
+        if (sendWithoutFocus)
+        {
+            canInput = true;
+            canSendLight.SetLight(true);
+            TurnAllScreensOn(); // okay I don't think all the lights run their code before this which breaks things
+        }
     }
 
     private void Update()
     {
         currentPuzzle = GameController.instance.currentPuzzle;
 
-        if (readingInput)
-        {
-            //print("hello?");
-            readTimer += Time.deltaTime;
+        if (readingInput) ReadInput();
 
-            if (readTimer >= timeForEachInput)
-            {
-                //print("does this ever go?");
-                readTimer = 0;
 
-                //print(output[currentIndex]);
-                if (t.focused)
-                {
-                    //FMODUnity
-                    RuntimeManager.PlayOneShot("event:/LaserFire");
-                    //print("enable");
-                    lb.SetColor(output[currentIndex]);
-                    EnableLaser();
-                    //print("should be doing the noise");
+        canSendLight.SetLight(canInput);
 
-                    if (currentPuzzle != null) currentPuzzle.MakeBranches(output[currentIndex].ToString());
-                }
-                else
-                {
-                    sm.FlickerSides();
-                    RuntimeManager.PlayOneShot("event:/LaserFire");
-                    lb.SetColor(output[currentIndex]);
-                    EnableLaser();
-                    //print("should be doing the noise");
-                }
 
-                if (currentIndex + 1 < output.Length) currentIndex++;
-                else
-                {
-
-                    //print("is this possibly a one time thing?");
-                    DoneReadingInput();
-                    return;
-                }
-
-                
-            }
-        }
-
-        if (t.projecting) // ah okay so this is controlling how many lights are on and runs all the time
+        if (canInput)
         {
             if (t.focused)
             {
-                // when you're focused and projecting
-                TurnAllLightsOff();
-                if (currentPuzzle != null) // this needs to be here though
+                if (currentPuzzle != null) // so this updates every frame, cool
                 {
-                    lightsOnNum = currentPuzzle.emptyBranches.Count;
-                    if (currentPuzzle.emptyBranches.Count == 0) lightsOnNum = 1;
-                    TurnLightsOnForEmpties(lightsOnNum);
+                    TurnScreensOnForPaths(); // so we don't need to worry about doing this the moment it focuses
                 }
             }
-            else
-            {
-                // when you're projecting but not focused, set all lights to on and lightonnum to 8
-
-                foreach (_Light l in lights)
-                {
-                    l.SetLight(true);
-                }
-
-                lightsOnNum = 8; // it seems like this part of the code is running when I hit the focus button?
-            }
         }
-        else
-        {
-            TurnAllLightsOff();
-        }
+
 
         if (laserOn)
         {
@@ -132,6 +88,85 @@ public class FullInputController : InteractableParent
                 //print("turn off");
                 DisableLaser();
             }
+        }
+    }
+
+    void UpdateOutput(string input)
+    {
+        output = output + input;
+    }
+
+    void SendToClusterScreen(BinaryInputBrain bib)
+    {
+        // here we hide a specific screen
+        bib.Hide();
+
+        // get cluster screen and run the function of AddToScreen and send bib.img.sprite?
+        // running that function will just make a game object itself over there but use the image
+        csb.AddParticle(bib.img.sprite);
+    }
+
+    void ReadInput()
+    {
+        readTimer += Time.deltaTime;
+
+        if (readTimer >= timeForEachInput)
+        {
+            readTimer = 0;
+            if (screens[currentIndex + 1].showing) currentIndex++; // right and we use output.lenth to determing how many to send, but since we're always updating which paths and screens are there
+            else
+            {
+                DoneReadingInput();
+                return;
+            }
+
+
+            if (t.focused) // is there a point to me doing this here?
+            {
+                //FMODUnity
+                UpdateOutput(screens[currentIndex].counter.ToString());
+                SendToClusterScreen(screens[currentIndex]);
+            }
+
+            
+
+            // i need this to update one more time
+
+
+        }
+    }
+
+    public void Uprighting()
+    {
+        canInput = false;
+        TurnAllScreensOff();
+        canSendLight.SetLight(false);
+    }
+
+    public void PuzzleReady() // yeah we need this, when it focuses
+    {
+        print(currentPuzzle);
+        if (currentPuzzle != null)
+        {
+            ResetAllScreens();
+            canInput = true; // NOO
+        }
+    }
+
+    public void SidesUnfocus()
+    {
+        if (sendWithoutFocus)
+        {
+            readingInput = false;
+            TurnAllScreensOn();
+            canInput = true;
+        }
+        else
+        {
+            readingInput = false;
+            TurnAllScreensOff();
+            ResetClusterScreen();
+            canInput = false;
         }
     }
 
@@ -148,59 +183,115 @@ public class FullInputController : InteractableParent
         laserOn = false;
     }
 
-    void TurnLightsOnForEmpties(int n)
+    void ResetClusterScreen() // this might just need to be in the other script
     {
-        for (int i = 0; i < n; i++)
+        csb.Clear();
+    }
+
+    void GetScreensOnNum()
+    {
+        if (currentPuzzle != null)
         {
-            lights[i].SetLight(true);
+            screensOnNum = currentPuzzle.emptyBranches.Count;
+            if (currentPuzzle.emptyBranches.Count == 0) screensOnNum = 1;
         }
     }
 
-    void TurnAllLightsOff()
+    void ResetAllScreens()
     {
-        foreach (_Light l in lights)
-        {
-            l.SetLight(false);
-        }
+        GetScreensOnNum();
 
-        lightsOnNum = 0;
+        for (int i = 0; i < screensOnNum; i ++)
+        {
+            screens[i].ResetIt();
+        }
+    }
+
+    void TurnScreensOnForPaths()
+    {
+        TurnAllScreensOff();
+
+        GetScreensOnNum();
+
+        for (int i = 0; i < screensOnNum; i++)
+        {
+            screens[i].Show(); // ohhh intereting
+        }
+    }
+
+    void TurnAllScreensOn()
+    {
+        foreach (BinaryInputBrain bib in screens)
+        {
+            bib.Show();
+        }
+    }
+
+    void TurnAllScreensOff()
+    {
+        foreach (BinaryInputBrain bib in screens)
+        {
+            bib.Hide();
+        }
     }
 
     public override void DoSomethingButton(GameObject theButton) // the button click is only once, we then need it to start reading
     {
-        // omg if there are no lights on this breaks
+        if (!readingInput && canInput) StartReadingInput();
+    }
 
-        if (!readingInput)
+    void StartReadingInput()
+    {
+        output = "";
+        currentIndex = 0;
+        readingInput = true;
+        canInput = false;
+
+        if (t.focused) // is there a point to me doing this here?
         {
-
-            output = "";
-
-            for (int i = 0; i < lightsOnNum; i++) // when you click the send button, you ask how many lights are on and only get that length of output
-            {
-                output = output + inputs[i].tmp.text;
-            }
-
-            //print(output);
-
-            foreach (BinaryInputBrain bib in inputs) // you clear the inputs back to displaying 0s
-            {
-                bib.Clear();
-            }
-
-            // technically I don't really want any of this to run yet
-            if (lightsOnNum > 0)
-            {
-                readingInput = true;
-                currentIndex = 0;
-            }
+            //FMODUnity
+            UpdateOutput(screens[currentIndex].counter.ToString());
+            SendToClusterScreen(screens[currentIndex]);
         }
+    }
 
+    IEnumerator DelayBeforeLightOnAgain()
+    {
+        yield return new WaitForSeconds(1f);
+
+        canSendLight.SetLight(true);
+        canInput = true;
+    }
+
+    void FireCluster()
+    {
+        // also run clear in the cluster screen
+        csb.Clear();
+        StartCoroutine(LaserDelay());
+    }
+
+    IEnumerator LaserDelay()
+    {
+        yield return new WaitForSeconds(.25f);
+
+        if (currentPuzzle != null) currentPuzzle.MakeBranches(output.ToString());
+        RuntimeManager.PlayOneShot("event:/LaserFire");
+        //lb.SetColor(output[currentIndex]);
+        EnableLaser();
     }
 
     void DoneReadingInput()
     {
+
+        
+
         readingInput = false;
-        if (currentPuzzle != null) currentPuzzle.UpdateEmptyBranches();
+        //if (currentPuzzle != null) currentPuzzle.UpdateEmptyBranches();
+        StartCoroutine(DelayBeforeLightOnAgain());
+
+        ResetAllScreens();
+        FireCluster();
+        // fire cluster
     }
 
 }

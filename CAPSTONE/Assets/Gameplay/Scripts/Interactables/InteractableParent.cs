@@ -38,4 +38,9 @@ public class InteractableParent : MonoBehaviour
     {
 
     }
+
+    public virtual void LeverPulled()
+    {
+
+    }
 }

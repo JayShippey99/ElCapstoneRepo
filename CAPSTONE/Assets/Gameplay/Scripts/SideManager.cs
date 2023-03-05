@@ -60,25 +60,6 @@ public class SideManager : InteractableParent
             tsides[i] = sides[i].projection.transform;
         }
 
-        /*
-        tsides = new Transform[]
-        {
-            frontSide, backSide, rightSide, leftSide, topSide, bottomSide
-        };
-
-        */
-       
-        /*
-        psides = new SideBrain[]
-        {
-            frontSide.GetComponent<SideBrain>(),
-            backSide.GetComponent<SideBrain>(),
-            rightSide.GetComponent<SideBrain>(),
-            leftSide.GetComponent<SideBrain>(),
-            topSide.GetComponent<SideBrain>(),
-            bottomSide.GetComponent<SideBrain>()
-        };
-        */
     }
 
     public void FlickerSides()
@@ -91,24 +72,18 @@ public class SideManager : InteractableParent
 
     public override void SetSwitch(bool on)
     {
+        
         // here's where we turn on the stuff again
-        t.projecting = on;
 
-        if (t.projecting)
+        if (t.focused)
         {
-            if (t.focused)
-            {
-                TurnOnFocusedSide();
-            }
-            else
-            {
-                TurnOnAll();
-            }
+            TurnOnFocusedSide();
         }
         else
         {
-            TurnOffAll();
+            Unfocus();
         }
+        
     }
 
     public override void DoSomethingButton(GameObject theButton)
@@ -116,16 +91,13 @@ public class SideManager : InteractableParent
         // focus or up focus
         t.focused = !t.focused;
 
-        if (t.projecting)
+        if (t.focused)
+        {   
+            TurnOnFocusedSide();
+        }
+        else
         {
-            if (t.focused)
-            {   
-                TurnOnFocusedSide();
-            }
-            else
-            {
-                TurnOnAll();
-            }
+            Unfocus();
         }
     }
 
@@ -145,12 +117,7 @@ public class SideManager : InteractableParent
                 if (t.focused)
                 {
                     t.focused = false;
-
-                    if (t.projecting)
-                    {
-                        TurnOnAll(); // ugh okay this is not going to work
-                                        // this is probably what is turning everything back on
-                    }
+                    Unfocus();
                 }
             }
         }
@@ -158,7 +125,7 @@ public class SideManager : InteractableParent
 
     // in here is the first step I think. In here I'm focusing on just one side, but what I also need to do is just have one puzzle be the one that it reacts to.
 
-    void TurnOffAll()
+    void TurnOffAll() // I don't really feel like we'll need this anymore?
     {
         foreach (SideBrain pb in psides)
         {
@@ -166,28 +133,38 @@ public class SideManager : InteractableParent
         }
     }
 
-    void TurnOnAll()
+    public void Unfocus() // turns on all sides that are unlocked
     {
         foreach (SideBrain pb in psides)
         {
-            pb.SetState(true);
+            if (pb.unlocked) pb.SetState(true);
         }
+
+        // when unfocusing also run the full input controller function for show all or hide all depending on what the bool is
+        FullInputController.instance.SidesUnfocus();
     }
 
     void TurnOnFocusedSide()
     {
         // right, all that it comes down to is setting the currently active PUZZZLE and then turning on that side, so we can maybe call these functions from the game controller? at some point we need to get the side brain in the gc scripts
+
+        GameController.instance.currentPuzzle = null;
+        
         foreach (SideBrain pb in psides)
         {
-            if (closestSide != pb.transform) pb.SetState(false);
-            else
+            if (pb.unlocked)
             {
-                foreach (PlantPuzzle pp in pb.puzzles) // very gross but this is how we can set the currently active puzzle
+                if (closestSide != pb.transform) pb.SetState(false);
+                else
                 {
-                    if (pp.gameObject.activeInHierarchy) GameController.instance.currentPuzzle = pp; // this should never run, which I think is good
-                }
+                    foreach (PlantPuzzle pp in pb.puzzles) // very gross but this is how we can set the currently active puzzle
+                    {
+                        print("does the error happen here?");
+                        if (pp.gameObject.activeInHierarchy) GameController.instance.currentPuzzle = pp; // this should never run, which I think is good
+                    }
 
-                pb.SetState(true);
+                    pb.SetState(true);
+                }
             }
         }
     }
@@ -217,6 +194,11 @@ public class SideManager : InteractableParent
     {
         SetClosestSide();
 
+        Vector3 sideVector = Vector3.zero;
+
+        // get the dot product? no. wait just normalize the position of hte closest side? and return that?
+        sideVector = closestSide.position.normalized;
+
         // activate the trigger for the puzzle. we might be straying away from the game controller lowkey
         switch (closestSide.name)
         {
@@ -240,6 +222,6 @@ public class SideManager : InteractableParent
                 return Vector3.down;
         }
 
-        return Vector3.zero;
+        return sideVector;
     }
 }

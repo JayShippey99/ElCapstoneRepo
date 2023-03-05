@@ -3,29 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMOD;
 using FMODUnity;
+using System.Reflection;
+using System;
+using UnityEngine.Events;
 
 public class GameController : MonoBehaviour
 {
-    // I want the controller now to be in charge of knowing what puzzles go to which side
-    // i'm mainly doing this so that I can keep track of the game state easier, like if all things are completed or not
-    // it'll also help keep track of button presses for pausing and such
+    // so now that the game is linear // the game will be linear BUT I think we could have splits at some points so that both sides help each other be solved
+    // I think I need a function for start intro, start tutorial, start sideX premessage, end,  // do we even need the exit codes? yeah I think it'll just be an easy thing to hook up with our system
 
-    // okay I might need to rethink this, I think that I'm gonna need to shove A TON of code into this one script and it might just not even be cleaner in the end is my concern
-    // I feel like I'm gonna start having EVERYThing move through this script which would just get clunky
+    // gamecontroller will have a runGameCode function, it'll be a big ass switch statament? orrr? maybe instead its, no. swtich statment cause idk if we could run functions through a class[] thing
+    // how does the tutroial play into this?
 
+
+
+    // I need an easy way to trigger gameEvents // game events are the intro, between sides, wait these all mostly sound like dialogue stuff. within those i can send calls to here to do thigns not dialogue related
+    // stuff like adding to the corkboard
+    // the cork board could be its own class
+    // it could store all the paper game objects
+    
+    // what if I do more than one thing with a gameCode?
+
+    // I need a way to say add these papers when the player isn't looking
+    // so I need a function that takes in an array of gameobjects to turn on when you're not looking
+
+    // THE DIALOGUE has the game codes
+    // so I just need a function for each time I need to change something about the world
+    // adding new papers
+    // turning on new sides
+    // activating arrows for the tutorial
+
+    // what does the switch do now? // i think the switch will instead run an animation to spin some things, turn some lights on, and make the tesseract appear in front of the player
+    // omg how tf do we animate a whole scene? if i want to animate a whole scene I'll instead just need to get all the animators of pieces within the scene and trigger the same trigger in each
+
+    // when does the first cutscene stop, after the tesseract becomes shwon, so intro sequence basically, lets make an event that happens at the end of the intro animation that starts the next dialogue, and turns cutscene to off
+    // end introSeq event
 
     public static GameController instance;
-
-    /*
-    public Level[] levels;
-
-    int[][] levelAndSection; // this will keep track of what current level and section I'm on, if level is -1, then i'm in the hub?
-
-    public _Light micLight;
-
-
-    Level currentLevel;
-    */
 
     public Side frontSide, backSide, rightSide, leftSide, topSide, bottomSide;
     [HideInInspector]
@@ -41,7 +55,7 @@ public class GameController : MonoBehaviour
 
     public Animator finalStickNote;
 
-    public GameObject mainMenu;
+    public GameObject mainMenu, hudMenu;
     public GameObject endMenu;
 
     [HideInInspector]
@@ -52,6 +66,29 @@ public class GameController : MonoBehaviour
     [HideInInspector]
     public bool cutsceneHappening;
 
+    PlantPuzzle thisPuzzle, nextPuzzle; // this is just for the delay and change
+
+
+    public CommsBrain cb;
+    
+    // I think I may need to make a bank of all the dialogue I've given and stuff
+    [HideInInspector]
+    public bool tutorial;
+    [Header("Tutorial")]
+    public GameObject[] tutorialArrows;
+
+    public GameEvent[] gameEvents; // i'd like there to be a gameCode + a function name that gets run
+    // select function from drop down?
+
+    [Header("CorkboardPapers")]
+    public Corkboard corkboard;
+
+    [HideInInspector]
+    public bool cutscene;
+
+    [HideInInspector]
+    public int dialogueSectionNum;
+    
     public void Awake()
     {
         if (instance == null) instance = this;
@@ -77,6 +114,7 @@ public class GameController : MonoBehaviour
             //print(s.puzzles.Count + " this is how many puzzles I just added");
         }
 
+        cutscene = true;
         //print(tesseract.animator);
     }
 
@@ -86,104 +124,78 @@ public class GameController : MonoBehaviour
         {
             // bring up menu again
             mainMenu.SetActive(true);
+            hudMenu.SetActive(false);
         }
-    }
 
-
-    public void StartNewLevel(int i)
-    {
-        /*
-        // instead of just activate this thing, run the animation by the trigger name and because of that in the animation, it will have the event in the animation
-        // but for now lets just say fuck it
-
-        // idk just making stuff up at this point
-        if (currentLevel == null)
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            levels[i].sections[0].SetActive(true); // this starts the first puzzle in the list // do this actually lol
-
-            currentLevel = levels[i];
+            //currentPuzzle.ClearPuzzle();
         }
-        //print("start new level");
-        Tesseract.instance.animator.SetTrigger("MoveToProject");
-        // so the puzzle runs now, very good, that should mean that it knows when it won now too
-        */
+        
+        if (corkboard.needsToAdd)
+        {
+            if (corkboard.CanAdd()) corkboard.AddPapers();
+        }
     }
 
-    // does this mean I need to keep track of where I am in the puzzle list?
-    
-    /*
-    public void GoToNextSection() // maybe I can phrase this as "puzzle done"
+    public void IntroSequence()
     {
-        //print("go to next section more than once?");
-        StartCoroutine(DelayAndThenFunction(ChangeSection, 2f));
+        tesseract.animator.enabled = true;
     }
-    */
-    
+
+    public void KillCube()
+    {
+        Destroy(tesseract.gameObject);
+    }
 
     public void GoToNextPuzzle() // do we want to send in which side? or should we already know that?
     {
         //print(focusedSide.puzzles.Count); // the count is fucking 0??
         Side s = focusedSide; // i wonder if this is being set how we want
+        
         // turn off current puzzle, turn on the next puzzle
         for (int i = 0; i < s.puzzles.Count - 1; i++) // puzzles will be the right length to only check for the puzzles
         {
             //print("does this run?");
             if (s.puzzles[i].gameObject.activeInHierarchy)
             {
-                //print("what about this?");
-                s.puzzles[i].gameObject.SetActive(false);
-                s.puzzles[i + 1].gameObject.SetActive(true);
-                // well fuck now we also need to tell the side manager what's the current puzzle
-                //SideManager.instance.currentlyActivePuzzle = s.puzzles[i + 1]; // this will need to change
-                currentPuzzle = s.puzzles[i + 1];
+                // when we do this we need to delay instead
+
+                thisPuzzle = s.puzzles[i];
+                nextPuzzle = s.puzzles[i + 1];
+
+                StartCoroutine(DelayAndThenFunction(Change, 1f)); // you can place after the puzzle is solved
+                // could the puzzle be broken after its done?
 
                 // okay so the issue with this is that puzzles can't contain the alien image in the list
                 return;
             }
         }
+        
+        //s.puzzles[0].gameObject.SetActive(false);
 
         LevelDone(s);
+
+        // I think I need it to unfocus when I solve it?
     }
 
-    void ChangeSection()
+    public void EndIntroSeq()
     {
-        /*
-        //print("how many times does this run?");
-        // OOO wait loop through the levels[] and then the sections[] if a section is active, set the next one to be active and this one off, if there is no next one, then run a level done function
-        foreach (Level l in levels) // for each level is levels? shouldn't it just be for this section? we'll we don't know which section is currently going
-        {
-            for (int i = 0; i < l.sections.Length; i++)
-            {
-                //print(i);
-                GameObject s = l.sections[i];
+        cb.StartDialogueChunk("roomStarted");
+        cutscene = false;
+    }
 
-                if (s.activeInHierarchy)
-                {
-                    // turn it off and set the next one to on, then break I imagine
-                    if (i + 1 < l.sections.Length)
-                    {
-                        // meaning there is another one in the list of sections
-                        s.SetActive(false); // how do I move this code to something with no input?
-                        l.sections[i + 1].SetActive(true);
+    void Change()
+    {
+        PlantPuzzle p1 = thisPuzzle;
+        PlantPuzzle p2 = nextPuzzle;
 
-                       // print("changing sections");
-                        //print("This puzzle name is: " + s.name + " and the next puzzle name is: " + l.sections[i+1]);
-                        //print("turn on new section");
-                        return; // AAAH this might not break all the way out of the loop, maybe that's the issue i feel like level done must still run after some time in the loop
-                    }
-                    else
-                    {
-                        //print("level done");
-                        LevelDone();
-                        return;
-                    }
-                    
-                }
-            }
-            //print("is any of this running?");
-        }
-        //print("is even this running?");
-        */
+        //print("what about this?");
+        p1.gameObject.SetActive(false);
+        p2.gameObject.SetActive(true);
+        // well fuck now we also need to tell the side manager what's the current puzzle
+        //SideManager.instance.currentlyActivePuzzle = s.puzzles[i + 1]; // this will need to change
+        currentPuzzle = p2;
     }
 
     public void ShowEndScreen()
@@ -191,7 +203,7 @@ public class GameController : MonoBehaviour
         endMenu.SetActive(true);
     }
 
-    void StartEndSequence()
+    public void StartEndSequence()
     {
         // rotate back to front again
 
@@ -215,19 +227,14 @@ public class GameController : MonoBehaviour
             if (!s.done) return;
         }
         
-        
-
         print("ALL SIDE ARE COMPLETED YOU DID ITTT");
         allSidesCompleted = true;
-        StartEndSequence();
+        //StartEndSequence();
     }
 
     public void LevelDone(Side s)
     {
-        // if its the last puzzle then this will run
-        //print("ALL PUZZLES FOR THIS SIDE ARE DONE");
-        // here is where we would run the sequence for solving the side
-        // and here is where we would show the constellation
+        // when the whole side is solved
 
         s.puzzles[s.puzzles.Count - 1].gameObject.SetActive(false); // what does this do?
         currentPuzzle = null;
@@ -235,6 +242,9 @@ public class GameController : MonoBehaviour
         s.done = true;
         s.stickyNote.SetTrigger("Release");
         RuntimeManager.PlayOneShot(s.sideSolvedSoundPath);
+
+        RunGameEvent(s.exitCode);
+        // need to get s exitCode here and send it to the runevent funciton
 
         CheckIfAllSidesAreComplete();
     }
@@ -247,6 +257,75 @@ public class GameController : MonoBehaviour
         function();
     }
 
+    public void RunGameEvent(string gameCode)
+    {
+        foreach (GameEvent ge in gameEvents)
+        {
+            if (ge.triggerCode == gameCode)
+            {
+                ge.function.Invoke();
+                return;
+            }
+        }
+    }
+
+    public void SetPapersToAdd()
+    {
+        corkboard.SetPapersToAdd();
+    }
+
+    // I definitely need a tutorial list of gameobjects
+    public void ChangeTutorialStep() // 
+    {
+        for (int i = 0; i < tutorialArrows.Length; i ++)
+        {
+            if (i == tutorialArrows.Length - 1)
+            {
+                //print("not doing it right " + i + " " + (tutorialArrows.Length - 1));
+                tutorialArrows[i].SetActive(false);
+            }
+            else if (tutorialArrows[i].activeInHierarchy)
+            {
+                //print("doign the thing");
+                tutorialArrows[i].SetActive(false);
+                tutorialArrows[i + 1].SetActive(true);
+                return;
+            }
+        }
+    }
+
+    void StartIntro()
+    {
+        cb.StartDialogueSection(cb.dialogueSections[0]);
+    }
+
+    public void StartTutorial()
+    {
+        //cb.StartDialogueChunk("tutorial");
+        tutorialArrows[0].SetActive(true);
+    }
+
+    public void StartSide() // AKA unlock side
+    {
+        SideManager.instance.Unfocus();
+        for (int i = 0; i < sides.Length; i++)
+        {
+            if (sides[i].projection.isOn == false)
+            {
+                sides[i].projection.SetState(true);
+                sides[i].projection.unlocked = true;
+                return;
+            }
+        }
+    }
+
+    public void EndSide()
+    {
+        SideManager.instance.Unfocus(); // I'm gonna do it at the beginning and end of a section just to make sure it's working
+        cb.StartDialogueSection(cb.dialogueSections[dialogueSectionNum]);
+    }
+
+
     public void QuitGame()
     {
         // save all stats here, but also save periodically
@@ -254,6 +333,12 @@ public class GameController : MonoBehaviour
     }
 }
 
+[System.Serializable]
+public class GameEvent
+{
+    public string triggerCode;
+    public UnityEvent function;
+}
 
 [System.Serializable]
 public class Side
@@ -266,7 +351,56 @@ public class Side
     public PlantPuzzle currentPuzzle; // for each side there will be a current puzzle being solved
     public GameObject intel; // maybe this doesn't need to be in the list?
     public Animator stickyNote;
+    public string exitCode;
     [HideInInspector]
     public bool done;
     public string sideSolvedSoundPath;
 }
+
+[System.Serializable]
+public class Corkboard
+{
+    public GameObject[] papersList;
+    [HideInInspector]
+    public List<GameObject> papersToAdd;
+    [HideInInspector]
+    public bool needsToAdd;
+
+    public bool CanAdd()
+    {
+        if (Camera.main.transform.rotation.eulerAngles.y == 0) return true;
+        else return false;
+    }
+
+    public void SetPapersToAdd()
+    {
+        needsToAdd = true;
+
+        foreach (GameObject paper in papersList)
+        {
+            if (paper.activeInHierarchy == false) // it feels sketchy now that i'm looking at it again
+            {
+                papersToAdd.Add(paper);
+                return;
+            }
+        }
+    }
+
+    public void AddPapers()
+    {
+        foreach (GameObject paper in papersToAdd)
+        {
+            paper.SetActive(true);
+        }
+
+        needsToAdd = false;
+
+        papersToAdd.Clear();
+    }
+}
+
+public class Tutorial // part of me is thinking that for each step in the tutorial, no wait, I can just do something twice if I need
+{
+    // each section of the tutorial needs a gameCode
+}
+

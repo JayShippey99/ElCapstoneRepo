@@ -219,9 +219,9 @@ public class SubmitToBoard : MonoBehaviour
         }
         if (GameController.instance != null)
         {
-            if (str == "first") GameController.instance.StartNewLevel(0); // I basically need to just copy the code I have below but relocate it kinda, and find a cleaner system for it
-            if (str == "second") GameController.instance.StartNewLevel(1);
-            if (str == "third") GameController.instance.StartNewLevel(2);
+            //if (str == "first") GameController.instance.StartNewLevel(0); // I basically need to just copy the code I have below but relocate it kinda, and find a cleaner system for it
+            //if (str == "second") GameController.instance.StartNewLevel(1);
+            //if (str == "third") GameController.instance.StartNewLevel(2);
 
             // maybe later I can have something like "run current level script"
         }

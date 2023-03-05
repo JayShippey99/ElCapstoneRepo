@@ -93,7 +93,7 @@ public class PlantPuzzle : MonoBehaviour
         char[] cStr = t.ToCharArray();
 
 
-        if (cCount == levelConditions.Count) // for the first input, use the root // there is more than one child, hence why it doesn't go, I think
+        if (cCount == levelConditions.Count)
         {
             //print("start path");
             if (t[0] == '0') MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
@@ -105,22 +105,22 @@ public class PlantPuzzle : MonoBehaviour
 
             //print(emptyBranches.Count);
             //print("is this run enough times " + ind);
-            if (ind < emptyBranches.Count) // if the 
+            for (int i = 0; i < cStr.Length; i++) // but I'm not even updting the output
             {
-                if (emptyBranches[ind].empty)
+                if (emptyBranches[i].empty)
                 {
                     // nah man I think the whole issue is that its just a global thing, we're even setting up the math to be that way
 
                     //print(emptyBranches[ind].end);
-                    startPoint = emptyBranches[ind].end; // I think this is a thing
-                    emptyBranches[ind].empty = false; // okay maybe it has to do with being false and stuff too?
+                    startPoint = emptyBranches[i].end; // I think this is a thing
+                    emptyBranches[i].empty = false; // okay maybe it has to do with being false and stuff too?
 
-                    branchesToBeRemoved.Add(emptyBranches[ind]);
+                    branchesToBeRemoved.Add(emptyBranches[i]);
 
-                    if (t[0] == '0') MakeStraight(startPoint);
-                    if (t[0] == '1') MakeSplit(startPoint);
-                    if (t[0] == '2') MakeEnd(startPoint);
-                    if (t[0] == '3') MakeExtension(startPoint, emptyBranches[ind].type); // does sending local position mess things up? // wait maybe instead of doing this based on location I can just send a result of what the branch was
+                    if (t[i] == '0') MakeStraight(startPoint); // shittt now this isn't working anymore
+                    if (t[i] == '1') MakeSplit(startPoint);
+                    if (t[i] == '2') MakeEnd(startPoint);
+                    if (t[i] == '3') MakeExtension(startPoint, emptyBranches[i].type); // does sending local position mess things up? // wait maybe instead of doing this based on location I can just send a result of what the branch was
 
                     // shit, the issue is that my lines need to be in world space cause they just stay there
                     // wait a minute, I'm not actually working with any rotation for the branches and I wonder if that's part of it?
@@ -128,14 +128,14 @@ public class PlantPuzzle : MonoBehaviour
                 }
             }
 
-            ind++;
+            //ind++;
         }
 
         // so everything works when its all in one go, that's because in the one go I'm able to make the list of all the branches and hten adjust accoridgly, I need to do this step by step somehow
 
 
         // THIS FUNCTION REMOVES BRANCHES THAT WILL HAVE STUFF GROWING ON THEM FROM THE EMPTY BRANCH LIST
-
+        UpdateEmptyBranches();
 
         //print("THIS IS THE NEW ORDER OF EMPTY BRANCHES"); // the order from the second one is wrong right off the bat
         foreach (BranchInitializer b in emptyBranches)
@@ -183,8 +183,9 @@ public class PlantPuzzle : MonoBehaviour
             emptyBranches.Insert(insertAt, b);
         }
 
-        if (shouldResetWhenDone)
+        if (shouldResetWhenDone) // this should reset me if the paths detect a collision
         {
+            print("what's this for?");
             ClearPuzzle();
         }
         else
@@ -230,14 +231,14 @@ public class PlantPuzzle : MonoBehaviour
        // print("in the check for completion function");
         foreach (PlantCondition pc in levelConditions) // we need to ask if at least one condition isn't met, that we don't reset? or what, lets jsut print when the puzzle is done
         {
-            print("how many times does this run"); // okay wait it makes sense i guess to only go once cause that just means that the very first thing isn't being solved
+            //print("how many times does this run"); // okay wait it makes sense i guess to only go once cause that just means that the very first thing isn't being solved
             //print("checking plant conditions");
             // for each condition, ask if its met
             if (!pc.CheckIfMet(fruits, branches)) return false; // for each level condition, I need to send through the whole list of fruits
-            print("does this run");
+            //print("does this run");
         }
 
-        print("do we return with true?");
+        //print("do we return with true?");
 
         return true;
     }
@@ -353,7 +354,8 @@ public class PlantPuzzle : MonoBehaviour
         if (cCount > 0 && emptyBranches.Count == 0)
         {
             //print("do we clear the puzzle?");
-            //print(cCount + " " + emptyBranches.Count);
+            print(cCount + " " + emptyBranches.Count);
+            print("its full?"); // my hunch is that its doing this somehow after the puzzle clears
             StartCoroutine(DelayAndThenFunction(ClearPuzzle, .5f));
         }
     }
@@ -369,8 +371,31 @@ public class PlantPuzzle : MonoBehaviour
         {
             // remove from list first? what list? heheh nice // actually lol I still think we need to do that
 
-            //print("is this going?");
-            if (!transform.GetChild(i).CompareTag("BranchPuzzleCondition")) Destroy(transform.GetChild(i).gameObject);
+            print("is this happening first?");
+            // if a child is NOT a puzzle condition, meaning something we placed, cool
+            Transform t = transform.GetChild(i);
+
+            if (!t.CompareTag("BranchPuzzleCondition"))
+            {
+                BranchInitializer bi = t.GetComponent<BranchInitializer>();
+                EndInitializer ei = t.GetComponent<EndInitializer>();
+
+                //print("does this run?");
+                if (bi != null)
+                {
+
+                    //print("how about this one");
+                    StopCoroutine(bi.Fizzle(-1));
+                    StartCoroutine(bi.Fizzle(-1)); // awful line of code //Destroy(transform.GetChild(i).gameObject);
+                }
+                else if (ei != null)
+                {
+                    //print("also checking this one");
+                    StopCoroutine(ei.Fizzle(-1));
+                    StartCoroutine(ei.Fizzle(-1)); // awful line of code //Destroy(transform.GetChild(i).gameObject);
+                }
+
+            }
             // instead of destroy we set them to fizzle, but the arrays do clear
         }
 

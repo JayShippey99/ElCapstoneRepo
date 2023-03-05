@@ -40,14 +40,17 @@ public class _Switch : MonoBehaviour
 
     private void OnMouseUpAsButton()
     {
-        //print("clicking");
-
-        isOn = !isOn;
-
-
-        foreach (InteractableParent ip in objs)
+        if (GameController.instance.cutscene == false)
         {
-            ip.SetSwitch(isOn);
+            //print("clicking");
+
+            isOn = !isOn;
+
+
+            foreach (InteractableParent ip in objs)
+            {
+                ip.SetSwitch(isOn);
+            }
         }
     }
 

@@ -179,10 +179,13 @@ public class _Knob : InteractableParent
 
     private void OnMouseDown()
     {
-        if (!returnToNeutral)
+        if (GameController.instance.cutscene == false)
         {
-            isHeld = true;
-            initialHoldOffset = Input.mousePosition.x - (totalOffset / turnSpeed); // - totalOffset // the inital hold offset always puts me back at the middle // okay my hold offset is the mouse position, and then in the function I'm getting the difference btween mouse position and mouse position which is 0 until I move again
+            if (!returnToNeutral)
+            {
+                isHeld = true;
+                initialHoldOffset = Input.mousePosition.x - (totalOffset / turnSpeed); // - totalOffset // the inital hold offset always puts me back at the middle // okay my hold offset is the mouse position, and then in the function I'm getting the difference btween mouse position and mouse position which is 0 until I move again
+            }
         }
     }
 }

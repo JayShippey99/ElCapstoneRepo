@@ -96,8 +96,8 @@ public class PlantPuzzle : MonoBehaviour
         if (cCount == levelConditions.Count)
         {
             //print("start path");
-            if (t[0] == '0') MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
-            if (t[0] == '1') MakeSplit(startPoint);
+            if (t[0] == '0') MakeSplit(startPoint);
+            if (t[0] == '1') MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
         }
         else // for every other input, use the ends of the branches
         {
@@ -117,8 +117,8 @@ public class PlantPuzzle : MonoBehaviour
 
                     branchesToBeRemoved.Add(emptyBranches[i]);
 
-                    if (t[i] == '0') MakeStraight(startPoint); // shittt now this isn't working anymore
-                    if (t[i] == '1') MakeSplit(startPoint);
+                    if (t[i] == '0') MakeSplit(startPoint);
+                    if (t[i] == '1') MakeStraight(startPoint); // shittt now this isn't working anymore
                     if (t[i] == '2') MakeEnd(startPoint);
                     if (t[i] == '3') MakeExtension(startPoint, emptyBranches[i].type); // does sending local position mess things up? // wait maybe instead of doing this based on location I can just send a result of what the branch was
 

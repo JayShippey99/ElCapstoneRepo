@@ -16,12 +16,13 @@ public class EndInitializer : MonoBehaviour
         if (dir < 0) progress = 1;
         else progress = 0;
 
-        Material m = GetComponent<SpriteRenderer>().material;
+        SpriteRenderer m = GetComponent<SpriteRenderer>();
+        m.material.SetTexture("_Main_Tex", m.sprite.texture);
 
         while ((progress < 1 && dir == 1) || (progress > 0 && dir == -1))
         {
             progress += Time.deltaTime * dir;
-            m.SetFloat("_FizzleAmount", progress);
+            m.material.SetFloat("_FizzleAmount", progress);
 
             yield return null;
         }

@@ -80,7 +80,7 @@ public class InspectObject : MonoBehaviour
     // but you can just always click it, I guess this just wouldn't do anything?
     void Show() // different trigger methods so different thigns
     {
-        if (reactToClick)
+        if (reactToClick && GameController.instance.readingPaper == false)
         {
             //print("face!");
             if (currentState == idle) // will change
@@ -92,6 +92,7 @@ public class InspectObject : MonoBehaviour
                 //GetComponent<BoxCollider>().enabled = false;
                 currentState = show;
             }
+            GameController.instance.readingPaper = true;
         }
     }
 
@@ -107,6 +108,7 @@ public class InspectObject : MonoBehaviour
                 //GetComponent<BoxCollider>().enabled = true;
                 currentState = home;
             }
+            GameController.instance.readingPaper = false;
         }
     }
 

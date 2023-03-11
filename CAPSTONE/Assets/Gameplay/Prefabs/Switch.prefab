@@ -49,7 +49,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pbMat: {fileID: 2100000, guid: d2be525864874804aacce44084a17ede, type: 2}
-  pMat: {fileID: 2100000, guid: a73ecbfd0b1ddd9428990efc47abc0a9, type: 2}
+  frontMat: {fileID: 0}
+  backMat: {fileID: 0}
+  rightMat: {fileID: 0}
+  leftMat: {fileID: 0}
+  topMat: {fileID: 0}
+  bottomMat: {fileID: 0}
+  speedOn: 0
+  speedOff: 0
+  ac1:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  ac2:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &2605809193918316222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +174,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 8a08212865601574dafaf216002a13f2, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: bb501095562e4ea4992ff46e0a1ac46e, type: 2}
     - target: {fileID: 919132149155446097, guid: 8a08212865601574dafaf216002a13f2, type: 3}
       propertyPath: m_Name
       value: SwitchBase (1)
@@ -229,6 +252,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 332b9407e1c3b344991cc6381b6e4779, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: db84a2c7ceb0d994a8f7b3b073fda33c, type: 2}
     - target: {fileID: 919132149155446097, guid: 332b9407e1c3b344991cc6381b6e4779, type: 3}
       propertyPath: m_Name
       value: Switch (1)

@@ -51,12 +51,15 @@ public class _Knob : InteractableParent
     // wonder if i could make like a specific class for it or something, for now lets keep it simple
 
 
-    // I NEED TO MAKE IT SO YOU CAN'T CLICK WHILE ITS GOING BACK TO NORMAL
+    // so when I let go, the tesseract stops rotating, if I focus what do I want to hve happen now?
+    // when I focus, trigger button to then say "can't interact"
 
     bool returnToNeutral = false;
     float returnTime;
     public float returnSpeed;
     float startOffset;
+
+    bool canInteract = true;
 
     void Start()
     {
@@ -108,15 +111,23 @@ public class _Knob : InteractableParent
     {
         //print(returnToNeutral);
         // I need to grab and drag, 0 + 10 drag. I've gone 10 away from the center point
-        if (!returnToNeutral)
+        if (canInteract == false)
+        {
+            print("cant interact");
+            if (Tesseract.instance.needsToUpright == false)
+            {
+                print("this no go?");
+                canInteract = true;
+            }
+        }
+        else if (!returnToNeutral)
         {
             //print("am i not returning to normal");
             if (isHeld)
             {
                 if (Input.GetMouseButtonUp(0))
                 {
-                    isHeld = false;
-
+                    StartReturnToNormal();
                     //obj.OnUp();
                 }
                 else
@@ -141,47 +152,61 @@ public class _Knob : InteractableParent
         }
         else
         {
-            //print("or am i returning to normal");
             if (returnTime < 1)
             {
-                returnTime += Time.deltaTime * returnSpeed;
-
-                totalOffset = Mathf.Lerp(startOffset, (startAngle * (turnAmount * 2)) - turnAmount, returnTime);
-
-                    //totalOffset = (startAngle * (turnAmount * 2)) - turnAmount;
-
-                totalOffset = Mathf.Clamp(totalOffset, -turnAmount, turnAmount);
-
-
-                transform.rotation = originalRotation;
-                transform.RotateAroundLocal(transform.forward, Mathf.Deg2Rad * totalOffset);
-
-                //value = 
-                value = Remap(totalOffset, -turnAmount, turnAmount, minValue, maxValue);
-
-                foreach (InteractableParent ip in objs)
-                {
-                    ip.ChangeSomethingDial(value);
-                }
+                ReturnToNormal();
             }
-            else returnToNeutral = false;
+            else
+            {
+                returnToNeutral = false;
+            }
         }
+    }
+
+    void ReturnToNormal()
+    {
+        returnTime += Time.deltaTime * returnSpeed; // Tesseract.instance.uprightSpeed;
+
+        totalOffset = Mathf.Lerp(startOffset, (startAngle * (turnAmount * 2)) - turnAmount, returnTime);
+
+        //totalOffset = (startAngle * (turnAmount * 2)) - turnAmount;
+
+        totalOffset = Mathf.Clamp(totalOffset, -turnAmount, turnAmount);
+
+
+        transform.rotation = originalRotation;
+        transform.RotateAroundLocal(transform.forward, Mathf.Deg2Rad * totalOffset);
+
+        //value = 
+        value = Remap(totalOffset, -turnAmount, turnAmount, minValue, maxValue);
+
+        foreach (InteractableParent ip in objs)
+        {
+            ip.ChangeSomethingDial(value);
+        }
+    }
+
+    void StartReturnToNormal()
+    {
+        isHeld = false;
+        returnToNeutral = true;
+        returnTime = 0;
+        startOffset = totalOffset;
     }
 
 
     public override void DoSomethingButton(GameObject theButton) // LMFAO sick
     {
         //print("does this get run for some reason?");
-        returnToNeutral = true;
-        returnTime = 0;
-        startOffset = totalOffset;
+        //StartReturnToNormal();
+        canInteract = false;
     }
 
     private void OnMouseDown()
     {
         if (GameController.instance.cutscene == false)
         {
-            if (!returnToNeutral)
+            if (!returnToNeutral && canInteract == true)
             {
                 isHeld = true;
                 initialHoldOffset = Input.mousePosition.x - (totalOffset / turnSpeed); // - totalOffset // the inital hold offset always puts me back at the middle // okay my hold offset is the mouse position, and then in the function I'm getting the difference btween mouse position and mouse position which is 0 until I move again

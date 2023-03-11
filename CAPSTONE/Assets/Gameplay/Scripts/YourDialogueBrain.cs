@@ -31,6 +31,8 @@ public class YourDialogueBrain : MonoBehaviour
 
     public void Send()
     {
+        FMODUnity.RuntimeManager.PlayOneShot("event:/YourDialogue");
+
         sent = true;
         print("send");
         anim.SetTrigger("Send");

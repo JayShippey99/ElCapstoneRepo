@@ -11,6 +11,11 @@ public class PlantCondition : MonoBehaviour
     // we should just be able to know which type this condition is without needign to set it?
 
     // maybe we also have a enum it can be
+    private void Start()
+    {
+        StartCoroutine(Fizzle(1));
+    }
+
     public bool CheckIfMet(List<GameObject> fruits, List<GameObject> branches) // should I send through all the fruits??
     {
         //print(gameObject.name);
@@ -45,6 +50,32 @@ public class PlantCondition : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public IEnumerator Fizzle(float dir) // 1 or -1
+    {
+        float progress = -1;
+
+        if (dir < 0) progress = 1;
+        else progress = 0;
+
+        SpriteRenderer m = GetComponent<SpriteRenderer>();
+        
+        m.material.SetTexture("_Main_Tex", m.sprite.texture);
+
+        while ((progress < 1 && dir == 1) || (progress > 0 && dir == -1))
+        {
+            //print("run me! " + progress + " " + dir);
+            progress += Time.deltaTime * dir;
+            m.material.SetFloat("_FizzleAmount", progress);
+
+            yield return null;
+        }
+
+        //print("below everything");
+        // this will only come out to 0 when its going away
+        //print(gameObject + " is this goddamn null?"); // it seems to be wanting to go away twice
+        if (progress <= 0) Destroy(gameObject);
     }
 }
 

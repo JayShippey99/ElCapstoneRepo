@@ -54,6 +54,8 @@ public class Tesseract : InteractableParent
     FMOD.Studio.EventInstance turnSoundLR;
     FMOD.Studio.EventInstance turnSoundUD;
 
+    public Material mat;
+
     void Start()
     {
         if (instance == null) instance = this;
@@ -72,8 +74,8 @@ public class Tesseract : InteractableParent
         if (needsToUpright == false)
         {
             // I now need to make it so that the thing unfocuses the moment that I move the thing around
-            //TurnRight();
-            //TurnUp();
+            TurnRight();
+            TurnUp();
         } else
         {
             //print("is this running for some reason?");
@@ -121,8 +123,6 @@ public class Tesseract : InteractableParent
         animator.enabled = true;
     }
 
-
-
     void TurnRight()
     {
         transform.RotateAroundLocal(Vector3.up, turnRightAmount * speed * Time.deltaTime);
@@ -153,6 +153,27 @@ public class Tesseract : InteractableParent
                 turnSoundUD.start();
             }
         }
+    }
+
+    public void RemoveBrightness(float time)
+    {
+        StartCoroutine(cRemoveBrightness(time));
+    }
+
+    IEnumerator cRemoveBrightness(float time)
+    {
+        float progress = 1;
+
+        while (progress > 0)
+        {
+            progress -= Time.deltaTime / time;
+
+            mat.SetFloat("_FlashAmount", progress * .65f); // progress starts at 1, 1 * .65 is .65, goes down to 0, nice
+
+            yield return null;
+        }
+
+        mat.SetFloat("_FlashAmount", 0);
     }
 
     void StopTurnSound(bool LR)

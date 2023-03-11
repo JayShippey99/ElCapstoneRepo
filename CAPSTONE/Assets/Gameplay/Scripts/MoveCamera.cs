@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MoveCamera : MonoBehaviour
 {
+    public static MoveCamera instance;
+
     Vector3 startLook;
     bool look;
     public float lookSpeed;
@@ -23,6 +25,9 @@ public class MoveCamera : MonoBehaviour
 
     private void Start()
     {
+        if (instance == null) instance = this;
+        else Destroy(gameObject); // okay its a little psychotic cause this would remove the camera but oh well it still works
+
         startLocation = transform.position;
     }
 

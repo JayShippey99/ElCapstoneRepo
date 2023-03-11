@@ -51,6 +51,7 @@ public class GameController : MonoBehaviour
     public PlantPuzzle currentPuzzle;
     // maybe what we can do is just recieve a signal if a plant puzzle was solved or not
 
+    public float fizzleDelay;
     public delegate void FunctionAfterDelay();
 
     public Animator finalStickNote;
@@ -82,13 +83,23 @@ public class GameController : MonoBehaviour
 
     [Header("CorkboardPapers")]
     public Corkboard corkboard;
-
     [HideInInspector]
+    public bool readingPaper;
+
+    [Header("TestingShorcuts")]
     public bool cutscene;
+    public bool playIntroSound;
+
+    //public bool shortCutToFirstPuzzle;
 
     [HideInInspector]
     public int dialogueSectionNum;
-    
+
+    public Vector3 introShakeStats;
+
+    [Header("ObjectsInTheRoom")]
+    public Material lightsMaterial;
+
     public void Awake()
     {
         if (instance == null) instance = this;
@@ -114,12 +125,22 @@ public class GameController : MonoBehaviour
             //print(s.puzzles.Count + " this is how many puzzles I just added");
         }
 
-        cutscene = true;
+        //cutscene = true;
         //print(tesseract.animator);
+        TurnOffLightsInRoom();
+        
+    }
+
+    void ShortCutToFirstPuzzle()
+    {
+        IntroSequence();
+        StartSide();
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.S)) ShortCutToFirstPuzzle();
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             // bring up menu again
@@ -138,17 +159,14 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void IntroSequence()
-    {
-        tesseract.animator.enabled = true;
-    }
+   
 
     public void KillCube()
     {
         Destroy(tesseract.gameObject);
     }
 
-    public void GoToNextPuzzle() // do we want to send in which side? or should we already know that?
+    public void GoToNextPuzzle() // This is the puzzle solved function basically
     {
         //print(focusedSide.puzzles.Count); // the count is fucking 0??
         Side s = focusedSide; // i wonder if this is being set how we want
@@ -164,7 +182,9 @@ public class GameController : MonoBehaviour
                 thisPuzzle = s.puzzles[i];
                 nextPuzzle = s.puzzles[i + 1];
 
-                StartCoroutine(DelayAndThenFunction(Change, 1f)); // you can place after the puzzle is solved
+                // CHANGE PUZZLE
+                KillCurrentPuzzle(thisPuzzle.transform);
+                StartCoroutine(DelayAndThenFunction(StartNextPuzzle, fizzleDelay)); // you can place after the puzzle is solved
                 // could the puzzle be broken after its done?
 
                 // okay so the issue with this is that puzzles can't contain the alien image in the list
@@ -179,13 +199,43 @@ public class GameController : MonoBehaviour
         // I think I need it to unfocus when I solve it?
     }
 
-    public void EndIntroSeq()
+    void KillCurrentPuzzle(Transform puzzle)
     {
-        cb.StartDialogueChunk("roomStarted");
-        cutscene = false;
+        foreach (Transform child in puzzle)
+        {
+            if (!child.CompareTag("BranchPuzzleCondition"))
+            {
+                BranchInitializer bi = child.GetComponent<BranchInitializer>();
+                EndInitializer ei = child.GetComponent<EndInitializer>();
+
+                //print("does this run?");
+                if (bi != null)
+                {
+                    //print("how about this one");
+                    StopCoroutine(bi.Fizzle(-1));
+                    StartCoroutine(bi.Fizzle(-1)); // awful line of code //Destroy(transform.GetChild(i).gameObject);
+                }
+                else if (ei != null)
+                {
+                    //print("also checking this one");
+                    StopCoroutine(ei.Fizzle(-1));
+                    StartCoroutine(ei.Fizzle(-1)); // awful line of code //Destroy(transform.GetChild(i).gameObject);
+                }
+            }
+            else
+            {
+                PlantCondition pc = child.GetComponent<PlantCondition>();
+                print("does this run?");
+                if (pc != null)
+                {
+                    StopCoroutine(pc.Fizzle(-1));
+                    StartCoroutine(pc.Fizzle(-1));
+                }
+            }
+        }
     }
 
-    void Change()
+    void StartNextPuzzle()
     {
         PlantPuzzle p1 = thisPuzzle;
         PlantPuzzle p2 = nextPuzzle;
@@ -196,6 +246,32 @@ public class GameController : MonoBehaviour
         // well fuck now we also need to tell the side manager what's the current puzzle
         //SideManager.instance.currentlyActivePuzzle = s.puzzles[i + 1]; // this will need to change
         currentPuzzle = p2;
+    }
+
+    public void IntroSequence()
+    {
+        if (playIntroSound) RuntimeManager.PlayOneShot("event:/IntroStartUp");
+        cutscene = true;
+        tesseract.animator.enabled = true;
+        MoveCamera.instance.LookThisWay(0);
+        MoveCamera.instance.ShakeCamera(introShakeStats.x, introShakeStats.y, introShakeStats.z);
+        // initial click turns on main lights
+        // with the extra clicks, the screens will turn on one by one
+        // radars on the side grow big bright particles
+        // before they reach the max, the pedestal will begin to rotate fast
+        // they shoot it at the center on the drop
+        // the tesseract starts out pure white
+        // tesesract grows and twitches in different rotations
+        // radar particles shrink as this goes on
+        // tesseract loses its whiteness when it starts the power down
+        // the pedestal slows down
+        // it'll spin a little out of this
+    }
+
+    public void EndIntroSeq()
+    {
+        cb.StartDialogueChunk("roomStarted");
+        cutscene = false;
     }
 
     public void ShowEndScreen()
@@ -330,6 +406,16 @@ public class GameController : MonoBehaviour
     {
         // save all stats here, but also save periodically
         Application.Quit();
+    }
+
+    void TurnOffLightsInRoom()
+    {
+        lightsMaterial.SetFloat("_FlickerAmount", 1);
+    }
+
+    public void TurnOnLightsInRoom()
+    {
+        lightsMaterial.SetFloat("_FlickerAmount", 0);
     }
 }
 

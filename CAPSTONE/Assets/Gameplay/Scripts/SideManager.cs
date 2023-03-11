@@ -92,7 +92,8 @@ public class SideManager : InteractableParent
         t.focused = !t.focused;
 
         if (t.focused)
-        {   
+        {
+            FMODUnity.RuntimeManager.PlayOneShot("event:/SideActivate");
             TurnOnFocusedSide();
         }
         else

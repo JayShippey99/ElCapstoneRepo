@@ -20,7 +20,7 @@ public class _Light : InteractableParent
     [Tooltip("Color of the emitted light")]
     public Color lightColor;
 
-    //public bool startOn;
+    public bool startOn;
 
     float toggleTimer; // time before it toggles again
     float timer; // since I can't progress the time in the middle of a frame I gotta count it this way
@@ -35,7 +35,7 @@ public class _Light : InteractableParent
 
         lMat.material.SetColor("_PhysicalLightColor", physicalColor);
         lMat.material.SetColor("_EmissiveLightColor", lightColor);
-        //if (startOn) TurnOn();
+        if (startOn) TurnOn();
     }
 
     // maybe I can give it some stats like the knob,

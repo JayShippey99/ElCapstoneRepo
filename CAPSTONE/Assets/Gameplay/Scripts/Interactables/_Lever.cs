@@ -78,6 +78,7 @@ public class _Lever : MonoBehaviour
         }
         else
         {
+            FMODUnity.RuntimeManager.PlayOneShot("event:/LeverActivate");
             foreach (InteractableParent ip in objs) // but wait, we really just want to do this for the active puzzle
             {
                 ip.LeverPulled();
@@ -113,6 +114,7 @@ public class _Lever : MonoBehaviour
         {
             if (currentState == normal)
             {
+                FMODUnity.RuntimeManager.PlayOneShot("event:/LeverPickup");
                 initialMouse = Input.mousePosition.y;
                 mousePull = 0;
                 currentState = grabbing;

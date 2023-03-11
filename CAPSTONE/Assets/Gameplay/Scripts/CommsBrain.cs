@@ -2,106 +2,106 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+
+// I think I need the game controller or something to know what section is happening?
+
+// I want the individual lines to come into frame one by one, not words, but lines
+// each line can just be its own object I think
+// when the object spawns, it will play the come into screen animation
+// each chunk of dialogue will have x amount of friend lines and x possible lines from you and what the line is
+// your lines will come in as buttons, but come in the same way and with a different color
+// your lines will have a way to say which dialogue chunk to go to next
+
+
+// there will be chunks of dialogue zones, like after side 1, tutorial, very intro, end, etc
+// in those chunks there will be individual spurts of dialogue
+// the dialogue options will have choices sometimes to go to other dialogues
+// each chunk of dialogue will have its own lines
+// if i were smarter I'd figure out a way to make this all in a text thing, but I'm kinda tired of reading through text
+
+// oof should I already start incorporating sounds?
+// like friend voice starts playing when they do bubbles and stops when you send your bubbles
+// and then your voice starts playing for a sec
+// ugh i'm so torn do I really dig into this now or maybe save some time to work on other things?
+// for sound I can just have a couple of long murmers of audio and they shuffle play each time I start the friend audio and then I can just set it to stop when I need. actually that I think would totally work
+
+// do think I need to do the tutorial thing though
+// lets think about the framework for something like that. I think we can just have the game controller
+// NO we should put the non dialogue consequences into a key exit code thing in commbs brain and then trigger things through the game controller. Should game controller be the thing adding stuff to the corkboard?
+
+// the dialogue will control the step of the tutorial
+// when you end a level it will start dialogue and a side
+// when you start the game it will play a cutscene and 
+
+
+// what stuff will be triggered by stuff in the dialogue?
+// activating a new side
+// actiavting the tutorial
+// adding new stuff to the corkboard
+// each response will have the option to have a game code
+// we need a way to run the correct game code
+// we need a way to RUN that. like do the actual stuff. how does that get worked out?
+// for the corkboard I need a way to set something up like here's the paper that's GOING to be added if you're not looking at the corkboard
+// game controller knows when something needs to be
+// add to corkboard bool and which paper is going to be added. I could lowkey make each one its own prefab and just spawn them or maybe they're already there and just need to be turned on
+// each paper then needs an entercode to know to turn that one on
+// if should add paper, 
+// I gota move the arrows down for the text
+
+// tutorial section is just gonna be arrows that showup in game
+// we may need to make a hovering arrow thing
+// each step of the tutorial will have an arrow to spawn
+
+// tutorial will have an array of arrows to turn on an off
+// each index in the array is a new step of the tutorial
+// BUT we could also have gmecodes for the steps in the tutorial in case something takes more than one chunk to explain
+
+// rotate using this
+// load up a series of particles with these, each number has a different reaction
+// send the thing with this, everything gets sent in order, otherwise its unstable
+// press this to activate, the puzzle facing you, you'll have to activate a side, for particles to collide
+// I will be helping you, by figuring out what's next, the more we crack the code
+// I'll post the important stuff, on the corkboard, to your left
+// reset a puzzle with this
+
+// what do we do with the string list of game codes, how do we know how to run certain functions? a massive switch statment?
+// we can have a list of gameEvents[] which contain any gameobjects that need to be spawned? it will at least have an enterCode for easy checking
+// maybe the gameEvent could have the option of tutorialEvents[] and how many there are and the tutorial event would have the arrow
+// how do we turn on more sides?
+// maybe we just have a specific thing for tutorial events[] // would all of these be strings? to just trigger specific things?
+// we have a specific thing for sideevents[]
+// what about stuff like the intro?
+// i think a game event should have a state too like is it the intro, is it the end, is it just the convo between part 3 and 4
+
+// i think we for sure call the section of dialogue from the gamecontroller
+// when we finish a side, we send a trigger?
+// I think each side needs to have an exit word? some easy way to say to the game controller I just finished up this part
+// ^^ this needs to happen I think
+
+// game controller will have these sections intro, tutorial, side1, side2, side3, side4, side5, side6, allsides, end, but also an easy way to modify this if needed, sideX means before that side?
+// intro will have dialogue, and the option to start the tutorial, and intro will also be a very initial sit down sort of a cinematic, could also have like a text click to continue exposition
+// tutorial will have dialogue and tutorial steps with arrows appearing and disappearing
+// side1 will have dialogue, when done it will turn on the first side, it will post the controls to the corkboard
+// same with all the other sides
+// allsides will be the same too, but it also might start to flicker the lights or something
+// end would trigger final cutscene, so like animator stuff. idk I think there's just gonna have to be a function for a lot of these things that the game controller takes care of entirely
+// and I think the main reason is because I'm not sure exactly what can be triggered just by enabling and disabling objects
+
+// I need a list of gameEvents that will happen, can I make a list of events?
+// I COULD use the code that turns a string into a function? like trigger gameCode, and the gameCode IS The function name?
+/*
+ public KnobReceiver obj;
+System.Reflections.MethodInfo changeDialFunction = obj.GetType().GetMethod("ChangeSomething");
+
+// calling functions
+object[] arguments = new object[] = {value};
+changeDialFunction.Invoke(obj, arguments);
+*/
+
 public class CommsBrain : MonoBehaviour
 {
-
-
-    // I think I need the game controller or something to know what section is happening?
-
-    // I want the individual lines to come into frame one by one, not words, but lines
-    // each line can just be its own object I think
-    // when the object spawns, it will play the come into screen animation
-    // each chunk of dialogue will have x amount of friend lines and x possible lines from you and what the line is
-    // your lines will come in as buttons, but come in the same way and with a different color
-    // your lines will have a way to say which dialogue chunk to go to next
-
-
-    // there will be chunks of dialogue zones, like after side 1, tutorial, very intro, end, etc
-    // in those chunks there will be individual spurts of dialogue
-    // the dialogue options will have choices sometimes to go to other dialogues
-    // each chunk of dialogue will have its own lines
-    // if i were smarter I'd figure out a way to make this all in a text thing, but I'm kinda tired of reading through text
-
-    // oof should I already start incorporating sounds?
-    // like friend voice starts playing when they do bubbles and stops when you send your bubbles
-    // and then your voice starts playing for a sec
-    // ugh i'm so torn do I really dig into this now or maybe save some time to work on other things?
-    // for sound I can just have a couple of long murmers of audio and they shuffle play each time I start the friend audio and then I can just set it to stop when I need. actually that I think would totally work
-
-    // do think I need to do the tutorial thing though
-    // lets think about the framework for something like that. I think we can just have the game controller
-    // NO we should put the non dialogue consequences into a key exit code thing in commbs brain and then trigger things through the game controller. Should game controller be the thing adding stuff to the corkboard?
-
-    // the dialogue will control the step of the tutorial
-    // when you end a level it will start dialogue and a side
-    // when you start the game it will play a cutscene and 
-
-
-    // what stuff will be triggered by stuff in the dialogue?
-    // activating a new side
-    // actiavting the tutorial
-    // adding new stuff to the corkboard
-    // each response will have the option to have a game code
-    // we need a way to run the correct game code
-    // we need a way to RUN that. like do the actual stuff. how does that get worked out?
-    // for the corkboard I need a way to set something up like here's the paper that's GOING to be added if you're not looking at the corkboard
-    // game controller knows when something needs to be
-    // add to corkboard bool and which paper is going to be added. I could lowkey make each one its own prefab and just spawn them or maybe they're already there and just need to be turned on
-    // each paper then needs an entercode to know to turn that one on
-    // if should add paper, 
-    // I gota move the arrows down for the text
-
-    // tutorial section is just gonna be arrows that showup in game
-    // we may need to make a hovering arrow thing
-    // each step of the tutorial will have an arrow to spawn
-
-    // tutorial will have an array of arrows to turn on an off
-    // each index in the array is a new step of the tutorial
-    // BUT we could also have gmecodes for the steps in the tutorial in case something takes more than one chunk to explain
-
-    // rotate using this
-    // load up a series of particles with these, each number has a different reaction
-    // send the thing with this, everything gets sent in order, otherwise its unstable
-    // press this to activate, the puzzle facing you, you'll have to activate a side, for particles to collide
-    // I will be helping you, by figuring out what's next, the more we crack the code
-    // I'll post the important stuff, on the corkboard, to your left
-    // reset a puzzle with this
-
-    // what do we do with the string list of game codes, how do we know how to run certain functions? a massive switch statment?
-    // we can have a list of gameEvents[] which contain any gameobjects that need to be spawned? it will at least have an enterCode for easy checking
-    // maybe the gameEvent could have the option of tutorialEvents[] and how many there are and the tutorial event would have the arrow
-    // how do we turn on more sides?
-    // maybe we just have a specific thing for tutorial events[] // would all of these be strings? to just trigger specific things?
-    // we have a specific thing for sideevents[]
-    // what about stuff like the intro?
-    // i think a game event should have a state too like is it the intro, is it the end, is it just the convo between part 3 and 4
-
-    // i think we for sure call the section of dialogue from the gamecontroller
-    // when we finish a side, we send a trigger?
-    // I think each side needs to have an exit word? some easy way to say to the game controller I just finished up this part
-    // ^^ this needs to happen I think
-
-    // game controller will have these sections intro, tutorial, side1, side2, side3, side4, side5, side6, allsides, end, but also an easy way to modify this if needed, sideX means before that side?
-    // intro will have dialogue, and the option to start the tutorial, and intro will also be a very initial sit down sort of a cinematic, could also have like a text click to continue exposition
-    // tutorial will have dialogue and tutorial steps with arrows appearing and disappearing
-    // side1 will have dialogue, when done it will turn on the first side, it will post the controls to the corkboard
-    // same with all the other sides
-    // allsides will be the same too, but it also might start to flicker the lights or something
-    // end would trigger final cutscene, so like animator stuff. idk I think there's just gonna have to be a function for a lot of these things that the game controller takes care of entirely
-    // and I think the main reason is because I'm not sure exactly what can be triggered just by enabling and disabling objects
-
-    // I need a list of gameEvents that will happen, can I make a list of events?
-    // I COULD use the code that turns a string into a function? like trigger gameCode, and the gameCode IS The function name?
-    /*
-     public KnobReceiver obj;
-    System.Reflections.MethodInfo changeDialFunction = obj.GetType().GetMethod("ChangeSomething");
-
-    // calling functions
-    object[] arguments = new object[] = {value};
-    changeDialFunction.Invoke(obj, arguments);
-    */
-
-    
 
     public GameObject friendDialoguePrefab;
     public GameObject yourDialoguePrefab;
@@ -115,10 +115,11 @@ public class CommsBrain : MonoBehaviour
     public float chunkDelay;
 
     FMOD.Studio.EventInstance friendSpeech; // these will be separate multtrack events that shuffle and stop when needed
-    FMOD.Studio.EventInstance yourSpeech;
+    //FMOD.Studio.EventInstance yourSpeech;
 
     void Start()
     {
+        friendSpeech = FMODUnity.RuntimeManager.CreateInstance("event:/FriendDialogue");
         StartDialogueSection(dialogueSections[0]);
     }
 
@@ -196,6 +197,8 @@ public class CommsBrain : MonoBehaviour
         int yourLinesToSend = chunk.yourDialogues.Length; // 2
         int yourLinesSent = 0;
 
+        //FMODUnity.RuntimeManager.PlayOneShot("event:/FriendDialogue");
+        friendSpeech.start();
 
         while (yourLinesSent + friendLinesSent < linesToSendTotal)
         {
@@ -207,14 +210,23 @@ public class CommsBrain : MonoBehaviour
                 friendLinesToSend--; // 1 // 0
                 friendLinesSent++; // 1 // 2
 
-                if (friendLinesToSend == 0) AddLine();
+                if (friendLinesToSend == 0)
+                {
+                    AddLine();
+                }
             }
             else if (yourLinesToSend > 0)
             {
-                SendYourLine(chunk.yourDialogues[yourLinesSent].dialogue, chunk.yourDialogues[yourLinesSent].exitCode, chunk.yourDialogues[yourLinesSent].gameCode);
+                friendSpeech.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 
-                yourLinesToSend--;
-                yourLinesSent++;
+                for (int i = 0; i < chunk.yourDialogues.Length; i++)
+                {
+                    SendYourLine(chunk.yourDialogues[yourLinesSent].dialogue, chunk.yourDialogues[yourLinesSent].exitCode, chunk.yourDialogues[yourLinesSent].gameCode);
+
+                    yourLinesToSend--;
+                    yourLinesSent++;
+                }
+                
             }
 
             yield return new WaitForSeconds(lineDelay);

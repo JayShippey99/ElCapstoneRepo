@@ -56,7 +56,27 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\PedestalSpinningVFXBrain.cs" />
+    <Compile Include="Assets\PathCreator\Examples\Scripts\PathSpawner.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\ZSerializers\AnchorZSerializer.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\2 - Scene Groups\House\Scripts\ObjectMover.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\GameManager.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\UIManager.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\ZSerializers\PinZSerializer.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\Anchor.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\BallMover.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\ZSerializers\BallMoverZSerializer.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\2 - Scene Groups\House\Scripts\MainMenu.cs" />
+    <Compile Include="Assets\PathCreator\Examples\Scripts\GeneratePathExample.cs" />
+    <Compile Include="Assets\PathCreator\Examples\Scripts\PathPlacer.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\NodeSpawner.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\ButtonInfo.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\CustomHingeSerializer.cs" />
+    <Compile Include="Assets\PathCreator\Examples\Scripts\PathSceneTool.cs" />
+    <Compile Include="Assets\PathCreator\Examples\Scripts\PathFollower.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\Pin.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\ZSerializers\NodeSpawnerZSerializer.cs" />
+    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\ZSerializers\GameManagerZSerializer.cs" />
+    <Compile Include="Assets\PathCreator\Examples\Scripts\RoadMeshCreator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -795,6 +815,10 @@
       <Project>{F775DD2D-6B9E-C573-6D38-AE221D218283}</Project>
       <Name>FMODUnityResonanceEditor</Name>
     </ProjectReference>
+    <ProjectReference Include="PathCreator.csproj">
+      <Project>{07C28832-BF1D-60E0-E8EF-3671F14106CD}</Project>
+      <Name>PathCreator</Name>
+    </ProjectReference>
     <ProjectReference Include="_Gamplay.Scipts.PenScripts.csproj">
       <Project>{E4A6B2E0-1DDA-4177-7C0F-C83CAF017417}</Project>
       <Name>_Gamplay.Scipts.PenScripts</Name>
@@ -802,6 +826,10 @@
     <ProjectReference Include="_Gameplay.External.csproj">
       <Project>{E129B6D1-E526-2BEE-FD26-73791BEDD6C8}</Project>
       <Name>_Gameplay.External</Name>
+    </ProjectReference>
+    <ProjectReference Include="PathCreatorEditor.csproj">
+      <Project>{9A64C19F-CD9F-AC43-2040-CD25314BAF4A}</Project>
+      <Name>PathCreatorEditor</Name>
     </ProjectReference>
     <ProjectReference Include="FMODUnity.csproj">
       <Project>{3263134D-84B2-DCAA-3A26-B162F48D5F73}</Project>
@@ -814,6 +842,14 @@
     <ProjectReference Include="FMODUnityResonance.csproj">
       <Project>{93A12D28-BFB8-F7E8-A6ED-60673DD77CCB}</Project>
       <Name>FMODUnityResonance</Name>
+    </ProjectReference>
+    <ProjectReference Include="ZSerializer.Editor.csproj">
+      <Project>{21C59EB1-6C1B-007E-3F82-C30AA2EDED59}</Project>
+      <Name>ZSerializer.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="ZSerializer.Runtime.csproj">
+      <Project>{CA523F54-9DC8-0B3B-3895-E07B83631C5D}</Project>
+      <Name>ZSerializer.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

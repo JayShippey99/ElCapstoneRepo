@@ -248,13 +248,22 @@ public class GameController : MonoBehaviour
         currentPuzzle = p2;
     }
 
+    void ForceCameraForward()
+    {
+        MoveCamera.instance.LookThisWay(0);
+        hudMenu.transform.Find("LookCork").gameObject.SetActive(true);
+        hudMenu.transform.Find("LookBack").gameObject.SetActive(false);
+    }
+
     public void IntroSequence()
     {
         if (playIntroSound) RuntimeManager.PlayOneShot("event:/IntroStartUp");
-        cutscene = true;
-        tesseract.animator.enabled = true;
-        MoveCamera.instance.LookThisWay(0);
+
+
+        ForceCameraForward();
         MoveCamera.instance.ShakeCamera(introShakeStats.x, introShakeStats.y, introShakeStats.z);
+        tesseract.animator.enabled = true;
+        cutscene = true;
         // initial click turns on main lights
         // with the extra clicks, the screens will turn on one by one
         // radars on the side grow big bright particles

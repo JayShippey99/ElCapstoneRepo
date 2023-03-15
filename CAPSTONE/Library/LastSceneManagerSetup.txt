@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Gameplay/Scenes/GameScene.unity
+- path: Assets/PathCreator/Examples/Scenes/Object Placement.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

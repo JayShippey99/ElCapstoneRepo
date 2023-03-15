@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class ClusterScreenBrain : MonoBehaviour
 {
+    public Animator pedestalAnim;
+
     public float imageSize;
     public float ogRadius;
     float radius;
@@ -44,9 +46,19 @@ public class ClusterScreenBrain : MonoBehaviour
         }
     }
 
-    public void Clear()
+    public void Shoot()
     {
         anim.SetTrigger("Fire");
+    }
+
+    public void Clear()
+    {
+        KillChildren();
+    }
+
+    public void ShootPedestal()
+    {
+        pedestalAnim.SetTrigger("ShootPedestal");
     }
 
     public void KillChildren()

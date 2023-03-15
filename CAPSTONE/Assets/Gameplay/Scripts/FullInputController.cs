@@ -14,6 +14,8 @@ public class FullInputController : InteractableParent
     public BinaryInputBrain[] screens;
     public ClusterScreenBrain csb;
 
+    public Animator tesseractAnim;
+
     string output;
 
     bool readingInput;
@@ -266,15 +268,20 @@ public class FullInputController : InteractableParent
     void FireCluster()
     {
         // also run clear in the cluster screen
-        csb.Clear();
-        StartCoroutine(LaserDelay());
+        csb.Shoot();
+        //StartCoroutine(LaserDelay()); // I need this some ere
     }
 
+    public void MakeBranches()
+    {
+        tesseractAnim.SetTrigger("GetShot");
+        if (currentPuzzle != null) currentPuzzle.MakeBranches(output.ToString());
+    }
     IEnumerator LaserDelay()
     {
         yield return new WaitForSeconds(.25f);
 
-        if (currentPuzzle != null) currentPuzzle.MakeBranches(output.ToString());
+         // no in realirt its just THIS
         RuntimeManager.PlayOneShot("event:/LaserFire");
         //lb.SetColor(output[currentIndex]);
         EnableLaser();

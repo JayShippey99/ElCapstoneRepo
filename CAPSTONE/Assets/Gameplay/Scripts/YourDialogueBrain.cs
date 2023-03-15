@@ -31,17 +31,20 @@ public class YourDialogueBrain : MonoBehaviour
 
     public void Send()
     {
-        FMODUnity.RuntimeManager.PlayOneShot("event:/YourDialogue");
+        if (sent == false)
+        {
+            FMODUnity.RuntimeManager.PlayOneShot("event:/YourDialogue");
 
-        sent = true;
-        print("send");
-        anim.SetTrigger("Send");
-        // here we have to send a notification back up to make everything else exit?
-        // yeah this just means // OH WAIT this is also important for triggering which dialogue section to run next
-        // how do we use exit code now?
-        print("this is exitCode " + exitCode);
-        cb.EndDialogueChunk(exitCode);
-        GameController.instance.RunGameEvent(gameCode); // activate gameEvent?
+            sent = true;
+            print("send");
+            anim.SetTrigger("Send");
+            // here we have to send a notification back up to make everything else exit?
+            // yeah this just means // OH WAIT this is also important for triggering which dialogue section to run next
+            // how do we use exit code now?
+            print("this is exitCode " + exitCode);
+            cb.EndDialogueChunk(exitCode);
+            GameController.instance.RunGameEvent(gameCode); // activate gameEvent?
+        }
     }
 
     public void KillSelf()

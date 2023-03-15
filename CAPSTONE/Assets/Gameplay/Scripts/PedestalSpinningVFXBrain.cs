@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class PedestalSpinningVFXBrain : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    //public GameObject laser;
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void FireLaser()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot("event:/LaserFire");
+        //lb.SetColor(output[currentIndex]);
+        //laser.SetActive(true);
+        FullInputController.instance.MakeBranches();
+    }
+
+    public void KillLaser()
+    {
+        //laser.SetActive(false);
     }
 }

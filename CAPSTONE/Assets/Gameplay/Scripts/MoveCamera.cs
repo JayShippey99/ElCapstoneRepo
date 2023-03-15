@@ -18,10 +18,16 @@ public class MoveCamera : MonoBehaviour
     float shakeCounter;
 
     Vector3 startLocation;
+    Quaternion startRotation;
+
+    Quaternion shakeRotation = new Quaternion();
+    Quaternion lookRotation = new Quaternion();
 
     public AnimationCurve shakeCurve;
 
     public float testIntensity, testTime, testStayTime;
+
+    public GameObject lookCork, lookBack;
 
     private void Start()
     {
@@ -29,17 +35,22 @@ public class MoveCamera : MonoBehaviour
         else Destroy(gameObject); // okay its a little psychotic cause this would remove the camera but oh well it still works
 
         startLocation = transform.position;
+        startRotation = transform.rotation;
     }
 
     private void Update()
     {
+        print(transform.rotation);
+
+
+
         if (look)
         {
             if (lookTime < 1) 
             { 
                 lookTime += Time.deltaTime * lookSpeed;
 
-                transform.rotation = Quaternion.Slerp(Quaternion.Euler(startLook), Quaternion.Euler(targetLook), lookTime);
+                lookRotation = Quaternion.Slerp(Quaternion.Euler(startLook), Quaternion.Euler(targetLook), lookTime);
             }
             else
             {
@@ -62,7 +73,11 @@ public class MoveCamera : MonoBehaviour
 
                 Vector3 randomOffset = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
 
-                transform.position = startLocation + randomOffset * shakeCurve.Evaluate(shakeCounter) * shakeIntensity;
+                //transform.position = startLocation + randomOffset * shakeCurve.Evaluate(shakeCounter) * shakeIntensity;
+
+                shakeRotation = Quaternion.Euler((randomOffset * shakeCurve.Evaluate(shakeCounter) * shakeIntensity)); // i need the rotation to go -1 to 1 in the x and y * shakeIntensity
+                // so wait if I want the player to be forced to look at the tesseract, how do I rotate with that in mind?
+                // yeah this won't work
 
                 //print("shaking " + randomOffset + " " + shakeCurve.Evaluate(shakeCounter) + " " + shakeIntensity);
             }
@@ -72,6 +87,28 @@ public class MoveCamera : MonoBehaviour
             }
         }
 
+        // so, if camera is not looking anywhere and not shaking, the rotation doesn't get touched, 
+
+        // when there is a cutscene, set the cork look to true and the other one to false
+        
+        if (look && shaking)
+        {
+            transform.rotation = lookRotation * shakeRotation;
+        }
+        else if (shaking)
+        {
+            transform.rotation = shakeRotation;
+        }
+        else if (look)
+        {
+            transform.rotation = lookRotation;
+        }
+
+
+        //Quaternion newRotation = Quaternion.Euler(lookRotation + shakeRotation);
+
+        //transform.rotation = newRotation;
+
         /*
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -79,12 +116,27 @@ public class MoveCamera : MonoBehaviour
             ShakeCamera(testIntensity, testTime, testStayTime);
         }
         */
+
+        // i want to take the camera's current rotation and add a shake rotation to it. but this only works since look rotation would be hard setting the rotation again
+        // i need a way to hard set rotation again if you're not moving the camera, so if not looking, then set rotation back to normal first? or just 
     }
 
     public void LookThisWay(float yRot)
     {
-        if (look == false)
+        if (look == false && GameController.instance.cutscene == false)
         {
+            if (yRot >= 0)
+            {
+                lookCork.SetActive(true);
+                lookBack.SetActive(false);
+            }
+            else
+            {
+                lookCork.SetActive(false);
+                lookBack.SetActive(true);
+            }
+
+            print("how often is this running");
             lookTime = 0;
             look = true;
             startLook = transform.rotation.eulerAngles;

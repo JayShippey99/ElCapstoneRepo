@@ -274,7 +274,7 @@ public class CommsBrain : MonoBehaviour
 
     public void EndDialogueChunk(string exitCode) // this makes everything else go away AND starts a new one if the exit code isn't "" or something
     {
-        print("end dialogue and go to " + exitCode);
+        //print("end dialogue and go to " + exitCode);
         foreach (Transform child in spawnLocation)
         {
             //print(child.name + " child");
@@ -303,10 +303,9 @@ public class CommsBrain : MonoBehaviour
 
 
 [System.Serializable]
-public class SectionText // i guess the section text could know when its done? but for now I just wanna test
+public class SectionText
 {
-//public bool canBeTriggeredOutOfOrder; // this will determine if we use the enter code
-public string enterCode; // i guess we can have a section text enter code, ? maybe? I mean like tutorial vs side 1 and side 4, like mostly eveything will go in order, but what if it doesn't?
+public string enterCode;
 public DialogueChunk[] dialogueChunks;
 [HideInInspector]
 public bool read;
@@ -315,7 +314,6 @@ public bool read;
 [System.Serializable]
 public class DialogueChunk
 {
-// this needs a code
 public string enterCode;
 public FriendDialogue[] friendDialogues;
 public YourDialogue[] yourDialogues;
@@ -324,16 +322,14 @@ public YourDialogue[] yourDialogues;
 [System.Serializable]
 public class FriendDialogue
 {
-public string dialogue; // this is what the bubble will say
+public string dialogue;
 }
 
 [System.Serializable]
 public class YourDialogue
 {
-// your dialogue will have choices
-public string dialogue; // what the bubble will say
-public string exitCode; // exit code means which dialogue does it go to next
-// I also need to factor in if something is supposed to happen, maybe I can just have some game controller triggers i can call out
+public string dialogue;
+public string exitCode;
 public string gameCode;
 }
 

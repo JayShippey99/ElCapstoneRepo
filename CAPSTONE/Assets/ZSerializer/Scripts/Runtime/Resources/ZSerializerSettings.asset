@@ -52,6 +52,8 @@ MonoBehaviour:
     PublicKeyToken=null
   - UnityEngine.Rigidbody2D, UnityEngine.Physics2DModule, Version=0.0.0.0, Culture=neutral,
     PublicKeyToken=null
+  - UnityEngine.Animator, UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral,
+    PublicKeyToken=null
   unityComponentDataList:
   - typeFullName: UnityEngine.AI.NavMeshAgent, UnityEngine.AIModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
@@ -125,6 +127,33 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - typeFullName: UnityEngine.MeshRenderer, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    componentNames:
+    - scaleInLightmap
+    - receiveGI
+    - stitchLightmapSeams
+    customVariableEntries: []
+    OnSerialize:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDeserialize:
+      m_PersistentCalls:
+        m_Calls: []
+  - typeFullName: UnityEngine.Light, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    componentNames:
+    - shadowRadius
+    - shadowAngle
+    - areaSize
+    - lightmapBakeType
+    customVariableEntries: []
+    OnSerialize:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDeserialize:
+      m_PersistentCalls:
+        m_Calls: []
   saveGroups:
   - Main
   - Settings
@@ -165,7 +194,10 @@ MonoBehaviour:
         PublicKeyToken=null
       - ParentTest, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       - SerializationTest, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      - TestingSaving, Gameplay.Scripts, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       values:
+      - isOn: 1
+        groupID: 0
       - isOn: 1
         groupID: 0
       - isOn: 1

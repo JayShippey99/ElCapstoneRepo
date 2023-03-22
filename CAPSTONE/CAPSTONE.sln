@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZSerializer.Runtime", "ZSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathCreator", "PathCreator.csproj", "{07C28832-BF1D-60E0-E8EF-3671F14106CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Splines.Examples", "Unity.Splines.Examples.csproj", "{D4D87E87-B23D-42C4-1330-9979D30F2179}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMODUnityResonance", "FMODUnityResonance.csproj", "{93A12D28-BFB8-F7E8-A6ED-60673DD77CCB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMODUnityEditor", "FMODUnityEditor.csproj", "{D07EFC67-D01C-7016-92BE-C4FE0B20A189}"
@@ -22,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZSerializer.Editor", "ZSerializer.Editor.csproj", "{21C59EB1-6C1B-007E-3F82-C30AA2EDED59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathCreatorEditor", "PathCreatorEditor.csproj", "{9A64C19F-CD9F-AC43-2040-CD25314BAF4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Splines.Examples.Editor", "Unity.Splines.Examples.Editor.csproj", "{F742E3A8-42E1-F141-7414-A76B5FBE1ACD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMODUnityResonanceEditor", "FMODUnityResonanceEditor.csproj", "{F775DD2D-6B9E-C573-6D38-AE221D218283}"
 EndProject
@@ -61,6 +65,10 @@ Global
 		{07C28832-BF1D-60E0-E8EF-3671F14106CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07C28832-BF1D-60E0-E8EF-3671F14106CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07C28832-BF1D-60E0-E8EF-3671F14106CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4D87E87-B23D-42C4-1330-9979D30F2179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4D87E87-B23D-42C4-1330-9979D30F2179}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4D87E87-B23D-42C4-1330-9979D30F2179}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4D87E87-B23D-42C4-1330-9979D30F2179}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93A12D28-BFB8-F7E8-A6ED-60673DD77CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{93A12D28-BFB8-F7E8-A6ED-60673DD77CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93A12D28-BFB8-F7E8-A6ED-60673DD77CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,6 +85,10 @@ Global
 		{9A64C19F-CD9F-AC43-2040-CD25314BAF4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A64C19F-CD9F-AC43-2040-CD25314BAF4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A64C19F-CD9F-AC43-2040-CD25314BAF4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F742E3A8-42E1-F141-7414-A76B5FBE1ACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F742E3A8-42E1-F141-7414-A76B5FBE1ACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F742E3A8-42E1-F141-7414-A76B5FBE1ACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F742E3A8-42E1-F141-7414-A76B5FBE1ACD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F775DD2D-6B9E-C573-6D38-AE221D218283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F775DD2D-6B9E-C573-6D38-AE221D218283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F775DD2D-6B9E-C573-6D38-AE221D218283}.Release|Any CPU.ActiveCfg = Release|Any CPU

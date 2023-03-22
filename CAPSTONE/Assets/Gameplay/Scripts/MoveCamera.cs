@@ -40,7 +40,7 @@ public class MoveCamera : MonoBehaviour
 
     private void Update()
     {
-        print(transform.rotation);
+        //print(transform.rotation);
 
 
 

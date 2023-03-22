@@ -6,6 +6,7 @@ using FMODUnity;
 using System.Reflection;
 using System;
 using UnityEngine.Events;
+using ZSerializer;
 
 public class GameController : MonoBehaviour
 {
@@ -98,10 +99,14 @@ public class GameController : MonoBehaviour
     public Vector3 introShakeStats;
 
     [Header("ObjectsInTheRoom")]
+    public Light[] roomLights;
     public Material lightsMaterial;
+
+    //int testCounter = 0;
 
     public void Awake()
     {
+        print("DOes the awake run again??");
         if (instance == null) instance = this;
         else Destroy(gameObject);
 
@@ -128,7 +133,10 @@ public class GameController : MonoBehaviour
         //cutscene = true;
         //print(tesseract.animator);
         TurnOffLightsInRoom();
-        
+
+        ZSerialize.LoadScene();
+        //print(testCounter);
+
     }
 
     void ShortCutToFirstPuzzle()
@@ -157,6 +165,20 @@ public class GameController : MonoBehaviour
         {
             if (corkboard.CanAdd()) corkboard.AddPapers();
         }
+
+        
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            //testCounter++;
+            print("saving from controller");
+            ZSerialize.SaveScene();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            StartSide();
+        }
+        
     }
 
    
@@ -386,7 +408,6 @@ public class GameController : MonoBehaviour
 
     public void StartTutorial()
     {
-        //cb.StartDialogueChunk("tutorial");
         tutorialArrows[0].SetActive(true);
     }
 
@@ -419,11 +440,19 @@ public class GameController : MonoBehaviour
 
     void TurnOffLightsInRoom()
     {
+        foreach (Light l in roomLights)
+        {
+            l.gameObject.SetActive(false);
+        }
         lightsMaterial.SetFloat("_FlickerAmount", 1);
     }
 
     public void TurnOnLightsInRoom()
     {
+        foreach (Light l in roomLights)
+        {
+            l.gameObject.SetActive(true);
+        }
         lightsMaterial.SetFloat("_FlickerAmount", 0);
     }
 }

@@ -29,7 +29,7 @@ public class BinaryInputBrain : InteractableParent
         counter++;
         if (counter >= particles.Length) counter = 0;
 
-        print(particles.Length + " " + particles[counter]);
+        //print(particles.Length + " " + particles[counter]);
         img.sprite = particles[counter];
     }
 

@@ -106,7 +106,7 @@ public class GameController : MonoBehaviour
 
     public void Awake()
     {
-        print("DOes the awake run again??");
+        //print("DOes the awake run again??");
         if (instance == null) instance = this;
         else Destroy(gameObject);
 
@@ -170,13 +170,14 @@ public class GameController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             //testCounter++;
-            print("saving from controller");
+            //print("saving from controller");
             ZSerialize.SaveScene();
         }
 
         if (Input.GetKeyDown(KeyCode.N))
         {
             StartSide();
+            //FullInputController.instance.PuzzleReady();
         }
         
     }
@@ -244,16 +245,17 @@ public class GameController : MonoBehaviour
                     StartCoroutine(ei.Fizzle(-1)); // awful line of code //Destroy(transform.GetChild(i).gameObject);
                 }
             }
-            else
+            else if (child.GetComponent<PlantCondition>() != null)
             {
                 PlantCondition pc = child.GetComponent<PlantCondition>();
-                print("does this run?");
-                if (pc != null)
-                {
-                    StopCoroutine(pc.Fizzle(-1));
-                    StartCoroutine(pc.Fizzle(-1));
-                }
+                StopCoroutine(pc.Fizzle(-1));
+                StartCoroutine(pc.Fizzle(-1));
             }
+            else
+            {
+                Destroy(child.gameObject);
+            }
+
         }
     }
 

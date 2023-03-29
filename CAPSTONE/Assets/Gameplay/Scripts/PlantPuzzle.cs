@@ -19,12 +19,34 @@ public class PlantPuzzle : MonoBehaviour
 
     // FUCK man I can't scale the puzzles now or else the ends don't place correctly
 
+    // okay I'm gonna make it spawn its own root when it loads up?
+
+    // I kinda wanna retry this code
+    // but it would be so much to rerwite
+    // what needs to happen next
+    // we need the branch length to change based on if its going diagonal or orthogonal
+    // if the root is 45 deg, a straight path is diagonal, if the root is 0 degrees, a straight path is straight, if the root is 90 degrees, a straight path is straight
+    // if the spread is normal, then diagonal, if the spread is flat, then straight
+    // if the root is normal and the spread is normal, diagonal, if the root is 45 and the spread is normal,
+
+    // straight branches are easy, they just do whatever the root does? so liek if the root is diagonal, then the straight is diagonla length
+    // I might just need to make a big like if chain with a bunch of conditions
+    // but the end result is sending in a different length for the branches
+
+    // should I make like 8 different branch types??
+
+    // maybe the root can shift between doing normal, 45 left, and 45 right and then going back to normal?
+
+    float orthoLength = 1f, diagLength = 1.4142f, specLength = 0.70710678118f; // i need the mathematical hypotenuse of a 1x1 square, special length is for using two sides to get the hypotenuse to 1
+
     int counter;
 
     static public PlantPuzzle instance;
 
     public GameObject branchPrefab;
     public GameObject fruitPrefab;
+    public GameObject rootPrefab;
+    Transform root;
     [HideInInspector]
     public List<BranchInitializer> emptyBranches = new List<BranchInitializer>(); // the current empty branches
     List<BranchInitializer> branchesToBeAdded = new List<BranchInitializer>(); // the branches I'm going to make on this frame
@@ -34,12 +56,14 @@ public class PlantPuzzle : MonoBehaviour
 
     //public GameObject[] AllPuzzles;
     List<PlantCondition> levelConditions = new List<PlantCondition>();
+    
 
     //[HideInInspector]
     //public GameObject currentLevel;
     //public int currentLevelNum;
 
-    float branchAngleDiv = 1f; // wonder if we can use some stuff to affect the children with this? idk
+    int branchAngleInt = 1; // wonder if we can use some stuff to affect the children with this? idk
+    // oh shit this kinda sucks cause now its not really in a 1.5 distance sort of setup
 
     [HideInInspector]
     public int cCount;
@@ -53,15 +77,24 @@ public class PlantPuzzle : MonoBehaviour
     [HideInInspector]
     public bool shouldResetWhenDone;
 
-    private void OnEnable() // noice, feels wrong for some reoson lmao
+    private void OnEnable() // noice, feels wrong for some reoson lmao, why do I have it as onenable?
     {
         //print(instance.gameObject.name);
+        //print("first?");
 
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < transform.childCount; i++) // doing -1 becuase of the root spawning in
         {
             levelConditions.Add(transform.GetChild(i).GetComponent<PlantCondition>());
             //print("adding level conditions");
         }
+
+    }
+
+    private void Start()
+    {
+        //print("second?");
+        GameObject r = Instantiate(rootPrefab, transform);
+        root = r.transform;
     }
 
     public void SetAsActive()
@@ -84,7 +117,9 @@ public class PlantPuzzle : MonoBehaviour
 
     public void MakeBranches(string t)
     {
-        cCount = transform.childCount; // quick way to get child Count // AHH no more children cause the level is children
+        // okay so for how i've set it up, 
+
+        cCount = transform.childCount-1; // quick way to get child Count // AHH no more children cause the level is children
 
         //Vector3 startPoint = transform.position; // first branch starts at the root
 
@@ -98,6 +133,9 @@ public class PlantPuzzle : MonoBehaviour
             //print("start path");
             if (t[0] == '0') MakeSplit(startPoint);
             if (t[0] == '1') MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
+            // omg wait maybe the 0 and \/ have the turn and spread effects on the root!
+            if (t[0] == '2') TurnRoot();
+            if (t[0] == '3') SpreadBranches();
         }
         else // for every other input, use the ends of the branches
         {
@@ -148,6 +186,37 @@ public class PlantPuzzle : MonoBehaviour
         cCount = transform.childCount;
     }
 
+    void SpreadBranches()
+    {
+        if (branchAngleInt == 1) branchAngleInt = 2;
+        else branchAngleInt = 1;
+    }
+
+    public void ResetSpread()
+    {
+        branchAngleInt = 1;
+    }
+
+    void TurnRoot()
+    {
+        //print("turn");
+        // so the main issue is that I need the puzzle elements to stay the same now
+        root.Rotate(Vector3.forward, 45);
+        // i think I may need to like save if the root is ortho or not? or maybe I'll just do a get root rot
+    }
+
+    public void ResetRotation()
+    {
+        root.rotation = Quaternion.Euler(Vector3.zero);
+    }
+
+    bool IsRootOrtho()
+    {
+        print(root.rotation.eulerAngles.z);
+        if (root.rotation.eulerAngles.z == 0 || 90 - Mathf.Abs(root.rotation.eulerAngles.z) < .2f) return true;
+        return false;
+    }
+
     public void UpdateEmptyBranches()
     {
         
@@ -185,7 +254,7 @@ public class PlantPuzzle : MonoBehaviour
 
         if (shouldResetWhenDone) // this should reset me if the paths detect a collision
         {
-            print("what's this for?");
+            //print("what's this for?");
             ClearPuzzle();
         }
         else
@@ -246,12 +315,22 @@ public class PlantPuzzle : MonoBehaviour
     
     public void MakeStraight(Vector3 start) // give it start point, it knows the end point
     {
+        // so if root isn't 0 or 90 degrees, length is 
+        // or wait, yeah, there is the issue of 
+        // okay so do we just need a hypotenuse value?
+        // like a diagonl length and a orthogonal length?
+        // actually this is awesome this should mean that straight is all sorted out since the spread doesn't matter
+
+        float branchLength = orthoLength;
+
+        if (!IsRootOrtho()) branchLength = diagLength;
+
         GameObject b = Instantiate(branchPrefab, transform.position, Quaternion.identity);
         b.transform.SetParent(transform);
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + (transform.up * transform.localScale.x), "straight", this); // shit okay so we can use just this transform.up and it doesn't change much
+        bi.Initialize(start, start + (root.up * transform.localScale.x * branchLength), "straight", this); // shit okay so we can use just this transform.up and it doesn't change much
         branchesToBeAdded.Add(bi);
         branches.Add(b);
         bi.TurnOnCollider();
@@ -264,7 +343,41 @@ public class PlantPuzzle : MonoBehaviour
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + (((transform.up * transform.localScale.x) / branchAngleDiv)) + (-transform.right * transform.localScale.x), "left", this); // this was working the whole time i'm pretty sure
+
+        // assuming nothing
+        // how do I find the reverse of the hypotenuse?
+        // like, instead of going out 1x 1y to get a lnegth of 1.41 i now need to go from ?x ?y to get a length of 1
+
+        float branchLength = orthoLength;
+
+        if (!IsRootOrtho())
+        {
+            if (branchAngleInt == 1) branchLength = specLength; // so far this is all correct, until its diag && spread is 2
+            else branchLength = diagLength;
+        }
+
+        if (branchAngleInt == 1) // make them 45 degrees
+        {
+            bi.Initialize(start, start + ((root.up * transform.localScale.x * branchLength)) + (-root.right * transform.localScale.x * branchLength), "left", this); // old, saving for reference
+        }
+
+        // nice, okay so what do we do then about the spread amount. its either one or the other
+        // if root is ortho && spread is 1, branches are ortho (but result in diag)
+        // if root is ortho && spread is 2, branches are ortho but made flat
+        // if root is diag && spread is 1, branches are speclength (but result is ortho)
+        // if root is diag && spread is 2, branches are ortho but result in diag but made flat
+        
+        // if the root is angled, then the branch l becomes the smaller one, and we can't have that if its angled and a wide branch
+        
+        if (branchAngleInt == 2) // make them 90 degrees
+        {
+            Vector3 branchAngle = -root.right; // root.up is 0, 0, 0? or no, that's rotation right?
+            bi.Initialize(start, start + Vector3.Scale(branchAngle, transform.localScale * branchLength), "left", this); // this was working the whole time i'm pretty sure
+        }
+
+
+        // bi.Initialize(start, start + (((root.up * transform.localScale.x) / branchAngleDiv)) + (-root.right * transform.localScale.x), "left", this); // old, saving for reference
+        // bi.Initialize(start, start + (((transform.up * transform.localScale.x) / branchAngleDiv)) + (-transform.right * transform.localScale.x), "left", this); // old, saving for reference;
         branchesToBeAdded.Add(bi);
         branches.Add(b);
 
@@ -278,7 +391,27 @@ public class PlantPuzzle : MonoBehaviour
         b.name = counter.ToString();
         counter++;
         BranchInitializer bi = b.GetComponent<BranchInitializer>();
-        bi.Initialize(start, start + (((transform.up * transform.localScale.x) / branchAngleDiv)) + (transform.right * transform.localScale.x), "right", this); // this was working the whole time i'm pretty sure
+
+        float branchLength = orthoLength;
+
+        if (!IsRootOrtho())
+        {
+            if (branchAngleInt == 1) branchLength = specLength; // so far this is all correct, until its diag && spread is 2
+            else branchLength = diagLength;
+        }
+
+        if (branchAngleInt == 1) // make them 45 degrees
+        {
+            bi.Initialize(start, start + ((root.up * transform.localScale.x * branchLength)) + (root.right * transform.localScale.x * branchLength), "left", this); // old, saving for reference
+        }
+
+        if (branchAngleInt == 2) // make them 90 degrees
+        {
+            Vector3 branchAngle = root.right; // root.up is 0, 0, 0? or no, that's rotation right?
+            bi.Initialize(start, start + Vector3.Scale(branchAngle, transform.localScale * branchLength), "left", this); // this was working the whole time i'm pretty sure
+        }
+
+        //bi.Initialize(start, start + (((root.up * transform.localScale.x) / branchAngleDiv)) + (root.right * transform.localScale.x), "right", this); // this was working the whole time i'm pretty sure
         branchesToBeAdded.Add(bi);
         branches.Add(b);
 
@@ -354,14 +487,15 @@ public class PlantPuzzle : MonoBehaviour
         if (cCount > 0 && emptyBranches.Count == 0)
         {
             //print("do we clear the puzzle?");
-            print(cCount + " " + emptyBranches.Count);
-            print("its full?"); // my hunch is that its doing this somehow after the puzzle clears
+            //print(cCount + " " + emptyBranches.Count);
+            //print("its full?"); // my hunch is that its doing this somehow after the puzzle clears
             StartCoroutine(DelayAndThenFunction(ClearPuzzle, .5f));
         }
     }
 
     public void ClearPuzzle()
     {
+        //print("clear");
         emptyBranches.Clear();
         fruits.Clear(); // just gotta clear it
         branches.Clear();
@@ -371,7 +505,7 @@ public class PlantPuzzle : MonoBehaviour
         {
             // remove from list first? what list? heheh nice // actually lol I still think we need to do that
 
-            print("is this happening first?");
+            //print("is this happening first?");
             // if a child is NOT a puzzle condition, meaning something we placed, cool
             Transform t = transform.GetChild(i);
 
@@ -394,7 +528,6 @@ public class PlantPuzzle : MonoBehaviour
                     StopCoroutine(ei.Fizzle(-1));
                     StartCoroutine(ei.Fizzle(-1)); // awful line of code //Destroy(transform.GetChild(i).gameObject);
                 }
-
             }
             // instead of destroy we set them to fizzle, but the arrays do clear
         }

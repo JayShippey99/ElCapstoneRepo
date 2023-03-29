@@ -160,7 +160,7 @@ public class SideManager : InteractableParent
                 {
                     foreach (PlantPuzzle pp in pb.puzzles) // very gross but this is how we can set the currently active puzzle
                     {
-                        print("does the error happen here?");
+                        //print("does the error happen here?");
                         if (pp.gameObject.activeInHierarchy) GameController.instance.currentPuzzle = pp; // this should never run, which I think is good
                     }
 

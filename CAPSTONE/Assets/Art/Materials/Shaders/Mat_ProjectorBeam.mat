@@ -41,7 +41,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Gradient1: 0.65
+    - _Gradient1: 0
     - _Gradient2: 3.68
     - _QueueControl: 0
     - _QueueOffset: 0

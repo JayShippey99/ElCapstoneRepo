@@ -45,6 +45,8 @@ public class BranchInitializer : MonoBehaviour
         //startEnds.Add(new Vector2(start.x - transform.parent.position.x, start.y - transform.parent.position.y)); // its close enough, still don't totally get why its off though // +2.1 // its like I need to offset by the world position of the tesseract or something
         //startEnds.Add(new Vector2(end.x - transform.parent.position.x, end.y - transform.parent.position.y));
 
+        // so the colliions almost work with the flat brnaches, they'll collide with each other if they're both placed at the same time
+
         startEnds.Add(new Vector2(start.x, start.y)); // its close enough, still don't totally get why its off though // +2.1 // its like I need to offset by the world position of the tesseract or something
         startEnds.Add(new Vector2(end.x, end.y));
 
@@ -55,9 +57,9 @@ public class BranchInitializer : MonoBehaviour
         // oh shit i think i need global line casts
         if (Physics2D.Linecast(end + transform.parent.position, start + transform.parent.position)) // FUCK YEAH BABYY okay so this works, we can move this to the create funciton I assuem? // oh yo i wonder if its these being messed with
         {
-            //print("hit");
             RaycastHit2D r = Physics2D.Linecast(end + transform.parent.position, start + transform.parent.position); // is the branch hitting itself?? // it might just be hitting itself?
 
+            //print(gameObject.name + " hit " + r.collider.name);
             LineRenderer hitBranch = r.collider.GetComponent<LineRenderer>();  // ohhh I'm doing it here that's what's going on
 
             LineRenderer thisBranch = GetComponent<LineRenderer>();
@@ -65,7 +67,14 @@ public class BranchInitializer : MonoBehaviour
             //print(hitBranch.gameObject.name + " this was hit by " + gameObject.name); // its hitting itself wtf
             //print(thisBranch.GetPosition(0) + " " + thisBranch.GetPosition(1) + " " + hitBranch.GetPosition(0) + " " + hitBranch.GetPosition(1));
 
-            if (hitBranch.GetPosition(1) != thisBranch.GetPosition(0) && hitBranch.GetPosition(1) != thisBranch.GetPosition(0))
+            //print((thisBranch.GetPosition(0) == hitBranch.GetPosition(1)) + " is the new branch coming off of the hit branch");
+            //print((thisBranch.GetPosition(1) == hitBranch.GetPosition(0)) + " is the new branch's end the start of the hit branch");
+
+
+            // okay I can't do this anymore based on what it comes off from
+            // 
+            // dude wtf I'm so lost but it worked
+            if (hitBranch.GetPosition(1) != thisBranch.GetPosition(0) || hitBranch.GetPosition(0) == thisBranch.GetPosition(1))// && hitBranch.GetPosition(1) != thisBranch.GetPosition(0))
             {
                 //print("FOUND SOMETHING"); // okay so the trick now is that this triggers on every new branch, maybe I can ask like if the end and start points are the same
                 // so if the start point and the end point of either thing are matching up, then its not a collision

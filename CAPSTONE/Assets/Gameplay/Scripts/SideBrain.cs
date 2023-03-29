@@ -116,7 +116,7 @@ public class SideBrain : InteractableParent
 
     public void SetState(bool on)
     {
-        print("turning on");
+        //print("turning on");
         isOn = on;
         idle = false;
     }

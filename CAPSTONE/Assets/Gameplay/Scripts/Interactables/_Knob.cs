@@ -113,10 +113,10 @@ public class _Knob : InteractableParent
         // I need to grab and drag, 0 + 10 drag. I've gone 10 away from the center point
         if (canInteract == false)
         {
-            print("cant interact");
+            //print("cant interact");
             if (Tesseract.instance.needsToUpright == false)
             {
-                print("this no go?");
+                //print("this no go?");
                 canInteract = true;
             }
         }

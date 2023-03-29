@@ -147,7 +147,7 @@ public class FullInputController : InteractableParent
 
     public void PuzzleReady() // yeah we need this, when it focuses
     {
-        print(currentPuzzle);
+        //print(currentPuzzle);
         if (currentPuzzle != null)
         {
             ResetAllScreens();

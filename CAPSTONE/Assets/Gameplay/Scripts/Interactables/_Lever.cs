@@ -74,7 +74,9 @@ public class _Lever : MonoBehaviour
     {
         if (puzzleResetLever && GameController.instance.currentPuzzle != null)
         {
-            GameController.instance.currentPuzzle.ClearPuzzle();
+            GameController.instance.currentPuzzle.ResetSpread();
+            GameController.instance.currentPuzzle.ResetRotation();
+            GameController.instance.currentPuzzle.ClearPuzzle(); // this is so wanky lol
         }
         else
         {

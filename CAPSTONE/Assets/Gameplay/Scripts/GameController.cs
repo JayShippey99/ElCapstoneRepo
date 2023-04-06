@@ -98,9 +98,24 @@ public class GameController : MonoBehaviour
 
     public Vector3 introShakeStats;
 
+    [Header("Machines to add")]
+    public GameObject[] machines;
+    public Animator screenDarken;
+
     [Header("ObjectsInTheRoom")]
     public Light[] roomLights;
     public Material lightsMaterial;
+    public _Switch switchForSpread;
+
+    [Header("MusicStuff")]
+    FMOD.Studio.Bus busMusic;
+    FMOD.Studio.Bus busSFX;
+
+    [HideInInspector]
+    public float musicVolume; // so these will need a translation one way or another. I think it might be best to save it as . so it starts at .8. and our things go from -80 to 10, so its really -90 to 0 which means .8 of -90 is? -89.2 maybe that'll lineit up right? no, that's not right
+    // just use a map function dummy
+    [HideInInspector]
+    public float sfxVolume;
 
     //int testCounter = 0;
 
@@ -134,9 +149,22 @@ public class GameController : MonoBehaviour
         //print(tesseract.animator);
         TurnOffLightsInRoom();
 
-        ZSerialize.LoadScene();
+        //ZSerialize.LoadScene();
         //print(testCounter);
 
+        busMusic = FMODUnity.RuntimeManager.GetBus("bus:/BusMusic");
+        busSFX = FMODUnity.RuntimeManager.GetBus("bus:/BusSFX");
+
+
+        musicVolume = .8f;
+        sfxVolume = .8f;
+        print(sfxVolume);
+        print(musicVolume);
+    }
+
+    public bool IsPuzzleReal()
+    {
+        return currentPuzzle != null;
     }
 
     void ShortCutToFirstPuzzle()
@@ -205,6 +233,7 @@ public class GameController : MonoBehaviour
                 thisPuzzle = s.puzzles[i];
                 nextPuzzle = s.puzzles[i + 1];
 
+                print(thisPuzzle);
                 // CHANGE PUZZLE
                 KillCurrentPuzzle(thisPuzzle.transform);
                 StartCoroutine(DelayAndThenFunction(StartNextPuzzle, fizzleDelay)); // you can place after the puzzle is solved
@@ -224,6 +253,10 @@ public class GameController : MonoBehaviour
 
     void KillCurrentPuzzle(Transform puzzle)
     {
+        if (RotationScreen.instance != null) RotationScreen.instance.Restart();
+
+        if (SpreadScreen.instance != null) SpreadScreen.instance.Restart();
+
         foreach (Transform child in puzzle)
         {
             if (!child.CompareTag("BranchPuzzleCondition"))
@@ -256,6 +289,21 @@ public class GameController : MonoBehaviour
                 Destroy(child.gameObject);
             }
 
+        }
+    }
+
+    public void ChangeBusVolume(bool changeMusic, float sliderV, float db)
+    {
+        if (changeMusic)
+        {
+            musicVolume = sliderV;
+            busMusic.setVolume(db);
+            print(musicVolume + " musvol");
+        }
+        else
+        {
+            sfxVolume = sliderV;
+            busSFX.setVolume(db);
         }
     }
 
@@ -378,6 +426,27 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void AddMachineSequence()
+    {
+        // run an animation 
+        screenDarken.SetTrigger("Blink");
+    }
+
+    public void AddMachine()
+    {
+        foreach (GameObject g in machines)
+        {
+            if (g.activeInHierarchy == false)
+            {
+                g.SetActive(true);
+
+                // lowkey what I think I might do also is make it so that based on g, I start a different new dialogue section or something
+                if (g.name == "RotateMachine") cb.StartDialogueSection("rotateMachine");
+                return;
+            }
+        }
+    }
+
     public void SetPapersToAdd()
     {
         corkboard.SetPapersToAdd();
@@ -415,7 +484,9 @@ public class GameController : MonoBehaviour
 
     public void StartSide() // AKA unlock side
     {
+        //print("from start side");
         SideManager.instance.Unfocus();
+
         for (int i = 0; i < sides.Length; i++)
         {
             if (sides[i].projection.isOn == false)
@@ -429,6 +500,7 @@ public class GameController : MonoBehaviour
 
     public void EndSide()
     {
+        //print("from end side");
         SideManager.instance.Unfocus(); // I'm gonna do it at the beginning and end of a section just to make sure it's working
         cb.StartDialogueSection(cb.dialogueSections[dialogueSectionNum]);
     }
@@ -457,6 +529,16 @@ public class GameController : MonoBehaviour
         }
         lightsMaterial.SetFloat("_FlickerAmount", 0);
     }
+        
+    public void ResetGame()
+    {
+        print("reset game");
+        
+        // fade to black or something
+        // reset all stats
+        // reopen level?
+    }
+
 }
 
 [System.Serializable]

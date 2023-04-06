@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2605809193918316220}
-  - component: {fileID: 2605809193918316223}
   - component: {fileID: 2605809193918316222}
   - component: {fileID: 2605809193918316221}
   m_Layer: 0
@@ -36,39 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &2605809193918316223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2605809193918316216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 646df0405d11d8b45913182df0533162, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pbMat: {fileID: 2100000, guid: d2be525864874804aacce44084a17ede, type: 2}
-  frontMat: {fileID: 0}
-  backMat: {fileID: 0}
-  rightMat: {fileID: 0}
-  leftMat: {fileID: 0}
-  topMat: {fileID: 0}
-  bottomMat: {fileID: 0}
-  speedOn: 0
-  speedOff: 0
-  ac1:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  ac2:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &2605809193918316222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,8 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507f97876b405a94d9310cf75d8d0f76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objs:
-  - {fileID: 2605809193918316223}
+  objs: []
   flipper: {fileID: 2947843957822957468}
   speed: 50
   ac:

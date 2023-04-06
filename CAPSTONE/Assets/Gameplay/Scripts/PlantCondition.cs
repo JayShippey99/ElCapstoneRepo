@@ -52,11 +52,10 @@ public class PlantCondition : MonoBehaviour
 
                 Vector3 middle = Vector3.Lerp(lr.GetPosition(0), lr.GetPosition(1), .5f); // find midpoint, absolutely fucking genius lmao
 
-
                 middle = new Vector3(middle.x * transform.parent.right.x, middle.y * transform.parent.up.y, middle.z * transform.parent.forward.z); // this I'm imagining just moves the mid point to where it is in real space?
                 // or maybe it rotates it
 
-                print(Vector3.Distance(transform.localPosition, middle) + " " + transform.localPosition + " " + middle); // yeah I think I gotta factor in the middle being calculated too using the angle
+                //print(Vector3.Distance(transform.localPosition, middle) + " " + transform.localPosition + " " + middle); // yeah I think I gotta factor in the middle being calculated too using the angle
 
                 if (Vector3.Distance(transform.localPosition, middle) < .01)
                 {
@@ -72,7 +71,7 @@ public class PlantCondition : MonoBehaviour
                     // so if I use transform.up, how do I get another vector to do dot product with?
                     // do I make another vector? how?
                     Vector3 compareAngle = Vector3.Normalize(bend - bstart); // simple,just subtract one from anoher
-                    print(Vector3.Dot(transform.up, compareAngle) + " dot");
+                    //print(Vector3.Dot(transform.up, compareAngle) + " dot");
 
                     /*
                     if (transform.localRotation.z - ((Mathf.Rad2Deg * funnyAng) + 90) < .1f) // well actully, if z = 0 and the angle is -90, this will never be true

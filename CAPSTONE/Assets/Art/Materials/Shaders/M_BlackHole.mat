@@ -66,6 +66,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BlackHoleSeeThrough: 0.05
     - _EdgePower: 0
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -73,5 +74,7 @@ Material:
     - _Square2Size: 1
     m_Colors:
     - _EdgeColor: {r: 2.252103, g: 24.139538, b: 31.829727, a: 1}
+    - _FocalPoint: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _RingNoiseSpeed: {r: 0.2, g: 0.5, b: 0, a: 0}
     - _SparkleSpeed: {r: 0.1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

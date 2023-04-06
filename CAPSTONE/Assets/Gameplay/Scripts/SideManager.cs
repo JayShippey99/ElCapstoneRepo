@@ -18,9 +18,12 @@ public class SideManager : InteractableParent
     static public SideManager instance;
 
     //public Transform frontSide, backSide, rightSide, leftSide, topSide, bottomSide; // but i feel like its smarter to have them segmented out like this?
-    Side[] sides;
+    Side[] sides; // just usgni the sides of the game controller we get all of these
     Transform[] tsides;
     SideBrain[] psides;
+
+    // for now i don't need to worry about the proejction material
+    // i just need to make sure that these new sides unlock properly and all tht?
 
     [HideInInspector]
     public Transform closestSide;
@@ -81,6 +84,7 @@ public class SideManager : InteractableParent
         }
         else
         {
+            print("from set switch");
             Unfocus();
         }
         
@@ -98,6 +102,8 @@ public class SideManager : InteractableParent
         }
         else
         {
+            print("from do something button");
+
             Unfocus();
         }
     }
@@ -117,8 +123,9 @@ public class SideManager : InteractableParent
             {
                 if (t.focused)
                 {
-                    t.focused = false;
+                    print("from change dial");
                     Unfocus();
+                    t.focused = false;
                 }
             }
         }
@@ -136,13 +143,23 @@ public class SideManager : InteractableParent
 
     public void Unfocus() // turns on all sides that are unlocked
     {
+
         foreach (SideBrain pb in psides)
         {
-            if (pb.unlocked) pb.SetState(true);
+            if (pb.unlocked)
+            {
+                pb.SetState(true);
+            }
         }
+
+        GameController.instance.currentPuzzle = null;
 
         // when unfocusing also run the full input controller function for show all or hide all depending on what the bool is
         FullInputController.instance.SidesUnfocus();
+
+        print("what? " + t.focused);
+        if (t.focused) t.animator.SetTrigger("Return"); // making this already trigger means that when i get to this path it'll just go automatically
+        
     }
 
     void TurnOnFocusedSide()
@@ -153,21 +170,46 @@ public class SideManager : InteractableParent
         
         foreach (SideBrain pb in psides)
         {
+            //print("1");
             if (pb.unlocked)
             {
-                if (closestSide != pb.transform) pb.SetState(false);
+                //print("2");
+                if (closestSide != pb.transform)
+                {
+                //print("3");
+                    pb.SetState(false);
+                }
                 else
                 {
+                //print("4");
                     foreach (PlantPuzzle pp in pb.puzzles) // very gross but this is how we can set the currently active puzzle
                     {
                         //print("does the error happen here?");
                         if (pp.gameObject.activeInHierarchy) GameController.instance.currentPuzzle = pp; // this should never run, which I think is good
                     }
+                    
+                    if (pb.name == "FrontFace") t.animator.SetTrigger("Side1");
+                    if (pb.name == "BackFace") t.animator.SetTrigger("Side2");
+                    if (pb.name == "RightFace") t.animator.SetTrigger("Side3");
+                    if (pb.name == "LeftFace") t.animator.SetTrigger("Side4");
+                    if (pb.name == "TopFace") t.animator.SetTrigger("Side5");
+                    if (pb.name == "BottomFace") t.animator.SetTrigger("Side6");
 
                     pb.SetState(true);
                 }
             }
         }
+
+        
+        if (RotationScreen.instance != null)
+        {
+            RotationScreen.instance.AdjustToPuzzle();
+        }
+        if (SpreadScreen.instance != null)
+        {
+            SpreadScreen.instance.AdjustToPuzzle();
+        }
+        
     }
 
     void SetClosestSide()
@@ -203,22 +245,22 @@ public class SideManager : InteractableParent
         // activate the trigger for the puzzle. we might be straying away from the game controller lowkey
         switch (closestSide.name)
         {
-            case "FrontPlane":
+            case "FrontFace":
                 // print("front");
                 return Vector3.forward;
-            case "BackPlane":
+            case "BackFace":
                 //print("back");
                 return Vector3.back;
-            case "RightPlane":
+            case "RightFace":
                 //print("right");
                 return Vector3.right;
-            case "LeftPlane":
+            case "LeftFace":
                 // print("left");
                 return Vector3.left;
-            case "TopPlane":
+            case "TopFace":
                 // print("top");
                 return Vector3.up;
-            case "BottomPlane":
+            case "BottomFace":
                 // print("bottom");
                 return Vector3.down;
         }

@@ -382,12 +382,13 @@ MonoBehaviour:
   - {fileID: -4591744812547122466}
   - {fileID: -8440913484016145077}
   - {fileID: -1247968866231263629}
+  - {fileID: 2054600765356984859}
   EditorParameters: []
   MasterBanks:
   - {fileID: 5758709198969958138}
   StringsBanks:
   - {fileID: 6745569315438918278}
-  cacheTime: 638146449640000000
+  cacheTime: 638163017960000000
   cacheVersion: 131601
 --- !u!114 &78715104449089100
 MonoBehaviour:
@@ -443,6 +444,33 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+  Length: 0
+--- !u!114 &2054600765356984859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: snapshot:/FilterMusic
+  m_EditorClassIdentifier: 
+  Path: snapshot:/FilterMusic
+  Guid:
+    Data1: -582822421
+    Data2: 1185054824
+    Data3: 51252893
+    Data4: -1986219024
+  Banks:
+  - {fileID: 5758709198969958138}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
   Length: 0
 --- !u!114 &2529529147420381586
 MonoBehaviour:
@@ -564,7 +592,7 @@ MonoBehaviour:
   Path: Assets/Audio/FMODBanks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638146449620000000
+  lastModified: 638163017960000000
   FileSizes: []
   Exists: 1
 --- !u!114 &6745569315438918278
@@ -582,8 +610,8 @@ MonoBehaviour:
   Path: Assets/Audio/FMODBanks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638146449640000000
+  lastModified: 638163017960000000
   FileSizes:
   - Name: 
-    Value: 1574
+    Value: 1798
   Exists: 1

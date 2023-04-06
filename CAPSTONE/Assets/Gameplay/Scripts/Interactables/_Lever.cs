@@ -89,6 +89,11 @@ public class _Lever : MonoBehaviour
         
 
         currentState = returningToNormal;
+
+        foreach (InteractableParent ip in objs)
+        {
+            ip.LeverPulled();
+        }
     }
 
     void SetStartRotForLerp()

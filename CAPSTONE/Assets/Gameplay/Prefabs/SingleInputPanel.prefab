@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a4a2e4e9c15e4434193b37e5ebaa4f8e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2f8f5cf51c298c44ba5acafe773b9e1a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -92,8 +92,8 @@ MonoBehaviour:
   light: {fileID: 476087841793303022}
   img: {fileID: 0}
   particles:
-  - {fileID: 21300000, guid: a4a2e4e9c15e4434193b37e5ebaa4f8e, type: 3}
   - {fileID: 21300000, guid: 2f8f5cf51c298c44ba5acafe773b9e1a, type: 3}
+  - {fileID: 21300000, guid: a4a2e4e9c15e4434193b37e5ebaa4f8e, type: 3}
   - {fileID: 21300000, guid: 2cf55c2795774d24d87f0074666831e2, type: 3}
   - {fileID: 21300000, guid: a52f9e6f4a49bfd4e8913d91fb895c14, type: 3}
   counter: 0

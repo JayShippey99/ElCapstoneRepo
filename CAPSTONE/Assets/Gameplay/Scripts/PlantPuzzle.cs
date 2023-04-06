@@ -134,8 +134,8 @@ public class PlantPuzzle : MonoBehaviour
             if (t[0] == '0') MakeSplit(startPoint);
             if (t[0] == '1') MakeStraight(startPoint); // these always run which is not good // maybe I can just check if there was anything that worked, like if there are branches but they're all full or something
             // omg wait maybe the 0 and \/ have the turn and spread effects on the root!
-            if (t[0] == '2') TurnRoot();
-            if (t[0] == '3') SpreadBranches();
+            //if (t[0] == '2') TurnRoot();
+            //if (t[0] == '3') SpreadBranches();
         }
         else // for every other input, use the ends of the branches
         {
@@ -186,10 +186,12 @@ public class PlantPuzzle : MonoBehaviour
         cCount = transform.childCount;
     }
 
-    void SpreadBranches()
+    public void SpreadBranches(bool shouldSpread)
     {
-        if (branchAngleInt == 1) branchAngleInt = 2;
+        if (shouldSpread) branchAngleInt = 2;
         else branchAngleInt = 1;
+
+        print("spread branches comes out to " + branchAngleInt);
     }
 
     public void ResetSpread()
@@ -197,11 +199,21 @@ public class PlantPuzzle : MonoBehaviour
         branchAngleInt = 1;
     }
 
-    void TurnRoot()
+    public int GetBranchSpread()
+    {
+        return branchAngleInt;
+    }
+
+    public void TurnRoot(int d) // only take -1 or 1
     {
         //print("turn");
         // so the main issue is that I need the puzzle elements to stay the same now
-        root.Rotate(Vector3.forward, 45);
+        
+        root.Rotate(Vector3.forward, (int)(45 * d)); // this doesn't mess with the indicator on the screen, don't worry about this
+        // wow awesome the root rotates within 180 degrees, like it goes 0 -45 -90 eetc 180 90 45 0
+        
+
+
         // i think I may need to like save if the root is ortho or not? or maybe I'll just do a get root rot
     }
 
@@ -210,11 +222,26 @@ public class PlantPuzzle : MonoBehaviour
         root.rotation = Quaternion.Euler(Vector3.zero);
     }
 
+    public int GetRootRotation()
+    {
+        //print((int)root.rotation.z + " " + root.rotation.z);
+        return (int)root.rotation.eulerAngles.z; // oof wait though I won't be able to like get a clean value if it spins around all silly
+    }
+
+
     bool IsRootOrtho()
     {
-        print(root.rotation.eulerAngles.z);
-        if (root.rotation.eulerAngles.z == 0 || 90 - Mathf.Abs(root.rotation.eulerAngles.z) < .2f) return true;
-        return false;
+        //print(root.rotation.eulerAngles.z);
+        //print(45 - (int)root.rotation.eulerAngles.z % 90); // -45 % 90 = 45 same if pos, 0 % 90 = 0, -90 % 90 = 0
+        //print((int)root.rotation.eulerAngles.z % 45 + " modulo 45"); // -45 % 45 = 0 same if pos, 0 % 45 = 0, -90 % 45 = 0
+        // okay so we can just do a modulo operator here?
+        if (Mathf.Abs(45 - (int)root.rotation.eulerAngles.z % 90) < 5) return false;
+        return true;
+    }
+
+    public bool HasPlacedBranches()
+    {
+        return (branches.Count > 0);
     }
 
     public void UpdateEmptyBranches()

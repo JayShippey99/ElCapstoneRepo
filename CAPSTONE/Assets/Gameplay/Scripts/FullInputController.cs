@@ -65,7 +65,6 @@ public class FullInputController : InteractableParent
 
         if (readingInput) ReadInput();
 
-
         canSendLight.SetLight(canInput);
 
 

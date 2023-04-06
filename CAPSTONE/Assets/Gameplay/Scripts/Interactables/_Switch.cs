@@ -7,7 +7,8 @@ public class _Switch : MonoBehaviour
     // Start is called before the first frame update
     public InteractableParent[] objs; // I'm gonna add multiple parents
 
-    bool isOn;
+    [HideInInspector]
+    public bool isOn;
 
     public GameObject flipper;
 

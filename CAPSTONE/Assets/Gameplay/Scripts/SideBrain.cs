@@ -43,6 +43,8 @@ public class SideBrain : InteractableParent
 
     public Animator stickyNote;
 
+    bool grow, shrink, hide, normal;
+
     private void Start()
     {
         //if (instance == null) instance = this;
@@ -53,6 +55,7 @@ public class SideBrain : InteractableParent
 
         //m.SetFloat("_Gradient1", 0f);
         m.SetFloat("_Visibility", 0f);
+        m.GetFloat("_Visibility");
         //m.SetFloat("_FlickerAmount", 0f);
 
         puzzles = new PlantPuzzle[puzzleHouser.childCount - 1];
@@ -75,7 +78,11 @@ public class SideBrain : InteractableParent
             {
                 //print("do it?");
                 //particles.Play();
-                if (progress < 1) progress += Time.deltaTime * speedOn;
+                if (progress < 1)
+                {
+                    progress += Time.deltaTime * speedOn;
+                }
+
                 else
                 {
                     particles.Play();
@@ -84,7 +91,10 @@ public class SideBrain : InteractableParent
             }
             else
             {
-                if (progress > 0) progress -= Time.deltaTime * speedOff;
+                if (progress > 0)
+                {
+                    progress -= Time.deltaTime * speedOff;
+                }
                 else
                 {
                     idle = true;
@@ -113,8 +123,7 @@ public class SideBrain : InteractableParent
             }
         }
     }
-
-    public void SetState(bool on)
+    public void SetState(bool on) // set state means show or hide, has nothing to do with being focused, BUT if its being hidden, then it'll shrink
     {
         //print("turning on");
         isOn = on;

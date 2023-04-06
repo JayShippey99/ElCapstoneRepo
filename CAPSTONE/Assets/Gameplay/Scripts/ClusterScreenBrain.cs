@@ -23,6 +23,7 @@ public class ClusterScreenBrain : MonoBehaviour
     {
         GameObject p = new GameObject(sprite.ToString(), particleComponents);
         p.GetComponent<Image>().sprite = sprite;
+        p.GetComponent<Image>().color = new Color(255, 255, 255, .5f);
         p.GetComponent<RectTransform>().sizeDelta = Vector2.one * imageSize;
         p.transform.SetParent(transform);
         p.transform.localRotation = Quaternion.Euler(Vector3.zero);

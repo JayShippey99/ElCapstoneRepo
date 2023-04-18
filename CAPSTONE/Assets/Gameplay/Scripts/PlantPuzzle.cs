@@ -37,7 +37,7 @@ public class PlantPuzzle : MonoBehaviour
 
     // maybe the root can shift between doing normal, 45 left, and 45 right and then going back to normal?
 
-    float orthoLength = 1f, diagLength = 1.4142f, specLength = 0.70710678118f; // i need the mathematical hypotenuse of a 1x1 square, special length is for using two sides to get the hypotenuse to 1
+    const float orthoLength = 1f, diagLength = 1.4142f, specLength = 0.70710678118f; // i need the mathematical hypotenuse of a 1x1 square, special length is for using two sides to get the hypotenuse to 1
 
     int counter;
 
@@ -46,6 +46,7 @@ public class PlantPuzzle : MonoBehaviour
     public GameObject branchPrefab;
     public GameObject fruitPrefab;
     public GameObject rootPrefab;
+    public Sprite rootNormal, rootWide, rootWidest;
     Transform root;
     [HideInInspector]
     public List<BranchInitializer> emptyBranches = new List<BranchInitializer>(); // the current empty branches
@@ -56,7 +57,7 @@ public class PlantPuzzle : MonoBehaviour
 
     //public GameObject[] AllPuzzles;
     List<PlantCondition> levelConditions = new List<PlantCondition>();
-    
+
 
     //[HideInInspector]
     //public GameObject currentLevel;
@@ -113,6 +114,13 @@ public class PlantPuzzle : MonoBehaviour
     {
         yield return new WaitForSeconds(delayTime);
         function();
+    }
+
+    public void ChangeRootIcon(int spread)
+    {
+        if (spread == 1) root.GetComponent<SpriteRenderer>().sprite = rootNormal;
+        if (spread == 2) root.GetComponent<SpriteRenderer>().sprite = rootWide;
+        if (spread == 3) root.GetComponent<SpriteRenderer>().sprite = rootWidest;
     }
 
     public void MakeBranches(string t)
@@ -186,12 +194,16 @@ public class PlantPuzzle : MonoBehaviour
         cCount = transform.childCount;
     }
 
-    public void SpreadBranches(bool shouldSpread)
+    public void SpreadBranches(int spreadAmount)
     {
-        if (shouldSpread) branchAngleInt = 2;
-        else branchAngleInt = 1;
+        branchAngleInt = spreadAmount;
 
-        print("spread branches comes out to " + branchAngleInt);
+        if (HasPlacedBranches()) ClearPuzzle();
+
+        //print(branchAngleInt);
+        ChangeRootIcon(branchAngleInt);
+
+        //print("spread branches comes out to " + branchAngleInt);
     }
 
     public void ResetSpread()
@@ -334,7 +346,7 @@ public class PlantPuzzle : MonoBehaviour
             //print("does this run");
         }
 
-        //print("do we return with true?");
+        //print("is complete!");
 
         return true;
     }
@@ -383,10 +395,12 @@ public class PlantPuzzle : MonoBehaviour
             else branchLength = diagLength;
         }
 
-        if (branchAngleInt == 1) // make them 45 degrees
+        if (branchAngleInt == 1) // make them 45 degrees // but now what happens when we have a branch angle of 3? i want to go 135 degrees
         {
             bi.Initialize(start, start + ((root.up * transform.localScale.x * branchLength)) + (-root.right * transform.localScale.x * branchLength), "left", this); // old, saving for reference
         }
+
+
 
         // nice, okay so what do we do then about the spread amount. its either one or the other
         // if root is ortho && spread is 1, branches are ortho (but result in diag)
@@ -400,6 +414,11 @@ public class PlantPuzzle : MonoBehaviour
         {
             Vector3 branchAngle = -root.right; // root.up is 0, 0, 0? or no, that's rotation right?
             bi.Initialize(start, start + Vector3.Scale(branchAngle, transform.localScale * branchLength), "left", this); // this was working the whole time i'm pretty sure
+        }
+
+        if (branchAngleInt == 3) // make them 45 degrees // but now what happens when we have a branch angle of 3? i want to go 135 degrees
+        {
+            bi.Initialize(start, start + ((-root.up * transform.localScale.x * branchLength)) + (-root.right * transform.localScale.x * branchLength), "left", this); // old, saving for reference
         }
 
 
@@ -429,13 +448,18 @@ public class PlantPuzzle : MonoBehaviour
 
         if (branchAngleInt == 1) // make them 45 degrees
         {
-            bi.Initialize(start, start + ((root.up * transform.localScale.x * branchLength)) + (root.right * transform.localScale.x * branchLength), "left", this); // old, saving for reference
+            bi.Initialize(start, start + ((root.up * transform.localScale.x * branchLength)) + (root.right * transform.localScale.x * branchLength), "right", this); // old, saving for reference
         }
 
         if (branchAngleInt == 2) // make them 90 degrees
         {
             Vector3 branchAngle = root.right; // root.up is 0, 0, 0? or no, that's rotation right?
-            bi.Initialize(start, start + Vector3.Scale(branchAngle, transform.localScale * branchLength), "left", this); // this was working the whole time i'm pretty sure
+            bi.Initialize(start, start + Vector3.Scale(branchAngle, transform.localScale * branchLength), "right", this); // this was working the whole time i'm pretty sure
+        }
+
+        if (branchAngleInt == 3) // make them 45 degrees
+        {
+            bi.Initialize(start, start + ((-root.up * transform.localScale.x * branchLength)) + (root.right * transform.localScale.x * branchLength), "right", this); // old, saving for reference
         }
 
         //bi.Initialize(start, start + (((root.up * transform.localScale.x) / branchAngleDiv)) + (root.right * transform.localScale.x), "right", this); // this was working the whole time i'm pretty sure

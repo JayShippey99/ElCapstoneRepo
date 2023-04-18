@@ -57,26 +57,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\PathCreator\Examples\Scripts\PathSpawner.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\ZSerializers\AnchorZSerializer.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\2 - Scene Groups\House\Scripts\ObjectMover.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\GameManager.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\UIManager.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\ZSerializers\PinZSerializer.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\Anchor.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\BallMover.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\ZSerializers\BallMoverZSerializer.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\2 - Scene Groups\House\Scripts\MainMenu.cs" />
     <Compile Include="Assets\PathCreator\Examples\Scripts\GeneratePathExample.cs" />
     <Compile Include="Assets\PathCreator\Examples\Scripts\PathPlacer.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\NodeSpawner.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\ButtonInfo.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\CustomHingeSerializer.cs" />
     <Compile Include="Assets\PathCreator\Examples\Scripts\PathSceneTool.cs" />
-    <Compile Include="Assets\ZResources\ZSerializer\UnityComponentZSerializers.cs" />
     <Compile Include="Assets\PathCreator\Examples\Scripts\PathFollower.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\Pin.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\3 - Level Saving\Scripts\ZSerializers\NodeSpawnerZSerializer.cs" />
-    <Compile Include="Assets\ZSerializer\Samples\1 - Scene Saving\BallMover\Scripts\ZSerializers\GameManagerZSerializer.cs" />
     <Compile Include="Assets\PathCreator\Examples\Scripts\RoadMeshCreator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -755,6 +739,9 @@
     <Reference Include="Unity.Searcher.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Searcher.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
     </Reference>
@@ -856,14 +843,6 @@
     <ProjectReference Include="FMODUnityResonance.csproj">
       <Project>{93A12D28-BFB8-F7E8-A6ED-60673DD77CCB}</Project>
       <Name>FMODUnityResonance</Name>
-    </ProjectReference>
-    <ProjectReference Include="ZSerializer.Editor.csproj">
-      <Project>{21C59EB1-6C1B-007E-3F82-C30AA2EDED59}</Project>
-      <Name>ZSerializer.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="ZSerializer.Runtime.csproj">
-      <Project>{CA523F54-9DC8-0B3B-3895-E07B83631C5D}</Project>
-      <Name>ZSerializer.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -24,7 +24,7 @@ public class YourDialogueBrain : MonoBehaviour
     {
         if (!sent)
         {
-            print("exit you");
+            //print("exit you");
             anim.SetTrigger("Exit");
         }
     }
@@ -36,12 +36,12 @@ public class YourDialogueBrain : MonoBehaviour
             FMODUnity.RuntimeManager.PlayOneShot("event:/YourDialogue");
 
             sent = true;
-            print("send");
+            //print("send");
             anim.SetTrigger("Send");
             // here we have to send a notification back up to make everything else exit?
             // yeah this just means // OH WAIT this is also important for triggering which dialogue section to run next
             // how do we use exit code now?
-            print("this is exitCode " + exitCode);
+            //print("this is exitCode " + exitCode);
             cb.EndDialogueChunk(exitCode);
             GameController.instance.RunGameEvent(gameCode); // activate gameEvent?
         }

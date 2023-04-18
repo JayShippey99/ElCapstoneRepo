@@ -26,8 +26,9 @@ public class Tesseract : InteractableParent
 
     static public Tesseract instance;
 
-    [HideInInspector]
     public Animator animator;
+
+    public ParticleSystem particles;
 
     public float speed; // turn speed
     float turnRightAmount, turnUpAmount;
@@ -61,9 +62,6 @@ public class Tesseract : InteractableParent
         if (instance == null) instance = this;
         else Destroy(gameObject);
 
-        animator = transform.GetChild(0).GetComponent<Animator>();
-
-
         turnSoundLR = FMODUnity.RuntimeManager.CreateInstance("event:/TurningSoundsLR");
         turnSoundUD = FMODUnity.RuntimeManager.CreateInstance("event:/TurningSoundsUD");
         //print(animator);
@@ -71,6 +69,12 @@ public class Tesseract : InteractableParent
 
     private void Update()
     {
+
+        // UGHHHH so as soon as the animator is up, then the scale goes back down to 0
+        // okay so its whatever the value is in the editor
+        // but what sucks is that idk of a good way I can change that
+
+        
         if (needsToUpright == false)
         {
             // I now need to make it so that the thing unfocuses the moment that I move the thing around
@@ -92,7 +96,15 @@ public class Tesseract : InteractableParent
                 needsToUpright = false;
             }
         }
+        
     }
+
+    /*
+    public void SetScaleOfAnimator(float size)
+    {
+        animator.transform.localScale = Vector3.one * size;
+    }
+    */
 
     public void ManualUpright(Vector3 rTo, Side s)
     {

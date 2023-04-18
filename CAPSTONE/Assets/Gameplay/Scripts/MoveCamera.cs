@@ -136,7 +136,7 @@ public class MoveCamera : MonoBehaviour
                 lookBack.SetActive(true);
             }
 
-            print("how often is this running");
+            //print("how often is this running");
             lookTime = 0;
             look = true;
             startLook = transform.rotation.eulerAngles;

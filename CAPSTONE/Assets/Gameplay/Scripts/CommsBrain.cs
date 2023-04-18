@@ -117,35 +117,39 @@ public class CommsBrain : MonoBehaviour
     FMOD.Studio.EventInstance friendSpeech; // these will be separate multtrack events that shuffle and stop when needed
     //FMOD.Studio.EventInstance yourSpeech;
 
+    string sectionToStart = "Intro";
     void Start()
     {
-        friendSpeech = FMODUnity.RuntimeManager.CreateInstance("event:/FriendDialogue");
-        StartDialogueSection(dialogueSections[0]);
+        if (!string.IsNullOrEmpty(sectionToStart)) StartDialogueSection(sectionToStart);
     }
 
+    public void StartWithSection(string section)
+    {
+        sectionToStart = section;
+    }
 
     public void StartDialogueSection(SectionText section)
     {
-        //print("start section");
-
+        
         // start first dialogue chunk in a section, need a section
-        StartDialogueChunk(section.dialogueChunks[0]);
+        StartDialogueChunk(section.dialogueChunks[0]); // open up the first CHUNK of the section
         GameController.instance.dialogueSectionNum++;
     }
 
-    public void StartDialogueSection(string enterCode)
+    public void StartDialogueSection(string enterCode) // wtd so doign it with a strign doesn't give you the right thinga
     {
-        DialogueChunk chunk = null;
+        SectionText section = null;
 
         // start first dialogue chunk in a section, need a section
         foreach (SectionText st in dialogueSections)
         {
-            if (st.enterCode == enterCode) chunk = st.dialogueChunks[0];
+            if (st.enterCode == enterCode) section = st;
         }
 
-        if (chunk != null)
+        if (section != null)
         {
-            StartDialogueChunk(chunk);
+            SaveAndLoadGame.UpdateCurrentDialogueSection(enterCode);
+            StartDialogueSection(section);
         }
         else
         {
@@ -169,7 +173,11 @@ public class CommsBrain : MonoBehaviour
         {
             foreach (DialogueChunk dc in st.dialogueChunks)
             {
-                if (dc.enterCode == enterCode) chunk = dc;
+                if (dc.enterCode == enterCode)
+                {
+                    SaveAndLoadGame.UpdateCurrentDialogueSection(st.enterCode); // this is really just so I can hop directly from one chunk to another, regardless of section and have it save
+                    chunk = dc;
+                }
             }
         }
 
@@ -291,6 +299,10 @@ public class CommsBrain : MonoBehaviour
         if (!string.IsNullOrEmpty(exitCode)) // what happens when there's nothing else? idk
         {
             StartDialogueChunk(exitCode);
+        }
+        else
+        {
+            SaveAndLoadGame.UpdateCurrentDialogueSection(""); // wait actually doing this should make it save as playing no dialogue
         }
     }
 

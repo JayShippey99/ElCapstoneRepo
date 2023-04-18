@@ -102,7 +102,7 @@ public class SideManager : InteractableParent
         }
         else
         {
-            print("from do something button");
+            //print("from do something button");
 
             Unfocus();
         }
@@ -123,7 +123,7 @@ public class SideManager : InteractableParent
             {
                 if (t.focused)
                 {
-                    print("from change dial");
+                    //print("from change dial");
                     Unfocus();
                     t.focused = false;
                 }
@@ -148,7 +148,7 @@ public class SideManager : InteractableParent
         {
             if (pb.unlocked)
             {
-                pb.SetState(true);
+                pb.SetState(false);
             }
         }
 
@@ -157,9 +157,26 @@ public class SideManager : InteractableParent
         // when unfocusing also run the full input controller function for show all or hide all depending on what the bool is
         FullInputController.instance.SidesUnfocus();
 
-        print("what? " + t.focused);
-        if (t.focused) t.animator.SetTrigger("Return"); // making this already trigger means that when i get to this path it'll just go automatically
-        
+        //if (t.animator.GetCurrentAnimatorStateInfo(0).IsName("Side1") ||  // ahh shit wait this doesn't help because  wtffff why doesn't this work how it should lmao jeezus
+
+        if (t.focused)
+        {
+            if (closestSide.gameObject.name == "FrontFaceParent") t.animator.SetTrigger("ReturnSide1");
+            if (closestSide.gameObject.name == "BackFaceParent") t.animator.SetTrigger("ReturnSide2");
+            if (closestSide.gameObject.name == "RightFaceParent") t.animator.SetTrigger("ReturnSide3");
+            if (closestSide.gameObject.name == "LeftFaceParent") t.animator.SetTrigger("ReturnSide4");
+            if (closestSide.gameObject.name == "TopFaceParent") t.animator.SetTrigger("ReturnSide5");
+            if (closestSide.gameObject.name == "BottomFaceParent") t.animator.SetTrigger("ReturnSide6");
+            //print("i am focused and want to return");
+        }
+
+        // okay so, when I'm not activated and i activate, I need to find that side and make it bigger
+        // it goes from the any state function
+        // when i'm focused on a side and I go to unfocus FOR WHATEVER REASON, return to the hub animation should play
+
+        // so if I focus one side, leave with the dial, focus another side, and then try to focus the first one, it just goes right back to the return
+        // when I shoot a partice, it does return after the fact. OHHH its because get shot is a seperate chain
+
     }
 
     void TurnOnFocusedSide()
@@ -167,33 +184,61 @@ public class SideManager : InteractableParent
         // right, all that it comes down to is setting the currently active PUZZZLE and then turning on that side, so we can maybe call these functions from the game controller? at some point we need to get the side brain in the gc scripts
 
         GameController.instance.currentPuzzle = null;
-        
+
+        //print(closestSide + " closest side");
+
         foreach (SideBrain pb in psides)
         {
             //print("1");
+           // print(pb.name);
+
             if (pb.unlocked)
             {
                 //print("2");
+                //print(pb.name);
+
+
                 if (closestSide != pb.transform)
                 {
                 //print("3");
-                    pb.SetState(false);
+                    //print(pb.name);
+
+
+                    pb.SetState(false); // okay but is this even right?
+                    // setting to false implies that its on
                 }
                 else
                 {
                 //print("4");
+                    //print(pb.name);
+
+
                     foreach (PlantPuzzle pp in pb.puzzles) // very gross but this is how we can set the currently active puzzle
                     {
+                        //print("5");
+                        //print(pb.name);
                         //print("does the error happen here?");
-                        if (pp.gameObject.activeInHierarchy) GameController.instance.currentPuzzle = pp; // this should never run, which I think is good
+                        if (pp.gameObject.activeInHierarchy)
+                        {
+                            GameController.instance.currentPuzzle = pp;
+                           // print(pp.gameObject.name + " name of the new current puzzle");
+                           // print(pb.name);
+                        }
+                        else
+                        {
+                           // print(pb.name);
+                           // print(pp.gameObject.name + " name of the not active puzzle");
+                        }
                     }
                     
-                    if (pb.name == "FrontFace") t.animator.SetTrigger("Side1");
-                    if (pb.name == "BackFace") t.animator.SetTrigger("Side2");
-                    if (pb.name == "RightFace") t.animator.SetTrigger("Side3");
-                    if (pb.name == "LeftFace") t.animator.SetTrigger("Side4");
-                    if (pb.name == "TopFace") t.animator.SetTrigger("Side5");
-                    if (pb.name == "BottomFace") t.animator.SetTrigger("Side6");
+                    
+                    if (pb.name == "FrontFaceParent") t.animator.SetTrigger("Side1");
+                    if (pb.name == "BackFaceParent") t.animator.SetTrigger("Side2");
+                    if (pb.name == "RightFaceParent") t.animator.SetTrigger("Side3");
+                    if (pb.name == "LeftFaceParent") t.animator.SetTrigger("Side4");
+                    if (pb.name == "TopFaceParent") t.animator.SetTrigger("Side5");
+                    if (pb.name == "BottomFaceParent") t.animator.SetTrigger("Side6");
+                    
 
                     pb.SetState(true);
                 }
@@ -224,7 +269,7 @@ public class SideManager : InteractableParent
         {
             if (Vector3.Distance(tsides[i].position, cameraPos) < shortestDistance)
             {
-                GameController.instance.focusedSide = sides[i];
+                GameController.instance.focusedSide = sides[i]; // awesome
                 closestSide = tsides[i];
                 shortestDistance = Vector3.Distance(tsides[i].position, cameraPos);
             }
@@ -245,26 +290,27 @@ public class SideManager : InteractableParent
         // activate the trigger for the puzzle. we might be straying away from the game controller lowkey
         switch (closestSide.name)
         {
-            case "FrontFace":
+            case "FrontFaceParent":
                 // print("front");
                 return Vector3.forward;
-            case "BackFace":
+            case "BackFaceParent":
                 //print("back");
                 return Vector3.back;
-            case "RightFace":
+            case "RightFaceParent":
                 //print("right");
                 return Vector3.right;
-            case "LeftFace":
+            case "LeftFaceParent":
                 // print("left");
                 return Vector3.left;
-            case "TopFace":
+            case "TopFaceParent":
                 // print("top");
                 return Vector3.up;
-            case "BottomFace":
+            case "BottomFaceParent":
                 // print("bottom");
                 return Vector3.down;
         }
 
+        Debug.LogWarning("The closest side name isn't matching anything");
         return sideVector;
     }
 }

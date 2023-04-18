@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SideBrain : InteractableParent
 {
-    public Material m;
+    public Material projM, bhM;
 
-    ParticleSystem particles;
+    public ParticleSystem particles;
 
     [HideInInspector]
     public bool unlocked;
@@ -43,20 +43,19 @@ public class SideBrain : InteractableParent
 
     public Animator stickyNote;
 
-    bool grow, shrink, hide, normal;
+    const int off = 0; // not unlocked or activated
+    const int on = 1; // unlocked, not activated
+    const int activated = 2; // unlocked and big
+    const int deactivated = 3; // going back to just on
+    int state = 0;
+
+    public float maxVis;
+
+    public bool refreshMaterials;
 
     private void Start()
     {
-        //if (instance == null) instance = this;
-        //else Destroy(gameObject);
-
-        particles = transform.GetChild(0).GetComponent<ParticleSystem>();
-        particles.Stop();
-
-        //m.SetFloat("_Gradient1", 0f);
-        m.SetFloat("_Visibility", 0f);
-        m.GetFloat("_Visibility");
-        //m.SetFloat("_FlickerAmount", 0f);
+        //print("when does this happen"); // okay so I need a way to make it so that they unlock when they need on load
 
         puzzles = new PlantPuzzle[puzzleHouser.childCount - 1];
 
@@ -66,68 +65,130 @@ public class SideBrain : InteractableParent
         }
 
         alienIntel = puzzleHouser.GetChild(puzzleHouser.childCount - 1).gameObject;
+
+        if (refreshMaterials) RefreshMaterials();
     }
 
-    private void Update()
+    void RefreshMaterials()
+    {
+        // set all their value that change back to 0
+        particles.Stop();
+        projM.SetFloat("_Visibility", 0f);
+        projM.SetFloat("_ProjectionAlphaIntensity", 0f);
+        bhM.SetFloat("_Visibility", 0f);
+    }
+
+    private void Update() // so the sides have an on, off, and activated state now. if off, all the stats are 0 and the particles are off, if its unlocked, then the visibility goes up to 1, if its activated, then it brings up the projectionAlpha and then also turns on the particle when necessary
     {
         //print(m.GetFloat("_FlickerAmount"));
 
         if (!idle)
         {
-            if (isOn)
+            //print("is update running");
+            if (state == on)
             {
-                //print("do it?");
-                //particles.Play();
-                if (progress < 1)
-                {
-                    progress += Time.deltaTime * speedOn;
-                }
-
-                else
-                {
-                    particles.Play();
-                    idle = true;
-                }
-            }
-            else
-            {
-                if (progress > 0)
-                {
-                    progress -= Time.deltaTime * speedOff;
-                }
-                else
-                {
-                    idle = true;
-                    particles.Stop();
-                }
+                Unlocking();
             }
 
-            //print(ac.Evaluate(progress) * pbOn);
-            //print(ac.Evaluate(progress) * pOn);
-
-            progress = Mathf.Clamp(progress, 0, 1);
-
-            m.SetFloat("_Visibility", ac2.Evaluate(progress) * pOn);
-        }
-
-        if (flicker)
-        {
-            flickerAmount = Mathf.Clamp(flickerAmount, 0, 1);
-
-            Flicker();
-
-            if (flickerAmount > 0) flickerAmount -= Time.deltaTime * flickerSpeed;
-            else
+            if (state == activated)
             {
-                flicker = false;
+                Activating();
+            }
+
+            if (state == deactivated)
+            {
+                Deactivating();
             }
         }
     }
+
+    void Unlocking()
+    {
+        //print("are we unlocking?");
+        if (progress < 1)
+        {
+            progress += Time.deltaTime * speedOn;
+
+            projM.SetFloat("_Visibility", ac1.Evaluate(progress));
+            bhM.SetFloat("_Visibility", ac2.Evaluate(progress));
+        }
+        else
+        {
+            projM.SetFloat("_Visibility", 1);
+            bhM.SetFloat("_Visibility", 1);
+            idle = true;
+        }
+    }
+
+    void Activating()
+    {
+        if (progress < 1)
+        {
+            progress += Time.deltaTime * speedOn;
+
+            projM.SetFloat("_ProjectionAlphaIntensity", ac1.Evaluate(progress) * .1f); // .1f cause that's just the max brightness we want that thing
+        }
+        else
+        {
+            projM.SetFloat("_ProjectionAlphaIntensity", .1f);
+            idle = true;
+            particles.Play();
+        }
+    }
+
+    void Deactivating()
+    {
+        if (progress > 0)
+        {
+            progress -= Time.deltaTime * speedOff;
+
+            projM.SetFloat("_ProjectionAlphaIntensity", ac2.Evaluate(progress) * .1f);
+
+            //print("deactivating " + ac2.Evaluate(progress) * .1f);
+        }
+        else
+        {
+            projM.SetFloat("_ProjectionAlphaIntensity", 0);
+            idle = true;
+            particles.Stop();
+        }
+    }
+
+    public void Unlock()
+    {
+        // this line looks weird but we won't refresh if we load up a side, but then for eerything else they get reset
+        refreshMaterials = false;
+        //print("do we unlock?");
+
+        // this could cue up an animtion or something
+        unlocked = true;
+        state = on;
+        idle = false;
+        progress = 0;
+
+        // do we want unlock to mess with which puzzle is activated? probably not
+    }
+
     public void SetState(bool on) // set state means show or hide, has nothing to do with being focused, BUT if its being hidden, then it'll shrink
     {
         //print("turning on");
-        isOn = on;
-        idle = false;
+        if (unlocked)
+        {
+            if (on)
+            {
+                //print("activate");
+                state = activated;
+                progress = 0;
+            }
+            else
+            {
+                state = deactivated;
+                progress = 1;
+            }
+
+
+            idle = false;
+        }
     }
 
     public override void DoSomethingButton(GameObject theButton) // This is for focus button
@@ -155,7 +216,7 @@ public class SideBrain : InteractableParent
 
     public void Flicker()
     {
-        m.SetFloat("_FlickerAmount", flickerAmount);
+        projM.SetFloat("_FlickerAmount", flickerAmount);
     }
 
 

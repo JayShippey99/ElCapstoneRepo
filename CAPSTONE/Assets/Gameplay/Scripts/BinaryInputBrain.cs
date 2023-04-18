@@ -26,8 +26,10 @@ public class BinaryInputBrain : InteractableParent
 
     public override void DoSomethingButton(GameObject theButton)
     {
+        GameController gc = GameController.instance;
+
         counter++;
-        if (counter >= particles.Length) counter = 0;
+        if (counter >= gc.unlockedParticles) counter = 0;
 
         //print(particles.Length + " " + particles[counter]);
         img.sprite = particles[counter];

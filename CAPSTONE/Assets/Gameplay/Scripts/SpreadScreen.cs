@@ -19,6 +19,7 @@ public class SpreadScreen : InteractableParent
 
     public override void SetSwitch(bool on)
     {
+        /*
         if (on)
         {
             // change graphic
@@ -39,8 +40,43 @@ public class SpreadScreen : InteractableParent
 
                 GameController.instance.currentPuzzle.SpreadBranches(false);
             }
+        }
+        */
+    }
 
-                
+    public override void DoSomethingButton(GameObject theButton)
+    {
+        if (theButton.name == "Normal")
+        {
+            // set the spread to normal
+            if (GameController.instance.currentPuzzle != null)
+            {
+                //if (GameController.instance.currentPuzzle.HasPlacedBranches()) GameController.instance.currentPuzzle.ClearPuzzle();
+
+                GameController.instance.currentPuzzle.SpreadBranches(1);
+            }
+        }
+
+        if (theButton.name == "Wide")
+        {
+            // set the spread to 180 degrees
+            if (GameController.instance.currentPuzzle != null)
+            {
+                //if (GameController.instance.currentPuzzle.HasPlacedBranches()) GameController.instance.currentPuzzle.ClearPuzzle();
+
+                GameController.instance.currentPuzzle.SpreadBranches(2);
+            }
+        }
+
+        if (theButton.name == "Widest")
+        {
+            // set the spread to crazy number
+            if (GameController.instance.currentPuzzle != null)
+            {
+                //if (GameController.instance.currentPuzzle.HasPlacedBranches()) GameController.instance.currentPuzzle.ClearPuzzle();
+
+                GameController.instance.currentPuzzle.SpreadBranches(3);
+            }
         }
     }
 

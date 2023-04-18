@@ -30,7 +30,7 @@ public class BranchInitializer : MonoBehaviour
         lr.SetPosition(1, end); // instead of 1 lets have it be scale
         //print(end * pp.transform.localScale.x + " " + end);
 
-        lr.SetWidth(pp.transform.localScale.x / 20f, pp.transform.localScale.x / 20f);
+        lr.SetWidth(pp.transform.localScale.x / 35f, pp.transform.localScale.x / 35f);
 
         this.type = type;
         empty = true;

@@ -14,7 +14,7 @@ public class FriendDialogueBrain : MonoBehaviour
     
     public void Exit()
     {
-        print("exit friend");
+        //print("exit friend");
         anim.SetTrigger("Exit");
     }
 

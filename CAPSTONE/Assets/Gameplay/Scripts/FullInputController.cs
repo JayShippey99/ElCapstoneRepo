@@ -41,6 +41,8 @@ public class FullInputController : InteractableParent
 
     public bool sendWithoutFocus;
 
+    GameController gc;
+
     private void Start()
     {
         if (instance == null) instance = this;
@@ -57,6 +59,9 @@ public class FullInputController : InteractableParent
             canSendLight.SetLight(true);
             TurnAllScreensOn(); // okay I don't think all the lights run their code before this which breaks things
         }
+
+        gc = GameController.instance;
+
     }
 
     private void Update()
@@ -66,15 +71,23 @@ public class FullInputController : InteractableParent
         if (readingInput) ReadInput();
 
         canSendLight.SetLight(canInput);
-
+        //print("run update");
 
         if (canInput)
         {
+            //print("can input");
             if (t.focused)
             {
+                //print("is focused");
                 if (currentPuzzle != null) // so this updates every frame, cool
                 {
+                    //print("there is a puzzle??");
                     TurnScreensOnForPaths(); // so we don't need to worry about doing this the moment it focuses
+                }
+                else if (GameController.instance.allSidesCompleted)
+                {
+                    //print("turn on one?");
+                    TurnOnFirstScreen();
                 }
             }
         }
@@ -90,6 +103,12 @@ public class FullInputController : InteractableParent
                 DisableLaser();
             }
         }
+    }
+
+    void TurnOnFirstScreen()
+    {
+        TurnAllScreensOff();
+        screens[0].Show();
     }
 
     void UpdateOutput(string input)
@@ -151,6 +170,10 @@ public class FullInputController : InteractableParent
         {
             ResetAllScreens();
             canInput = true; // NOO
+        }
+        else if (GameController.instance.allSidesCompleted)
+        {
+            canInput = true;
         }
     }
 
@@ -275,6 +298,46 @@ public class FullInputController : InteractableParent
     {
         tesseractAnim.SetTrigger("GetShot");
         if (currentPuzzle != null) currentPuzzle.MakeBranches(output.ToString());
+        else if (gc.allSidesCompleted)
+        {
+            // HEREEEEE IS WHERE WE NEED THE CODE TO BE ///////////////////////// ////////////////////////////
+
+            // this is where we see what side we're sending the particle into and what conditions also need to be met
+            // gc.focusedSide // okay good we can get the focused side involed to know what the proper conditions are
+            // but then the game controller needs to know if this is the correct side in the order
+            // for starters lets just make it so that when you shoot anything into the correct ordered sides you win
+            // so we need a side order, so lets just say since this area of code is the only place we'll be able to shoot at it, then from here we can access a list of sides and check if it matches another side
+
+            // send the input, if the side matches, we print "yes"
+            // if the side doesn't match at any point, then we reset and then 
+            // so its like we need a number for the guess count
+            // cause otherwise if we just run through teh hwole list, athoug i guessss we can check fro a null and then know not to check further?
+            // well, we need a number input, if we get the input wrong, we reset to 0, checking the 
+            // or wait instead of making two lists we can just have the one list but keep track of number of corrent inputs
+
+            // now I wanna make sure that it knows which particle to send into it also
+
+            if (gc.focusedSide == gc.endPuzzleSideOrder[gc.endPuzzleGuessNumber] && output[0].ToString() == gc.endPuzzleSideStringOrder[gc.endPuzzleGuessNumber])
+            {
+                gc.endPuzzleGuessNumber++;
+                print("correct so far");
+                // when we get this correct, lets open up the middle of each side by adding the vortex effect
+
+                if (gc.endPuzzleGuessNumber > 5)
+                {
+                    gc.endPuzzleGuessNumber = 5; // clamp it just in case
+                    print("We got the order correct!!");
+                    // 
+                }
+            }
+            else
+            {
+                gc.endPuzzleGuessNumber = 0;
+                print("you fucked up!");
+                // set everything back to normal
+            }
+        }
+        // so sending the right particles happens before this
     }
     IEnumerator LaserDelay()
     {

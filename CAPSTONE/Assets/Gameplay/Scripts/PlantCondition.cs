@@ -35,6 +35,7 @@ public class PlantCondition : MonoBehaviour
             foreach (GameObject f in fruits)
             {
                 //print(transform.localPosition + " " + f.transform.localPosition);
+                print("yep end");
                 if (Vector3.Distance(transform.localPosition, f.transform.localPosition) < .01) return true; // honestly we don't need to worry about what it is, we can just ask for both points right? // actually holy shit I think we can still just use the middle rule for the branches too, but wait no
                 //print("does this run");
             }
@@ -82,8 +83,11 @@ public class PlantCondition : MonoBehaviour
                     }
                     */
 
-                    if (Vector3.Dot(transform.up, compareAngle) == 1)
+                    print(Vector3.Dot(transform.up, compareAngle) + " somewhere in the middle");
+
+                    if (Mathf.RoundToInt(Mathf.Abs(Vector3.Dot(transform.up, compareAngle))) == 1) // do I want to abs it? maybe
                     {
+                        print("yep line");
                         return true;
                     }
 

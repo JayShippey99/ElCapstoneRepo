@@ -1,12 +1,8 @@
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FMOD;
-using FMODUnity;
-using System.Reflection;
-using System;
 using UnityEngine.Events;
-using ZSerializer;
 
 public class GameController : MonoBehaviour
 {
@@ -46,7 +42,15 @@ public class GameController : MonoBehaviour
     [HideInInspector]
     public Side[] sides;
 
+    // end puzzle stuff
     [HideInInspector]
+    public Side[] endPuzzleSideOrder; // we set this in the start
+    [HideInInspector]
+    public string[] endPuzzleSideStringOrder;
+    [HideInInspector]
+    public int endPuzzleGuessNumber; // this will start at 0, when we make a guess, we ask if the focused side == endpuzzSO[0] and then if its the same increase the guessNumber, but if its wrong we reset
+
+
     public Side focusedSide;
     [HideInInspector]
     public PlantPuzzle currentPuzzle;
@@ -106,19 +110,29 @@ public class GameController : MonoBehaviour
     public Light[] roomLights;
     public Material lightsMaterial;
     public _Switch switchForSpread;
+    public Animator radarAnim;
 
     [Header("MusicStuff")]
     FMOD.Studio.Bus busMusic;
     FMOD.Studio.Bus busSFX;
 
+    // i need these to start off as .8 by default
+    float musicVolume = .8f; // so these will need a translation one way or another. I think it might be best to save it as . so it starts at .8. and our things go from -80 to 10, so its really -90 to 0 which means .8 of -90 is? -89.2 maybe that'll lineit up right? no, that's not right
+    float sfxVolume = .8f;
+
+    [Header("Saving and Loading")]
+    public bool loadOnStart;
+
     [HideInInspector]
-    public float musicVolume; // so these will need a translation one way or another. I think it might be best to save it as . so it starts at .8. and our things go from -80 to 10, so its really -90 to 0 which means .8 of -90 is? -89.2 maybe that'll lineit up right? no, that's not right
-    // just use a map function dummy
-    [HideInInspector]
-    public float sfxVolume;
+    public int unlockedParticles = 2; // unlock side1, then we need to add a new particle, add new particle event
 
     //int testCounter = 0;
 
+    public float GetMusicVol() { return musicVolume; }
+    public float GetSfxVol() { return sfxVolume; }
+    public void SetMusicVol(float vol) { musicVolume = vol; }
+    public void SetSFXVol(float vol) { sfxVolume = vol; }
+    
     public void Awake()
     {
         //print("DOes the awake run again??");
@@ -133,6 +147,11 @@ public class GameController : MonoBehaviour
             frontSide, backSide, rightSide, leftSide, topSide, bottomSide
         };
 
+        endPuzzleSideOrder = new Side[] { topSide, leftSide, backSide, rightSide, frontSide, bottomSide };
+        endPuzzleSideStringOrder = new string[] { "0", "1", "2", "3", "0", "1" };
+
+        print("probably not working");
+
         foreach (Side s in sides) // foreach side
         {
             Transform pp = s.puzzleList.transform;
@@ -141,25 +160,19 @@ public class GameController : MonoBehaviour
                 //print("adding to puzzle list");
                 s.puzzles.Add(child.GetComponent<PlantPuzzle>()); // now we have assigned the puzzles for each side
             }
-
             //print(s.puzzles.Count + " this is how many puzzles I just added");
         }
 
+
+
         //cutscene = true;
         //print(tesseract.animator);
-        TurnOffLightsInRoom();
-
-        //ZSerialize.LoadScene();
-        //print(testCounter);
+        //TurnOffLightsInRoom(); // holy fuck its YOU
 
         busMusic = FMODUnity.RuntimeManager.GetBus("bus:/BusMusic");
         busSFX = FMODUnity.RuntimeManager.GetBus("bus:/BusSFX");
 
-
-        musicVolume = .8f;
-        sfxVolume = .8f;
-        print(sfxVolume);
-        print(musicVolume);
+        if (loadOnStart) SaveAndLoadGame.Load();
     }
 
     public bool IsPuzzleReal()
@@ -186,7 +199,7 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            //currentPuzzle.ClearPuzzle();
+            SaveAndLoadGame.ResetGame();
         }
         
         if (corkboard.needsToAdd)
@@ -197,9 +210,7 @@ public class GameController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            //testCounter++;
-            //print("saving from controller");
-            ZSerialize.SaveScene();
+            SaveAndLoadGame.Save();
         }
 
         if (Input.GetKeyDown(KeyCode.N))
@@ -207,15 +218,70 @@ public class GameController : MonoBehaviour
             StartSide();
             //FullInputController.instance.PuzzleReady();
         }
-        
-    }
 
-   
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            AddNewParticle();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            // I want to do a shortcut to the very end, 
+            // so I need each side to be "completed", I could use the logic from the load and save thing
+            // solving the last side of the tesseract needs to like override the power of the room and let the inputs send for the intel
+            // for starters, we need to make it go to the intel of each side
+
+            SaveAndLoadGame.puzzleForSides = new int[] { 0, 0, 0, 0, 0, 0 };
+            SaveAndLoadGame.unlockedSides = 6; // I swear to god though tthat doing 6 woudl break thing
+
+            for (int i = 0; i < sides.Length; i++)
+            {
+                Side s = sides[i];
+
+                s.projection.Unlock(); // why am i not saving the unlocked sides?
+
+                
+
+                foreach (PlantPuzzle puzzle in s.puzzles)
+                {
+                    puzzle.gameObject.SetActive(false); // what does this do? // turns the last puzzle child false, gotcha
+                //print("puzzle count for side " + i + " is " + s.puzzles.Count);
+                    SaveAndLoadGame.IncreasePuzzleForSide(GetIndexOfFocusedSide(s)); // omfg duhhh 
+                }
+
+                currentPuzzle = null;
+                s.intel.SetActive(true); // lowkey with the way that I did these sticky notes, I might as well have just done the same thing for theese
+                s.done = true;
+                //RuntimeManager.PlayOneShot(s.sideSolvedSoundPath);
+
+                // need to get s exitCode here and send it to the runevent funciton
+            }
+
+            SaveAndLoadGame.Save();
+
+            CheckIfAllSidesAreComplete();
+
+
+
+        }
+
+    }
 
     public void KillCube()
     {
         Destroy(tesseract.gameObject);
     }
+
+    int GetIndexOfFocusedSide(Side side) // am i sending a side that doesn't exist or what
+    {
+        for (int i = 0; i < sides.Length; i++)
+        {
+            if (side == sides[i]) return i;
+        }
+
+        print("MEGA OOPSIE");
+        return -1;
+    }    
 
     public void GoToNextPuzzle() // This is the puzzle solved function basically
     {
@@ -225,6 +291,7 @@ public class GameController : MonoBehaviour
         // turn off current puzzle, turn on the next puzzle
         for (int i = 0; i < s.puzzles.Count - 1; i++) // puzzles will be the right length to only check for the puzzles
         {
+            //print("loop for puzzles count");
             //print("does this run?");
             if (s.puzzles[i].gameObject.activeInHierarchy)
             {
@@ -233,7 +300,10 @@ public class GameController : MonoBehaviour
                 thisPuzzle = s.puzzles[i];
                 nextPuzzle = s.puzzles[i + 1];
 
-                print(thisPuzzle);
+                //print("change puzzle!");
+                SaveAndLoadGame.IncreasePuzzleForSide(GetIndexOfFocusedSide(s));
+                
+                // CHANGE PUZZLE
                 // CHANGE PUZZLE
                 KillCurrentPuzzle(thisPuzzle.transform);
                 StartCoroutine(DelayAndThenFunction(StartNextPuzzle, fizzleDelay)); // you can place after the puzzle is solved
@@ -259,19 +329,20 @@ public class GameController : MonoBehaviour
 
         foreach (Transform child in puzzle)
         {
+            //print(child.name);
             if (!child.CompareTag("BranchPuzzleCondition"))
             {
                 BranchInitializer bi = child.GetComponent<BranchInitializer>();
                 EndInitializer ei = child.GetComponent<EndInitializer>();
 
-                //print("does this run?");
-                if (bi != null)
+                //print("does this run? ");
+                if (bi != null) // this doesn't run
                 {
                     //print("how about this one");
                     StopCoroutine(bi.Fizzle(-1));
                     StartCoroutine(bi.Fizzle(-1)); // awful line of code //Destroy(transform.GetChild(i).gameObject);
                 }
-                else if (ei != null)
+                else if (ei != null) // and this doesn't run
                 {
                     //print("also checking this one");
                     StopCoroutine(ei.Fizzle(-1));
@@ -280,16 +351,19 @@ public class GameController : MonoBehaviour
             }
             else if (child.GetComponent<PlantCondition>() != null)
             {
+                //print("kill the conditions?");
                 PlantCondition pc = child.GetComponent<PlantCondition>();
                 StopCoroutine(pc.Fizzle(-1));
                 StartCoroutine(pc.Fizzle(-1));
             }
             else
             {
+                //print("kill anything else?");
                 Destroy(child.gameObject);
             }
 
         }
+        //print("end of kill current");
     }
 
     public void ChangeBusVolume(bool changeMusic, float sliderV, float db)
@@ -298,12 +372,15 @@ public class GameController : MonoBehaviour
         {
             musicVolume = sliderV;
             busMusic.setVolume(db);
-            print(musicVolume + " musvol");
+            SaveAndLoadGame.ChangeMusicVolume(musicVolume);
+            //print(musicVolume + " musvol");
         }
         else
         {
+            //print("changing sfx bus volume " + sliderV);
             sfxVolume = sliderV;
             busSFX.setVolume(db);
+            SaveAndLoadGame.ChangeSFXVolume(sfxVolume);
         }
     }
 
@@ -331,10 +408,11 @@ public class GameController : MonoBehaviour
     {
         if (playIntroSound) RuntimeManager.PlayOneShot("event:/IntroStartUp");
 
+        radarAnim.SetTrigger("Intro");
 
         ForceCameraForward();
         MoveCamera.instance.ShakeCamera(introShakeStats.x, introShakeStats.y, introShakeStats.z);
-        tesseract.animator.enabled = true;
+        tesseract.animator.SetTrigger("Intro");
         cutscene = true;
         // initial click turns on main lights
         // with the extra clicks, the screens will turn on one by one
@@ -353,6 +431,7 @@ public class GameController : MonoBehaviour
     {
         cb.StartDialogueChunk("roomStarted");
         cutscene = false;
+        SaveAndLoadGame.UpdateTesseractSize(1);
     }
 
     public void ShowEndScreen()
@@ -381,19 +460,42 @@ public class GameController : MonoBehaviour
         
         foreach (Side s in sides)
         {
-            if (!s.done) return;
+            if (!s.done)
+            {
+                print(s.projection.name + " is what's not done");
+                return;
+            }
         }
         
+        //StartEndSequence();
+        AllSidesAreComplete();
+    }
+
+    void AllSidesAreComplete()
+    {
         print("ALL SIDE ARE COMPLETED YOU DID ITTT");
         allSidesCompleted = true;
-        //StartEndSequence();
+        // now what happens
+        // without adding all the effects, maybe we should have a function that starts up the new functionality for the last task
+        // what is the new functionality for the last task?
+        // when you focus on the intel, you're able to shoot at it this time, you'll be able to just shoot 1 particle at it
+        // for now it'll print "particle recieved"
+        // i also need an order to be done correctly so I need a list of conditions somewhere, or like a list of steps, its 6 steps, each step has a certain amount of conditions
+        // conditions include, root rotation, spread amount, and particle type, these conditions need to be a value of each side, and so then the side itself can check if all the conditions were met, then we can add a yes to the list?
+        // but wait, we also need it to be in the correct order
+        // hmm maybe unlocking new things involves a little version of each of these puzzles
+        // I need a way to allow an input when all sides are completed
+
     }
 
     public void LevelDone(Side s)
     {
         // when the whole side is solved
 
-        s.puzzles[s.puzzles.Count - 1].gameObject.SetActive(false); // what does this do?
+
+        SaveAndLoadGame.IncreasePuzzleForSide(GetIndexOfFocusedSide(focusedSide));
+
+        s.puzzles[s.puzzles.Count - 1].gameObject.SetActive(false); // what does this do? // turns the last puzzle child false, gotcha
         currentPuzzle = null;
         s.intel.SetActive(true); // lowkey with the way that I did these sticky notes, I might as well have just done the same thing for theese
         s.done = true;
@@ -426,6 +528,17 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void AddNewParticle()
+    {
+        // well no, cause we can have a dialogue trigger this, this is okay
+
+        unlockedParticles++;
+        if (unlockedParticles == 3) cb.StartDialogueSection("endParticle"); // is this even what I want? // shouldn't end particle just go into the list of dialogue sections nums?
+        if (unlockedParticles == 4) cb.StartDialogueSection("repeatParticle"); // is this even what I want? // shouldn't end particle just go into the list of dialogue sections nums?
+
+        SaveAndLoadGame.IncreaseUnlockedParticles();
+    }
+
     public void AddMachineSequence()
     {
         // run an animation 
@@ -438,10 +551,13 @@ public class GameController : MonoBehaviour
         {
             if (g.activeInHierarchy == false)
             {
+                SaveAndLoadGame.IncreaseAddedMachines();
+
                 g.SetActive(true);
 
                 // lowkey what I think I might do also is make it so that based on g, I start a different new dialogue section or something
                 if (g.name == "RotateMachine") cb.StartDialogueSection("rotateMachine");
+                if (g.name == "SpreadMachine") cb.StartDialogueSection("spreadMachine");
                 return;
             }
         }
@@ -472,11 +588,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    void StartIntro()
-    {
-        cb.StartDialogueSection(cb.dialogueSections[0]);
-    }
-
     public void StartTutorial()
     {
         tutorialArrows[0].SetActive(true);
@@ -486,13 +597,16 @@ public class GameController : MonoBehaviour
     {
         //print("from start side");
         SideManager.instance.Unfocus();
+        tesseract.animator.enabled = true;
 
         for (int i = 0; i < sides.Length; i++)
         {
-            if (sides[i].projection.isOn == false)
+            if (sides[i].projection.unlocked == false) // ohhh so we're just already asking if its on or not or somehting
             {
-                sides[i].projection.SetState(true);
-                sides[i].projection.unlocked = true;
+                sides[i].projection.Unlock();
+                SaveAndLoadGame.IncreaseUnlockedSides(); // eh I don't like that I'm doing the math here but, oh my god yeah it'll be so much smoother if we don't do it this way
+                //sides[i].projection.SetState(true); // huh so this is the only way we set things to true? for the first time?
+                //sides[i].projection.unlocked = true;
                 return;
             }
         }
@@ -502,38 +616,49 @@ public class GameController : MonoBehaviour
     {
         //print("from end side");
         SideManager.instance.Unfocus(); // I'm gonna do it at the beginning and end of a section just to make sure it's working
-        cb.StartDialogueSection(cb.dialogueSections[dialogueSectionNum]);
+        cb.StartDialogueSection(cb.dialogueSections[dialogueSectionNum]); // okay this isn't adding up correctly anymore
+        // ohhhh dialogue section number isn't being saved so it always resets
     }
+
 
 
     public void QuitGame()
     {
         // save all stats here, but also save periodically
+        print(SaveAndLoadGame.lightsOn + " last call are lights on");
         Application.Quit();
+
+        UnityEditor.EditorApplication.isPlaying = false;
     }
 
-    void TurnOffLightsInRoom()
+    public void TurnOffLightsInRoom()
     {
         foreach (Light l in roomLights)
         {
             l.gameObject.SetActive(false);
         }
         lightsMaterial.SetFloat("_FlickerAmount", 1);
+
+        SaveAndLoadGame.UpdateTurnOnLights(false);
     }
 
     public void TurnOnLightsInRoom()
     {
+        print("turn on lights!");
         foreach (Light l in roomLights)
         {
             l.gameObject.SetActive(true);
         }
         lightsMaterial.SetFloat("_FlickerAmount", 0);
+
+        SaveAndLoadGame.UpdateTurnOnLights(true);
     }
         
     public void ResetGame()
     {
-        print("reset game");
-        
+        SaveAndLoadGame.ResetGame();
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         // fade to black or something
         // reset all stats
         // reopen level?
@@ -576,8 +701,7 @@ public class Corkboard
 
     public bool CanAdd()
     {
-        if (Camera.main.transform.rotation.eulerAngles.y == 0) return true;
-        else return false;
+        return Camera.main.transform.rotation.eulerAngles.y == 0;
     }
 
     public void SetPapersToAdd()
@@ -604,7 +728,16 @@ public class Corkboard
         needsToAdd = false;
 
         papersToAdd.Clear();
+
+        SaveAndLoadGame.IncreaseAddedPapers();
     }
+}
+
+[System.Serializable]
+public class FinalPuzzleCondition
+{
+    public Side side;
+    public string condition; // will be 0, 1, 2 or, 3
 }
 
 public class Tutorial // part of me is thinking that for each step in the tutorial, no wait, I can just do something twice if I need

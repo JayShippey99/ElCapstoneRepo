@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_TopPuzzles
-  m_Shader: {fileID: -6465566751694194690, guid: 98409153d611f9248962bdabc027c379, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 19ee67bb734899b408e46c4b151ea3cc, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -49,18 +49,34 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_b4ed2d6e267f4af1ba22c9f42f583bcc_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 923956e38a81c084ca46af1f8a745c95, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3cc03c2f4f1eb2e4bb7c27e71dfb57d6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_d39811d10f144f8b98a13cb9075132c7_Texture_1:
         m_Texture: {fileID: 2800000, guid: a39d2b2c06fb74865acbc12874971968, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_ec900f5c0bdc4d1a947501ca595d03a4_Texture_1:
+        m_Texture: {fileID: 2800000, guid: a9586ba76a5679347818956b2c12d702, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_0ab99ddf80a547c18d74f179458a9f6a_Out_0:
+        m_Texture: {fileID: 2800000, guid: 14cdfdc4e3e47a7469fb6156d434437d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Texture2DAsset_0e707dbc2e9c4726addd56a020e1418b_Out_0:
         m_Texture: {fileID: 2800000, guid: 14cdfdc4e3e47a7469fb6156d434437d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_13124d6b611045ba868629f02467abc1_Out_0:
+        m_Texture: {fileID: 2800000, guid: 923956e38a81c084ca46af1f8a745c95, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Texture2DAsset_52256bf5015748b28e2028432a38078b_Out_0:
+        m_Texture: {fileID: 2800000, guid: 14cdfdc4e3e47a7469fb6156d434437d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_de468fd8c31045dc87ca0aad3d0d3288_Out_0:
         m_Texture: {fileID: 2800000, guid: 14cdfdc4e3e47a7469fb6156d434437d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -78,18 +94,25 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ColorIntensity: 1
     - _FlickerAmount: 0
-    - _Float: 0.1
-    - _Float_1: -0.48
+    - _Float: 1
+    - _Float_1: 0
     - _Float_2: 1
     - _Intensity: 10
+    - _ProjectionAlphaIntensity: 0
+    - _ProjectionIntensity: 1
+    - _ProjectionStep1: 0.2
+    - _ProjectionStep2: 0.4
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Roundedness: 5.01
     - _ShockwaveSize: 0.1
     - _Visibility: 0
     m_Colors:
+    - _MidPoint: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _OutlineColor: {r: 0.514151, g: 0.97523135, b: 1, a: 1}
     - _ShockFocalPoint: {r: 0.5, g: 0.3, b: 0, a: 0}
     - _SparkleSpeed: {r: 0.1, g: 0, b: 0, a: 0}
+    - _SwirlMovement: {r: 0.1, g: 0.1, b: 0, a: 0}
   m_BuildTextureStacks: []

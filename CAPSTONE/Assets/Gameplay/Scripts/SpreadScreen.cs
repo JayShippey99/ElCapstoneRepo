@@ -8,7 +8,7 @@ public class SpreadScreen : InteractableParent
 
     public _Switch switcher;
 
-    public Sprite spreadOn, spreadOff;
+    public Sprite spreadNorm, spreadWide, spreadWidest;
     public SpriteRenderer screen;
 
     private void Start()
@@ -55,6 +55,8 @@ public class SpreadScreen : InteractableParent
 
                 GameController.instance.currentPuzzle.SpreadBranches(1);
             }
+
+            SetSpread(1);
         }
 
         if (theButton.name == "Wide")
@@ -66,6 +68,8 @@ public class SpreadScreen : InteractableParent
 
                 GameController.instance.currentPuzzle.SpreadBranches(2);
             }
+
+            SetSpread(2);
         }
 
         if (theButton.name == "Widest")
@@ -77,6 +81,8 @@ public class SpreadScreen : InteractableParent
 
                 GameController.instance.currentPuzzle.SpreadBranches(3);
             }
+
+            SetSpread(3);
         }
     }
 
@@ -89,11 +95,7 @@ public class SpreadScreen : InteractableParent
 
         if (pp != null)
         {
-            if (pp.GetBranchSpread() == 1) Restart();
-            else
-            {
-                TurnOn();
-            }
+            SetSpread(pp.GetBranchSpread());
         }
     }
 
@@ -102,21 +104,17 @@ public class SpreadScreen : InteractableParent
         Restart();
     }
 
-    void TurnOn()
+    public void SetSpread(int spreadAmount)
     {
-        switcher.isOn = true;
-        screen.sprite = spreadOn;
-    }
-    
-    void TurnOff()
-    {
-        switcher.isOn = false;
-        screen.sprite = spreadOff;
+        //switcher.isOn = true;
+        if (spreadAmount == 1) screen.sprite = spreadNorm;
+        if (spreadAmount == 2) screen.sprite = spreadWide;
+        if (spreadAmount == 3) screen.sprite = spreadWidest;
     }
 
     public void Restart() // restart will be called from lever pulled
     {
-        TurnOff();
+        SetSpread(1);
     }
 
 

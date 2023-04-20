@@ -13,7 +13,8 @@ static public class SaveAndLoadGame
     static public float tesseractSize = 0;
     static public int[] puzzleForSides = new int[] { 0, 0, 0, 0, 0, 0 };
     static public int unlockedParticles = 2;
-    static public int lightsOn = 1;
+    static public int lightsOn = 0;
+    static public int tutorialStep = 0;
 
     static public void Save() 
     {
@@ -54,9 +55,11 @@ static public class SaveAndLoadGame
         PlayerPrefs.SetInt("UnlockedParticles", unlockedParticles);
 
         // save lights on
-        Debug.Log(lightsOn);
+        //Debug.Log(lightsOn);
         PlayerPrefs.SetInt("LightsOn", lightsOn);
         //PlayerPrefs.SetInt("LightsOn2", lightsOn);
+
+        PlayerPrefs.SetInt("TutorialStep", tutorialStep);
     }
 
     static public void Load() // I wonder if load should take in some things? like game controller and stuff just to make typing easier?
@@ -85,6 +88,13 @@ static public class SaveAndLoadGame
 
         // load added papers
         addedPapers = PlayerPrefs.GetInt("AddedPapers");
+        if (dialogueSection == "tutorial2") addedPapers = 0;
+        if (dialogueSection == "side1") addedPapers = 1;
+        if (dialogueSection == "side2") addedPapers = 2;
+        if (dialogueSection == "side3") addedPapers = 3;
+        if (dialogueSection == "side4") addedPapers = 4;
+        if (dialogueSection == "side5") addedPapers = 5;
+        if (dialogueSection == "side6") addedPapers = 6; // side 6 is AFTER we oslve the 6th aka ALL sides // we may need ot come back later and add to this
         for (int i = 0; i < addedPapers; i++)
         {
             gc.corkboard.papersList[i].SetActive(true);
@@ -125,13 +135,21 @@ static public class SaveAndLoadGame
 
         // load lights on
         lightsOn = PlayerPrefs.GetInt("LightsOn");
-        Debug.Log(lightsOn + " light on vlue" + " player pref value is" + PlayerPrefs.GetInt("LightsOn"));
+        //Debug.Log(lightsOn + " light on vlue" + " player pref value is" + PlayerPrefs.GetInt("LightsOn"));
         if (lightsOn == 1)
         {
-            Debug.Log("lights on from load?");
+            //Debug.Log("lights on from load?");
             gc.TurnOnLightsInRoom();
         }
         else gc.TurnOffLightsInRoom();
+
+        // load which step
+        tutorialStep = PlayerPrefs.GetInt("TutorialStep");
+        if (dialogueSection == "tutorial") tutorialStep = 1;
+        if (dialogueSection == "tutorial2") tutorialStep = 4;
+        if (dialogueSection == "rotateMachine") tutorialStep = 12;
+        if (dialogueSection == "spreadMachine") tutorialStep = 14;
+        gc.tutorialArrows[tutorialStep].SetActive(true); // the last step is a none again so this is fine
     }
 
     static public void ResetGame()
@@ -166,7 +184,10 @@ static public class SaveAndLoadGame
 
         // reset lights on
         lightsOn = 0;
-        
+
+        // rset tut
+        tutorialStep = 0;
+
         Save();
     }
 
@@ -233,6 +254,13 @@ static public class SaveAndLoadGame
     {
         if (on) lightsOn = 1;
         else lightsOn = 0;
+        Save();
+    }
+
+    static public void IncreaseTutorialStep()
+    {
+        tutorialStep++;
+        Debug.Log("updated tut step is " + tutorialStep);
         Save();
     }
 }

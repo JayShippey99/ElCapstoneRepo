@@ -27,7 +27,7 @@ public class _Light : InteractableParent
     int blinkCounter;
 
     // get ref to material so that it can change individually
-    MeshRenderer lMat;
+    public MeshRenderer lMat;
 
     public void Awake()
     {
@@ -81,14 +81,17 @@ public class _Light : InteractableParent
     // 
     public void SetLight(bool on)
     {
+        //print("set light");
         if (on)
         {
             TurnOn();
         }
         else
         {
+            //print(lMat);
             TurnOff();
         }
+        //print("after set light");
     }
 
     // trigger light will happen from only a button? what? hm
@@ -125,6 +128,8 @@ public class _Light : InteractableParent
     }
     void TurnOff()
     {
+        //print(lMat); // somethign turns lmat to null?
+        //print(lMat.material);
         lMat.material.SetInt("_On", 0);
     }
 

@@ -197,6 +197,7 @@ public class _Knob : InteractableParent
 
     public override void DoSomethingButton(GameObject theButton) // LMFAO sick
     {
+        
         //print("does this get run for some reason?");
         //StartReturnToNormal();
         canInteract = false;

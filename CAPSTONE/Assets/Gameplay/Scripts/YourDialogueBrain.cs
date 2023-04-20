@@ -20,6 +20,11 @@ public class YourDialogueBrain : MonoBehaviour
     [HideInInspector]
     public bool sent;
 
+    private void Start()
+    {
+        //print(exitCode + " dialogue start");
+    }
+
     public void Exit()
     {
         if (!sent)

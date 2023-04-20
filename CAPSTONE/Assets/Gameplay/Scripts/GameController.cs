@@ -1,4 +1,5 @@
 using FMODUnity;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -190,6 +191,15 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.S)) ShortCutToFirstPuzzle();
 
+        /*
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            dialogueSectionNum++;
+            cb.StartDialogueSection(cb.dialogueSections[dialogueSectionNum]);
+            print(dialogueSectionNum);
+        }
+        */
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             // bring up menu again
@@ -215,6 +225,7 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.N))
         {
+            print("pressing n");
             StartSide();
             //FullInputController.instance.PuzzleReady();
         }
@@ -297,7 +308,7 @@ public class GameController : MonoBehaviour
             {
                 // when we do this we need to delay instead
 
-                thisPuzzle = s.puzzles[i];
+                thisPuzzle = s.puzzles[i]; // duh this puzzle never gets set
                 nextPuzzle = s.puzzles[i + 1];
 
                 //print("change puzzle!");
@@ -313,10 +324,10 @@ public class GameController : MonoBehaviour
                 return;
             }
         }
-        
-        //s.puzzles[0].gameObject.SetActive(false);
 
-        LevelDone(s);
+        //print("does this run???? " + s);
+        StartCoroutine(LevelDone(s));
+        //print("does this run49018983");
 
         // I think I need it to unfocus when I solve it?
     }
@@ -335,7 +346,7 @@ public class GameController : MonoBehaviour
                 BranchInitializer bi = child.GetComponent<BranchInitializer>();
                 EndInitializer ei = child.GetComponent<EndInitializer>();
 
-                //print("does this run? ");
+                //print("d? ");
                 if (bi != null) // this doesn't run
                 {
                     //print("how about this one");
@@ -363,7 +374,13 @@ public class GameController : MonoBehaviour
             }
 
         }
-        //print("end of kill current");
+
+        //DelayAndThenFunction(KillThisPuzzle, fizzleDelay);
+    }
+
+    void KillThisPuzzle()
+    {
+        thisPuzzle.gameObject.SetActive(false);
     }
 
     public void ChangeBusVolume(bool changeMusic, float sliderV, float db)
@@ -429,7 +446,7 @@ public class GameController : MonoBehaviour
 
     public void EndIntroSeq()
     {
-        cb.StartDialogueChunk("roomStarted");
+        cb.StartDialogueSection("roomStarted");
         cutscene = false;
         SaveAndLoadGame.UpdateTesseractSize(1);
     }
@@ -488,14 +505,24 @@ public class GameController : MonoBehaviour
 
     }
 
-    public void LevelDone(Side s)
+    public IEnumerator LevelDone(Side s)
     {
         // when the whole side is solved
 
+        print("killing");
+        if (thisPuzzle == null) thisPuzzle = s.puzzles[s.puzzles.Count - 1];
+        KillCurrentPuzzle(thisPuzzle.transform);
+
+        yield return new WaitForSeconds(fizzleDelay);
+
+        print("after fizzle delay");
+
+        //StartCoroutine(DelayAndThenFunction(StartNextPuzzle, fizzleDelay));
 
         SaveAndLoadGame.IncreasePuzzleForSide(GetIndexOfFocusedSide(focusedSide));
 
-        s.puzzles[s.puzzles.Count - 1].gameObject.SetActive(false); // what does this do? // turns the last puzzle child false, gotcha
+        s.puzzleList.gameObject.SetActive(false);
+        //s.puzzles[s.puzzles.Count - 1].gameObject.SetActive(false); // what does this do? // turns the last puzzle child false, gotcha
         currentPuzzle = null;
         s.intel.SetActive(true); // lowkey with the way that I did these sticky notes, I might as well have just done the same thing for theese
         s.done = true;
@@ -547,6 +574,8 @@ public class GameController : MonoBehaviour
 
     public void AddMachine()
     {
+
+
         foreach (GameObject g in machines)
         {
             if (g.activeInHierarchy == false)
@@ -556,8 +585,17 @@ public class GameController : MonoBehaviour
                 g.SetActive(true);
 
                 // lowkey what I think I might do also is make it so that based on g, I start a different new dialogue section or something
-                if (g.name == "RotateMachine") cb.StartDialogueSection("rotateMachine");
-                if (g.name == "SpreadMachine") cb.StartDialogueSection("spreadMachine");
+                if (g.name == "RotateMachine")
+                {
+                    ChangeTutorialStep();
+                    cb.StartDialogueSection("rotateMachine");
+                }
+                if (g.name == "SpreadMachine")
+                {
+                    ChangeTutorialStep();
+                    cb.StartDialogueSection("spreadMachine");
+                }
+
                 return;
             }
         }
@@ -577,12 +615,16 @@ public class GameController : MonoBehaviour
             {
                 //print("not doing it right " + i + " " + (tutorialArrows.Length - 1));
                 tutorialArrows[i].SetActive(false);
+                // so if I have 3 steps, and the last one is n empty one, on the last one, i just turn that one off, but then my index stays as 2, which means if I load up i'll just 
+                // this won't happen actually and if it does I think that it won't break
             }
             else if (tutorialArrows[i].activeInHierarchy)
             {
                 //print("doign the thing");
                 tutorialArrows[i].SetActive(false);
                 tutorialArrows[i + 1].SetActive(true);
+
+                SaveAndLoadGame.IncreaseTutorialStep();
                 return;
             }
         }
@@ -590,7 +632,17 @@ public class GameController : MonoBehaviour
 
     public void StartTutorial()
     {
-        tutorialArrows[0].SetActive(true);
+
+
+        foreach (GameObject g in tutorialArrows)
+        {
+            g.SetActive(false);
+        }
+
+        SaveAndLoadGame.IncreaseTutorialStep();
+
+        tutorialArrows[1].SetActive(true);
+        cb.StartDialogueSection("tutorial");
     }
 
     public void StartSide() // AKA unlock side
@@ -612,15 +664,38 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void EndSide()
+    public void EndSide(int num)
     {
         //print("from end side");
-        SideManager.instance.Unfocus(); // I'm gonna do it at the beginning and end of a section just to make sure it's working
-        cb.StartDialogueSection(cb.dialogueSections[dialogueSectionNum]); // okay this isn't adding up correctly anymore
+        //SideManager.instance.Unfocus(); // I'm gonna do it at the beginning and end of a section just to make sure it's working
+        //cb.StartDialogueSection(cb.dialogueSections[dialogueSectionNum]); // okay this isn't adding up correctly anymore
+        //cutscene = false; // this might change
         // ohhhh dialogue section number isn't being saved so it always resets
+
+        switch(num)
+        {
+
+            case 1:
+                cb.StartDialogueSection("side1");
+                break;
+            case 2:
+                cb.StartDialogueSection("side2");
+                break;
+            case 3:
+                cb.StartDialogueSection("side3");
+                break;
+            case 4:
+                cb.StartDialogueSection("side4");
+                break;
+            case 5:
+                cb.StartDialogueSection("side5");
+                break;
+            case 6:
+                cb.StartDialogueSection("side6");
+                break;
+        }
+
     }
-
-
 
     public void QuitGame()
     {
@@ -662,6 +737,18 @@ public class GameController : MonoBehaviour
         // fade to black or something
         // reset all stats
         // reopen level?
+    }
+
+    public void UnlockFirstSide() // we'll need this functoin so that we can unlcock the first side, wait and then run the dialogeu
+    {
+        StartSide();
+        StartCoroutine(DelayAndThenFunction(StartTutorial2, 2)); // you can place after the puzzle is solved
+    }
+
+    public void StartTutorial2()
+    {
+        cb.StartDialogueSection("tutorial2");
+        // where to put the code that say if your dialogue section is tutorial, then set restart the tutorial steps, and if you start with tutorial2, load with nother number
     }
 
 }

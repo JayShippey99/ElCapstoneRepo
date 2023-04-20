@@ -108,7 +108,7 @@ Material:
     - _QueueOffset: 0
     - _Roundedness: 5.01
     - _ShockwaveSize: 0.05
-    - _Visibility: 0
+    - _Visibility: 1
     m_Colors:
     - _MidPoint: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _OutlineColor: {r: 0.514151, g: 0.97523135, b: 1, a: 1}

@@ -107,6 +107,7 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
 
     public override void ChangeSomethingDial(float f) // I need to make it so that when I let go, if a thing is on an image, 
     {
+        /*
         //print(currentSignal);
         if (currentSignal != null)
         {
@@ -145,6 +146,7 @@ public class FreqScanObject : InteractableParent // has two funcitons, onup, and
                 strongSignalLight.SetLight(true);
             }
         }
+        */
     }
 
     /*

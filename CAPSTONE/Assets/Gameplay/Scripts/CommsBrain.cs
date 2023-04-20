@@ -118,9 +118,14 @@ public class CommsBrain : MonoBehaviour
     //FMOD.Studio.EventInstance yourSpeech;
 
     string sectionToStart = "Intro";
+
+    int currentChunkNumber;
+
     void Start()
     {
         if (!string.IsNullOrEmpty(sectionToStart)) StartDialogueSection(sectionToStart);
+
+        //print(dialogueSections[0].dialogueChunks[1].yourDialogues[0].exitCode);
     }
 
     public void StartWithSection(string section)
@@ -134,6 +139,7 @@ public class CommsBrain : MonoBehaviour
         // start first dialogue chunk in a section, need a section
         StartDialogueChunk(section.dialogueChunks[0]); // open up the first CHUNK of the section
         GameController.instance.dialogueSectionNum++;
+        currentChunkNumber = 0;
     }
 
     public void StartDialogueSection(string enterCode) // wtd so doign it with a strign doesn't give you the right thinga
@@ -150,6 +156,7 @@ public class CommsBrain : MonoBehaviour
         {
             SaveAndLoadGame.UpdateCurrentDialogueSection(enterCode);
             StartDialogueSection(section);
+            //if (enterCode == "tutorial") GameController.instance.StartTutorial();
         }
         else
         {
@@ -159,10 +166,13 @@ public class CommsBrain : MonoBehaviour
 
     void StartDialogueChunk(DialogueChunk chunk)
     {
+        //print(dialogueSections[0].dialogueChunks[1].yourDialogues[0].exitCode + " start dialogue chunk");
+
         // this will start the loop of one by one putting things into the screen
         //print("start chunk");
         StartCoroutine(DelayBeforeNextChunk(chunk));
         //StartCoroutine(DialogueChunkAnim(chunk));
+        currentChunkNumber++;
     }
 
     public void StartDialogueChunk(string enterCode)
@@ -182,11 +192,13 @@ public class CommsBrain : MonoBehaviour
         }
 
         if (chunk != null)
-        {    
+        {
+            //print("does this run?");
             StartDialogueChunk((chunk));
         }
         else
         {
+            //print("what about this guy");
             Debug.LogError("There's no chunk with the enter code you asked for");
         }
 
@@ -194,6 +206,8 @@ public class CommsBrain : MonoBehaviour
 
     IEnumerator DialogueChunkAnim(DialogueChunk chunk)
     {
+        //print(dialogueSections[0].dialogueChunks[1].yourDialogues[0].exitCode + " dialogue chunk coroutine");
+
         ResetSpawn();
 
         //print("start coroutine");
@@ -205,6 +219,7 @@ public class CommsBrain : MonoBehaviour
         int yourLinesToSend = chunk.yourDialogues.Length; // 2
         int yourLinesSent = 0;
 
+
         //FMODUnity.RuntimeManager.PlayOneShot("event:/FriendDialogue");
         friendSpeech.start();
 
@@ -212,6 +227,8 @@ public class CommsBrain : MonoBehaviour
         {
             if (friendLinesToSend > 0) // 2 // 1 // runs twice
             {
+                //print(dialogueSections[0].dialogueChunks[1].yourDialogues[0].exitCode + " dialogue chunk coroutine");
+
                 //print(friendLinesSent + " " + friendLinesToSend);
                 SendFriendLine(chunk.friendDialogues[friendLinesSent].dialogue); // 0 // 1 // runs twice
 
@@ -226,15 +243,25 @@ public class CommsBrain : MonoBehaviour
             else if (yourLinesToSend > 0)
             {
                 friendSpeech.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                //print(dialogueSections[0].dialogueChunks[1].yourDialogues[0].exitCode + " dialogue chunk coroutine");
 
                 for (int i = 0; i < chunk.yourDialogues.Length; i++)
                 {
+                    // okay so for some reason there's like a disconnect with the actual things I'm comparing, idk how only one of the variables is getting sent through
+
+                    //print(chunk.enterCode + " " + chunk.yourDialogues.Length + " " + chunk.yourDialogues[0].exitCode + " " + yourLinesSent + " " + chunk.yourDialogues[yourLinesSent].dialogue + " " + chunk.yourDialogues[yourLinesSent].gameCode);
+                    //chunk = dialogueSections[GameController.instance.dialogueSectionNum].dialogueChunks[currentChunkNumber]; // wtf so now it works?
+                    //print((dialogueSections[0].dialogueChunks[1].yourDialogues[0] == chunk.yourDialogues[yourLinesSent]) + " " + dialogueSections[0].dialogueChunks[1].yourDialogues[0].dialogue + " " + chunk.yourDialogues[yourLinesSent].dialogue);
+                    //print(chunk.yourDialogues[0].dialogue + " " + chunk.yourDialogues[0].exitCode);
+                    //print("line above is the tester");
                     SendYourLine(chunk.yourDialogues[yourLinesSent].dialogue, chunk.yourDialogues[yourLinesSent].exitCode, chunk.yourDialogues[yourLinesSent].gameCode);
+                    //print(dialogueSections[0].dialogueChunks[1].yourDialogues[0].exitCode + " specific dialogue chunk after " + chunk.yourDialogues[yourLinesSent].exitCode);
 
                     yourLinesToSend--;
                     yourLinesSent++;
                 }
-                
+
+
             }
 
             yield return new WaitForSeconds(lineDelay);
@@ -265,6 +292,8 @@ public class CommsBrain : MonoBehaviour
         y.exitCode = exitCode;
         y.gameCode = gameCode;
         y.cb = this;
+
+        //print(y.exitCode + " " + exitCode);
 
         AddLine();
     }
@@ -298,10 +327,12 @@ public class CommsBrain : MonoBehaviour
 
         if (!string.IsNullOrEmpty(exitCode)) // what happens when there's nothing else? idk
         {
+            //print("wahts up");
             StartDialogueChunk(exitCode);
         }
         else
         {
+            //print("is this what's happening>");
             SaveAndLoadGame.UpdateCurrentDialogueSection(""); // wait actually doing this should make it save as playing no dialogue
         }
     }

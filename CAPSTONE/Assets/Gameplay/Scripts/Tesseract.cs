@@ -119,13 +119,15 @@ public class Tesseract : InteractableParent
 
     public override void DoSomethingButton(GameObject theButton)
     {
+        // something in here is where the mterial gets lost weirdly
         // Regardless of which button is doing it, the tesseract will upright
         needsToUpright = true;
         startRot = transform.rotation;
         uprightTimer = 0;
 
         rotateTo = sm.GetRotationToClosestSide();
-        FullInputController.instance.Uprighting();
+        FullInputController.instance.Uprighting(); // something in here
+        
     }
 
     public override void SetSwitch(bool on)

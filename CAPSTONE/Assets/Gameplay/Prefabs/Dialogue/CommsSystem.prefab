@@ -59,6 +59,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -117,42 +118,106 @@ MonoBehaviour:
   friendDialoguePrefab: {fileID: 8744539541615578186, guid: 5cbee9a2e8ce3f84287f8380b1ef2dec, type: 3}
   yourDialoguePrefab: {fileID: 4099114773197992803, guid: a22477a99a26de648a7ff509213b0e63, type: 3}
   dialogueSections:
-  - enterCode: 
+  - enterCode: Intro
     dialogueChunks:
     - enterCode: 
       friendDialogues:
-      - dialogue: Hello
-      - dialogue: This is a test
-      - dialogue: Is it working?
+      - dialogue: So...
+      - dialogue: This is the lab
+      - dialogue: Make yourself at home
       yourDialogues:
-      - dialogue: Yes it is
-        exitCode: yes
-      - dialogue: No isn't
-        exitCode: no
-    - enterCode: yes
+      - dialogue: Hello??
+        exitCode: int2
+        gameCode: 
+    - enterCode: int2
       friendDialogues:
-      - dialogue: Oh yay that's so good!
-      - dialogue: WOO HOO
+      - dialogue: This is where I go when people
+      - dialogue: can't seem to get a hold of me
+      - dialogue: The radio signals are very... filtered here
+      yourDialogues:
+      - dialogue: What did you bring me here for again?
+        exitCode: c02m98m
+        gameCode: introSeq
+      - dialogue: Why did you ask me to come here?
+        exitCode: cu3ioium03um09u
+        gameCode: dotidotidoto
+    - enterCode: int3
+      friendDialogues:
+      - dialogue: Well
+      - dialogue: From what I've seen,
+      - dialogue: you just fit the bill
+      yourDialogues:
+      - dialogue: Right...
+        exitCode: int4
+        gameCode: 
+      - dialogue: Thanks, I guess
+        exitCode: int4
+        gameCode: 
+    - enterCode: int4
+      friendDialogues:
+      - dialogue: Look
+      - dialogue: You're the only person that I trust
+      - dialogue: I'll prove it
+      - dialogue: Lemme get this thing on
       yourDialogues:
       - dialogue: ...
         exitCode: 
-    - enterCode: no
+        gameCode: introSeq
+    read: 0
+  - enterCode: TesseractStart
+    dialogueChunks:
+    - enterCode: 
       friendDialogues:
-      - dialogue: Oh no!
-      - dialogue: What a shame...
+      - dialogue: So...
+      - dialogue: This is the lab
+      - dialogue: Make yourself at home
       yourDialogues:
-      - dialogue: Tell me something else
-        exitCode: more
-      - dialogue: Be quiet
+      - dialogue: Its... impressive
         exitCode: 
-    - enterCode: more
+        gameCode: 
+      - dialogue: What is all this stuff?
+        exitCode: 
+        gameCode: 
+      - dialogue: (Click a bubble to respond)
+        exitCode: 
+        gameCode: 
+    - enterCode: int2
       friendDialogues:
-      - dialogue: Something more
+      - dialogue: This is where I go when people
+      - dialogue: can't seem to get a hold of me
+      - dialogue: The radio signals are very... filtered here
       yourDialogues:
-      - dialogue: Very funny...
+      - dialogue: What did you bring me here for again?
         exitCode: 
+        gameCode: 
+      - dialogue: Why did you ask me to come here?
+        exitCode: 
+        gameCode: 
+    - enterCode: int3
+      friendDialogues:
+      - dialogue: Well
+      - dialogue: From what I've seen,
+      - dialogue: you just fit the bill
+      yourDialogues:
+      - dialogue: Right...
+        exitCode: 
+        gameCode: 
+      - dialogue: Thanks, I guess
+        exitCode: 
+        gameCode: 
+    - enterCode: int4
+      friendDialogues:
+      - dialogue: Look
+      - dialogue: You're the only person that I trust
+      - dialogue: I'll prove it
+      - dialogue: Lemme get this thing on
+      yourDialogues:
+      - dialogue: ...
+        exitCode: 
+        gameCode: introSeq
+    read: 0
   spawnLocation: {fileID: 8777557900277216794}
-  lineGap: 50
+  lineGap: 75
   lineDelay: 0.2
   chunkDelay: 0.75
 --- !u!1 &8777557900277216795

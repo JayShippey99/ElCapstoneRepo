@@ -57,11 +57,11 @@ public class SideBrain : InteractableParent
     {
         //print("when does this happen"); // okay so I need a way to make it so that they unlock when they need on load
 
-        puzzles = new PlantPuzzle[puzzleHouser.childCount - 1];
+        puzzles = new PlantPuzzle[puzzleHouser.childCount];
 
-        for (int i = 0; i < puzzleHouser.childCount - 1; i++)
+        for (int i = 0; i < puzzleHouser.childCount; i++)
         {
-            puzzles[i] = puzzleHouser.GetChild(i).GetComponent<PlantPuzzle>();
+            puzzles[i] = puzzleHouser.GetChild(i).GetComponent<PlantPuzzle>(); // is this why???
         }
 
         alienIntel = puzzleHouser.GetChild(puzzleHouser.childCount - 1).gameObject;

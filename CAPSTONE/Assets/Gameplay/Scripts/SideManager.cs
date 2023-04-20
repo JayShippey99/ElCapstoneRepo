@@ -92,6 +92,7 @@ public class SideManager : InteractableParent
 
     public override void DoSomethingButton(GameObject theButton)
     {
+        
         // focus or up focus
         t.focused = !t.focused;
 
@@ -110,6 +111,7 @@ public class SideManager : InteractableParent
 
     public override void ChangeSomethingDial(float f) // i need to make it so that when I touch the dial while its focused it unfocuses, the issue here is that I need to know if the dials are being touched cause of me or not, like are they resetting
     {
+        
         // i can ask though if the value of f is a distance from 0
         float n = Mathf.Abs(f) - 30;
 
@@ -168,6 +170,7 @@ public class SideManager : InteractableParent
             if (closestSide.gameObject.name == "TopFaceParent") t.animator.SetTrigger("ReturnSide5");
             if (closestSide.gameObject.name == "BottomFaceParent") t.animator.SetTrigger("ReturnSide6");
             //print("i am focused and want to return");
+            t.focused = false;
         }
 
         // okay so, when I'm not activated and i activate, I need to find that side and make it bigger
@@ -182,7 +185,7 @@ public class SideManager : InteractableParent
     void TurnOnFocusedSide()
     {
         // right, all that it comes down to is setting the currently active PUZZZLE and then turning on that side, so we can maybe call these functions from the game controller? at some point we need to get the side brain in the gc scripts
-
+        print("focusing");
         GameController.instance.currentPuzzle = null;
 
         //print(closestSide + " closest side");
@@ -209,9 +212,9 @@ public class SideManager : InteractableParent
                 }
                 else
                 {
-                //print("4");
+                    //print("4");
                     //print(pb.name);
-
+                    print(pb.puzzles.Length);
 
                     foreach (PlantPuzzle pp in pb.puzzles) // very gross but this is how we can set the currently active puzzle
                     {
@@ -220,12 +223,14 @@ public class SideManager : InteractableParent
                         //print("does the error happen here?");
                         if (pp.gameObject.activeInHierarchy)
                         {
+                            print("we have a puzzle!");
                             GameController.instance.currentPuzzle = pp;
                            // print(pp.gameObject.name + " name of the new current puzzle");
                            // print(pb.name);
                         }
                         else
                         {
+                            print("no puzzle");
                            // print(pb.name);
                            // print(pp.gameObject.name + " name of the not active puzzle");
                         }

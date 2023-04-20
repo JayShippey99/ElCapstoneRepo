@@ -43,6 +43,7 @@ public class BinaryInputBrain : InteractableParent
 
     public void Show() // What we'll do is just send in which image from the input controller
     {
+        //print(light.lMat);
         showing = true;
         light.SetLight(true);
         img.enabled = true;

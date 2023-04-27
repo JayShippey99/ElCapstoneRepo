@@ -4,6 +4,29 @@ using UnityEngine;
 
 public class TesseractAnimationEvents : MonoBehaviour
 {
+    // well actaully the last thing I reall yneed to do is to have the credits roll... i wonder if I culd just include that in here too?
+
+    public void RollCredits()
+    {
+        GameController.instance.ShowEndCredits();
+    }
+
+    public void SaveGame() // this runs within the animation
+    {
+        SaveAndLoadGame.UpdateGameCompletion(1);
+    }
+
+    public void SuckUp() // turn on stars to generate some and then start the gradient suck
+    {
+        Tesseract.instance.spaceExplosion.gameObject.SetActive(true);
+        EndPuzzleIntensity.instance.Explode();
+    }
+
+    public void ExplodeStars()
+    {
+        Tesseract.instance.ExplodeStars();
+    }
+
     public void EndIntroSeq()
     {
         GameController.instance.EndIntroSeq();
@@ -11,7 +34,7 @@ public class TesseractAnimationEvents : MonoBehaviour
 
     public void ShowEndScreen()
     {
-        GameController.instance.ShowEndScreen();
+        GameController.instance.ShowEndCredits();
     }
 
     public void TurnOnLightsInRoom()

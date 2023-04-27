@@ -37,7 +37,7 @@ public class InspectObject : MonoBehaviour
 
         hidden = true;
         hideLocation = transform.position;
-        hideRotation = transform.localRotation.eulerAngles;
+        hideRotation = transform.rotation.eulerAngles;
     }
 
     void Update()
@@ -51,7 +51,7 @@ public class InspectObject : MonoBehaviour
                     //transform.position = showLocation;
                     transform.position = Vector3.Lerp(transform.position, showLocation, speed); // looks great tbh
                                                                                                 //transform.rotation = Quaternion.Euler(showRotation);
-                    transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(showRotation), speed);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(showRotation), speed);
                     if (Vector3.Distance(transform.position, showLocation) < .01f)
                     {
                         //print("idle");
@@ -64,7 +64,7 @@ public class InspectObject : MonoBehaviour
                     //transform.position = hideLocation;
                     transform.position = Vector3.Lerp(transform.position, hideLocation, speed);
                     //transform.rotation = Quaternion.Euler(hideRotation);
-                    transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(hideRotation), speed);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(hideRotation), speed);
 
                     if (Vector3.Distance(transform.position, hideLocation) < .01f)
                     {
@@ -86,7 +86,7 @@ public class InspectObject : MonoBehaviour
             if (currentState == idle) // will change
             {
                 showLocation = Camera.main.transform.position + Camera.main.transform.forward * 1;
-                showRotation = Camera.main.transform.localRotation.eulerAngles + new Vector3(-90, 90, 0);
+                showRotation = Camera.main.transform.rotation.eulerAngles;
                 //hidden = false;
                 //print("face?");
                 //GetComponent<BoxCollider>().enabled = false;

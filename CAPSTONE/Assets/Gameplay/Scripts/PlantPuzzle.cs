@@ -73,7 +73,7 @@ public class PlantPuzzle : MonoBehaviour
 
     int ind;
 
-    public SideBrain sideOwner;
+    //public SideBrain sideOwner;
 
     [HideInInspector]
     public bool shouldResetWhenDone;
@@ -183,11 +183,8 @@ public class PlantPuzzle : MonoBehaviour
         // THIS FUNCTION REMOVES BRANCHES THAT WILL HAVE STUFF GROWING ON THEM FROM THE EMPTY BRANCH LIST
         UpdateEmptyBranches();
 
-        //print("THIS IS THE NEW ORDER OF EMPTY BRANCHES"); // the order from the second one is wrong right off the bat
-        foreach (BranchInitializer b in emptyBranches)
-        {
-            //print(b.end.x);
-        }
+
+        if (emptyBranches.Count > 6) ClearPuzzle();
 
         //print(emptyBranches.Count);
 
@@ -209,6 +206,7 @@ public class PlantPuzzle : MonoBehaviour
     public void ResetSpread()
     {
         branchAngleInt = 1;
+        ChangeRootIcon(branchAngleInt);
     }
 
     public int GetBranchSpread()
@@ -316,6 +314,7 @@ public class PlantPuzzle : MonoBehaviour
         branchesToBeAdded.Clear();
         branchesToBeRemoved.Clear();
 
+
         // by the end I wanna know how many new empty branches tehre are
         // so it KNOWS the proper amount of epmty branches
         // omg wait it might a be <= vs < situation
@@ -339,6 +338,7 @@ public class PlantPuzzle : MonoBehaviour
        // print("in the check for completion function");
         foreach (PlantCondition pc in levelConditions) // we need to ask if at least one condition isn't met, that we don't reset? or what, lets jsut print when the puzzle is done
         {
+            
             //print("how many times does this run"); // okay wait it makes sense i guess to only go once cause that just means that the very first thing isn't being solved
             //print("checking plant conditions");
             // for each condition, ask if its met
@@ -346,7 +346,7 @@ public class PlantPuzzle : MonoBehaviour
             //print("does this run");
         }
 
-        //print("is complete!");
+        print("is complete!");
 
         return true;
     }
@@ -387,16 +387,20 @@ public class PlantPuzzle : MonoBehaviour
         // how do I find the reverse of the hypotenuse?
         // like, instead of going out 1x 1y to get a lnegth of 1.41 i now need to go from ?x ?y to get a length of 1
 
+        // so we need to ask if the root is NOT ortho and the length is 3
+
         float branchLength = orthoLength;
 
-        if (!IsRootOrtho())
+        if (!IsRootOrtho()) // bruh wtf
         {
-            if (branchAngleInt == 1) branchLength = specLength; // so far this is all correct, until its diag && spread is 2
+            //print("root is NOT ortho speclegnth is " + specLength + " diagonal length is " + diagLength + " ortholength is " + orthoLength + " and branch angle is "+ branchAngleInt);
+            if (branchAngleInt == 1 || branchAngleInt == 3) branchLength = specLength; // so far this is all correct, until its diag && spread is 2
             else branchLength = diagLength;
         }
 
         if (branchAngleInt == 1) // make them 45 degrees // but now what happens when we have a branch angle of 3? i want to go 135 degrees
         {
+            //print(branchLength + " " + specLength);
             bi.Initialize(start, start + ((root.up * transform.localScale.x * branchLength)) + (-root.right * transform.localScale.x * branchLength), "left", this); // old, saving for reference
         }
 
@@ -418,6 +422,7 @@ public class PlantPuzzle : MonoBehaviour
 
         if (branchAngleInt == 3) // make them 45 degrees // but now what happens when we have a branch angle of 3? i want to go 135 degrees
         {
+            print(branchLength + " " + diagLength);
             bi.Initialize(start, start + ((-root.up * transform.localScale.x * branchLength)) + (-root.right * transform.localScale.x * branchLength), "left", this); // old, saving for reference
         }
 
@@ -442,7 +447,7 @@ public class PlantPuzzle : MonoBehaviour
 
         if (!IsRootOrtho())
         {
-            if (branchAngleInt == 1) branchLength = specLength; // so far this is all correct, until its diag && spread is 2
+            if (branchAngleInt == 1 || branchAngleInt == 3) branchLength = specLength; // so far this is all correct, until its diag && spread is 2
             else branchLength = diagLength;
         }
 
@@ -459,6 +464,7 @@ public class PlantPuzzle : MonoBehaviour
 
         if (branchAngleInt == 3) // make them 45 degrees
         {
+            print("YEYSYEEYSY");
             bi.Initialize(start, start + ((-root.up * transform.localScale.x * branchLength)) + (root.right * transform.localScale.x * branchLength), "right", this); // old, saving for reference
         }
 
@@ -546,6 +552,8 @@ public class PlantPuzzle : MonoBehaviour
 
     public void ClearPuzzle()
     {
+        FMODUnity.RuntimeManager.PlayOneShot("event:/ClearPuzzle");
+
         //print("clear");
         emptyBranches.Clear();
         fruits.Clear(); // just gotta clear it

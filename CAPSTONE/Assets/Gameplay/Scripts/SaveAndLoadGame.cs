@@ -15,6 +15,18 @@ static public class SaveAndLoadGame
     static public int unlockedParticles = 2;
     static public int lightsOn = 0;
     static public int tutorialStep = 0;
+    static public int gameDone = 0; // what this will do is trump everything on the loading and just set everything to its max
+    static public int canDoEndParticles = 0;
+
+    // okay so if I load with a dialogue section, I know exactly what to load everything with
+    // if I don't have a dialogue section, that means I'm solving puzzles or something. so that means that I can use the most open side to determine how to load everything
+    // this will be super manual and might require a lot of reworking
+    // is there a better way to do this
+
+    // so what happened, i closd down opened up, the arrow was in the wrong spot, because of this, it kept iterating at the wrong step
+    // why did this happen
+    // it started with exactly nothing which is the weird part
+
 
     static public void Save() 
     {
@@ -60,6 +72,10 @@ static public class SaveAndLoadGame
         //PlayerPrefs.SetInt("LightsOn2", lightsOn);
 
         PlayerPrefs.SetInt("TutorialStep", tutorialStep);
+
+        PlayerPrefs.SetInt("GameDone", gameDone);
+
+        PlayerPrefs.SetInt("CanDoEndParticles", canDoEndParticles);
     }
 
     static public void Load() // I wonder if load should take in some things? like game controller and stuff just to make typing easier?
@@ -73,7 +89,12 @@ static public class SaveAndLoadGame
         //Debug.Log("unlocked sides " + unlockedSides);
         for (int i = 0; i < PlayerPrefs.GetInt("UnlockedSides"); i++)
         {
-            gc.sides[i].projection.Unlock();
+            gc.sides[i].projection.unlocked = true;
+            gc.sides[i].projection.SetStateTo(1);
+            gc.sides[i].projection.SetIdle(false);
+            gc.sides[i].projection.SetProgress(0);
+
+            //gc.sides[i].projection.Unlock();
         }
 
         // load the dialogue section
@@ -110,7 +131,7 @@ static public class SaveAndLoadGame
         // load tesseract size for anim purposes
         tesseractSize = PlayerPrefs.GetFloat("TesseractSize"); // if the tesseract size is 1, we also need to turn on the particles
         //Debug.Log("load with a size of " + tesseractSize);
-        if (tesseractSize != 0)
+        if (tesseractSize != 0 && gameDone == 0)
         {
             gc.tesseract.animator.SetTrigger("ScaleUp");
         }
@@ -119,6 +140,7 @@ static public class SaveAndLoadGame
 
         // load active puzzles for each side
         puzzleForSides = new int[] { PlayerPrefs.GetInt("Side1Puzzle"), PlayerPrefs.GetInt("Side2Puzzle"), PlayerPrefs.GetInt("Side3Puzzle"), PlayerPrefs.GetInt("Side4Puzzle"), PlayerPrefs.GetInt("Side5Puzzle"), PlayerPrefs.GetInt("Side6Puzzle") };
+        //puzzleForSides = new int[] { 0, 0, 0, 0, 0, 0 };
         for (int i = 0; i < 6; i++)
         {
             if (gc.sides[i].puzzles.Count > puzzleForSides[i]) gc.sides[i].puzzles[puzzleForSides[i]].gameObject.SetActive(true);
@@ -128,6 +150,7 @@ static public class SaveAndLoadGame
                 gc.sides[i].done = true;
             }
         }
+        
 
         // load unlocked particles
         unlockedParticles = PlayerPrefs.GetInt("UnlockedParticles");
@@ -150,6 +173,18 @@ static public class SaveAndLoadGame
         if (dialogueSection == "rotateMachine") tutorialStep = 12;
         if (dialogueSection == "spreadMachine") tutorialStep = 14;
         gc.tutorialArrows[tutorialStep].SetActive(true); // the last step is a none again so this is fine
+
+        gameDone = PlayerPrefs.GetInt("GameDone");
+        // if game is done, then turn on the final stuff in the room, set the end particles to scale 1 and on, and don't let the tesseract grow
+        if (gameDone == 1)
+        {
+            gc.finalRoomMess.SetActive(true);
+            gc.tesseract.spaceExplosion.gameObject.SetActive(true);
+            gc.tesseract.spaceExplosion.transform.localScale = Vector3.one * .4f;
+        }
+
+        canDoEndParticles = PlayerPrefs.GetInt("CanDoEndParticles");
+        if (canDoEndParticles == 1) gc.allSidesCompleted = true;
     }
 
     static public void ResetGame()
@@ -188,18 +223,23 @@ static public class SaveAndLoadGame
         // rset tut
         tutorialStep = 0;
 
+        gameDone = 0;
+
+        canDoEndParticles = 0;
+
         Save();
     }
 
     static public void IncreaseUnlockedSides()
     {
         unlockedSides++;
-        if (unlockedSides > 5) Debug.LogError("Too many sides have been unlocked");
+        if (unlockedSides > 6) Debug.LogError("Too many sides have been unlocked");
         Save();
     }
 
     static public void IncreaseAddedPapers()
     {
+        Debug.Log("increasing papers " + (addedPapers + 1));
         addedPapers++;
         Save();
     }
@@ -261,6 +301,18 @@ static public class SaveAndLoadGame
     {
         tutorialStep++;
         Debug.Log("updated tut step is " + tutorialStep);
+        Save();
+    }
+
+    static public void UpdateGameCompletion(int done) // 0 for no 1 for yes
+    {
+        gameDone = 1;
+        Save();
+    }
+
+    static public void UpdateCanSendEndParticle(int yes)
+    {
+        canDoEndParticles = yes;
         Save();
     }
 }

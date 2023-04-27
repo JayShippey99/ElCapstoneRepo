@@ -57,6 +57,11 @@ public class ClusterScreenBrain : MonoBehaviour
         KillChildren();
     }
 
+    public void LaserSound()
+    {
+        FMODUnity.RuntimeManager.PlayOneShot("event:/LaserFire");
+    }
+
     public void ShootPedestal()
     {
         pedestalAnim.SetTrigger("ShootPedestal");

@@ -214,7 +214,7 @@ public class SideManager : InteractableParent
                 {
                     //print("4");
                     //print(pb.name);
-                    print(pb.puzzles.Length);
+                    //print(pb.puzzles.Length);
 
                     foreach (PlantPuzzle pp in pb.puzzles) // very gross but this is how we can set the currently active puzzle
                     {
@@ -223,14 +223,14 @@ public class SideManager : InteractableParent
                         //print("does the error happen here?");
                         if (pp.gameObject.activeInHierarchy)
                         {
-                            print("we have a puzzle!");
+                            //print("we have a puzzle!");
                             GameController.instance.currentPuzzle = pp;
                            // print(pp.gameObject.name + " name of the new current puzzle");
                            // print(pb.name);
                         }
                         else
                         {
-                            print("no puzzle");
+                            //print("no puzzle");
                            // print(pb.name);
                            // print(pp.gameObject.name + " name of the not active puzzle");
                         }

@@ -133,7 +133,20 @@ public class FullInputController : InteractableParent
         if (readTimer >= timeForEachInput)
         {
             readTimer = 0;
-            if (screens[currentIndex + 1].showing) currentIndex++; // right and we use output.lenth to determing how many to send, but since we're always updating which paths and screens are there
+            if (currentIndex + 1 < screens.Length)
+            {
+                if (screens[currentIndex + 1].showing)
+                {
+                    //print("how many time is this running");
+                    RuntimeManager.PlayOneShot("event:/AddParticle");
+                    currentIndex++; // right and we use output.lenth to determing how many to send, but since we're always updating which paths and screens are there
+                }
+                else
+                {
+                    DoneReadingInput();
+                    return;
+                }
+            }
             else
             {
                 DoneReadingInput();
@@ -251,7 +264,7 @@ public class FullInputController : InteractableParent
         }
     }
 
-    void TurnAllScreensOff()
+    public void TurnAllScreensOff()
     {
         foreach (BinaryInputBrain bib in screens)
         {
@@ -261,7 +274,7 @@ public class FullInputController : InteractableParent
 
     public override void DoSomethingButton(GameObject theButton) // the button click is only once, we then need it to start reading
     {
-        if (!readingInput && canInput) StartReadingInput();
+        if (!readingInput && canInput && !gc.cutscene) StartReadingInput();
     }
 
     void StartReadingInput()
@@ -274,6 +287,7 @@ public class FullInputController : InteractableParent
         if (t.focused) // is there a point to me doing this here?
         {
             //FMODUnity
+            RuntimeManager.PlayOneShot("event:/AddParticle");
             UpdateOutput(screens[currentIndex].counter.ToString());
             SendToClusterScreen(screens[currentIndex]);
         }
@@ -290,6 +304,7 @@ public class FullInputController : InteractableParent
     void FireCluster()
     {
         // also run clear in the cluster screen
+        RuntimeManager.PlayOneShot("event:/ClusterSend");
         csb.Shoot();
         //StartCoroutine(LaserDelay()); // I need this some ere
     }
@@ -319,6 +334,7 @@ public class FullInputController : InteractableParent
 
             if (gc.focusedSide == gc.endPuzzleSideOrder[gc.endPuzzleGuessNumber] && output[0].ToString() == gc.endPuzzleSideStringOrder[gc.endPuzzleGuessNumber])
             {
+                EndPuzzleIntensity.instance.Correct();
                 gc.endPuzzleGuessNumber++;
                 print("correct so far");
                 // when we get this correct, lets open up the middle of each side by adding the vortex effect
@@ -327,11 +343,27 @@ public class FullInputController : InteractableParent
                 {
                     gc.endPuzzleGuessNumber = 5; // clamp it just in case
                     print("We got the order correct!!");
+
+                    // here is where we will run the end sequence
+                    // what is the end sequence
+                    // we need to run an animation for the tesseract
+                    // we need to start the final dialogue sequence
+                    // start with vfx for cube sucking things in, screen shaking, cue dialogue that says get outta here
+                    // get outta here
+                    // while outside you hear lots of noises
+                    // what sends you back into the room?
+                    // and then when we come back inside the room
+                    // you see the wormhole close just as you come back in 
+                    // that's when the beat drops
+                    // and then you have until the song ends to read the final message
+                    // or maybe when the song ends that's when we add a button to end the game, like exit facility sort of a thing
+                    gc.StartEndSequence();
                     // 
                 }
             }
             else
             {
+                EndPuzzleIntensity.instance.Incorrect();
                 gc.endPuzzleGuessNumber = 0;
                 print("you fucked up!");
                 // set everything back to normal

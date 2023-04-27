@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using FMODUnity;
 
 public class GameController : MonoBehaviour
 {
@@ -112,6 +113,8 @@ public class GameController : MonoBehaviour
     public Material lightsMaterial;
     public _Switch switchForSpread;
     public Animator radarAnim;
+    public GameObject finalRoomMess; // also include the sparks system
+    public ParticleSystem machineSparks;
 
     [Header("MusicStuff")]
     FMOD.Studio.Bus busMusic;
@@ -128,6 +131,8 @@ public class GameController : MonoBehaviour
     public int unlockedParticles = 2; // unlock side1, then we need to add a new particle, add new particle event
 
     //int testCounter = 0;
+    [HideInInspector]
+    public bool canSendInput;
 
     public float GetMusicVol() { return musicVolume; }
     public float GetSfxVol() { return sfxVolume; }
@@ -145,13 +150,15 @@ public class GameController : MonoBehaviour
 
         sides = new Side[]
         {
-            frontSide, backSide, rightSide, leftSide, topSide, bottomSide
+            frontSide, rightSide, topSide, leftSide, backSide, bottomSide
         };
 
-        endPuzzleSideOrder = new Side[] { topSide, leftSide, backSide, rightSide, frontSide, bottomSide };
-        endPuzzleSideStringOrder = new string[] { "0", "1", "2", "3", "0", "1" };
+        // back, front, right, top, left, bottom
+        //endPuzzleSideOrder = new Side[] { topSide, frontSide, backSide, rightSide, leftSide, bottomSide };
+        endPuzzleSideOrder = new Side[] { backSide, frontSide, rightSide, topSide, leftSide, bottomSide };
+        endPuzzleSideStringOrder = new string[] { "0", "1", "2", "3", "2", "1" };
 
-        print("probably not working");
+        //print("probably not working");
 
         foreach (Side s in sides) // foreach side
         {
@@ -175,7 +182,6 @@ public class GameController : MonoBehaviour
 
         if (loadOnStart) SaveAndLoadGame.Load();
     }
-
     public bool IsPuzzleReal()
     {
         return currentPuzzle != null;
@@ -189,6 +195,21 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TurnOnLightsInRoom();
+        }
+
+        if (allSidesCompleted && Input.GetKeyDown(KeyCode.X))
+        {
+            for(int i = 0; i < 6; i++)
+            {
+                EndPuzzleIntensity.instance.Correct();
+            }
+
+            StartEndSequence();
+        }
+
         if (Input.GetKeyDown(KeyCode.S)) ShortCutToFirstPuzzle();
 
         /*
@@ -234,8 +255,13 @@ public class GameController : MonoBehaviour
         {
             AddNewParticle();
         }
-        
-        if (Input.GetKeyDown(KeyCode.C))
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            //StartEndSequence();
+        }
+
+            if (Input.GetKeyDown(KeyCode.C))
         {
             // I want to do a shortcut to the very end, 
             // so I need each side to be "completed", I could use the logic from the load and save thing
@@ -250,8 +276,6 @@ public class GameController : MonoBehaviour
                 Side s = sides[i];
 
                 s.projection.Unlock(); // why am i not saving the unlocked sides?
-
-                
 
                 foreach (PlantPuzzle puzzle in s.puzzles)
                 {
@@ -270,7 +294,12 @@ public class GameController : MonoBehaviour
 
             SaveAndLoadGame.Save();
 
-            CheckIfAllSidesAreComplete();
+            allSidesCompleted = true;
+            SaveAndLoadGame.UpdateCanSendEndParticle(1);
+
+            cb.StartDialogueSection("side6");
+            //
+            //CheckIfAllSidesAreComplete();
 
 
 
@@ -278,9 +307,14 @@ public class GameController : MonoBehaviour
 
     }
 
-    public void KillCube()
+    public void CutSceneStart()
     {
-        Destroy(tesseract.gameObject);
+        cutscene = true;
+    }
+
+    public void CutSceneEnd()
+    {
+        cutscene = false;
     }
 
     int GetIndexOfFocusedSide(Side side) // am i sending a side that doesn't exist or what
@@ -302,16 +336,18 @@ public class GameController : MonoBehaviour
         // turn off current puzzle, turn on the next puzzle
         for (int i = 0; i < s.puzzles.Count - 1; i++) // puzzles will be the right length to only check for the puzzles
         {
-            //print("loop for puzzles count");
+            print("loop for puzzles count " + s.puzzleList.name);
             //print("does this run?");
             if (s.puzzles[i].gameObject.activeInHierarchy)
             {
+                print("loop for puzzles count " + s.puzzles[i].name);
+
                 // when we do this we need to delay instead
 
                 thisPuzzle = s.puzzles[i]; // duh this puzzle never gets set
                 nextPuzzle = s.puzzles[i + 1];
 
-                //print("change puzzle!");
+                print("change puzzle!");
                 SaveAndLoadGame.IncreasePuzzleForSide(GetIndexOfFocusedSide(s));
                 
                 // CHANGE PUZZLE
@@ -325,7 +361,7 @@ public class GameController : MonoBehaviour
             }
         }
 
-        //print("does this run???? " + s);
+        print("does this run???? " + s);
         StartCoroutine(LevelDone(s));
         //print("does this run49018983");
 
@@ -451,29 +487,62 @@ public class GameController : MonoBehaviour
         SaveAndLoadGame.UpdateTesseractSize(1);
     }
 
-    public void ShowEndScreen()
+    public void ShowEndCredits()
     {
-        endMenu.SetActive(true);
+        endMenu.SetActive(true); //this will run the fade in animation
     }
 
     public void StartEndSequence()
     {
-        // rotate back to front again
+        // what needs to happen is it needs to rotate back to normal
+        // and it needs to start Vfx showing that its increasing  in intensitty and statthe i to get outa
 
-        tesseract.ManualUpright(Vector3.forward, frontSide);
+        //tesseract.ManualUpright(Vector3.forward, frontSide);
 
         foreach (Side s in sides)
         {
             s.projection.SetState(false);
+            // I wonder if we should set the sides back to normal, keep the look or what. although, when you get the right sides locked in, then the black hold should open up
         }
 
-        finalStickNote.SetTrigger("Release");
+        // here is also where we need to start adding vfx
+
+        cb.StartDialogueSection("finalWords");
+
+        //finalStickNote.SetTrigger("Release");
         //print(tesseract.animator);
-        tesseract.animator.SetTrigger("FinalSequence");
+        //tesseract.animator.SetTrigger("FinalSequence");
     }
 
-    void CheckIfAllSidesAreComplete()
-    { 
+    public void HallwayBlink()
+    {
+        // fade out, it says you step out into the hallway
+        // there is a dialogue scream?
+        // or maybe its just a thing where you go back in whenever?
+        // fade out, display the text
+        // "you hear too much commotion"
+        // "you have to go back in there"
+        // fade back
+        // don't worry about all the visuals yet, just get the framework ready for it
+        // when you go back in... I guess just let the song play out when the song ends, go to credits
+        // have a line that says, from Dr Carl Cassini and you click it and it gives you the letter
+        // credits let you leave whenever
+        // maybe the room is red when yuo come back in?
+        screenDarken.SetTrigger("HallwayBlink");
+    }
+
+    public void RoomFinalState()
+    {
+        // add the final paper but also add papers to the ground and other equipment
+        finalRoomMess.SetActive(true);
+    }
+
+    
+
+    void CheckIfAllSidesAreComplete() // we don't REALLY need to run this, it will just know when the sides are done because you solve ide 6 last, always //
+    {
+        /*
+        print("check if all sides are done");
         
         foreach (Side s in sides)
         {
@@ -486,12 +555,14 @@ public class GameController : MonoBehaviour
         
         //StartEndSequence();
         AllSidesAreComplete();
+        */
     }
 
-    void AllSidesAreComplete()
+    public void AllSidesAreComplete() // so this doesn't necessarily need ot run once all sides are solved right? i think i should save this vlaue though maybe?
     {
         print("ALL SIDE ARE COMPLETED YOU DID ITTT");
         allSidesCompleted = true;
+        SaveAndLoadGame.UpdateCanSendEndParticle(1);
         // now what happens
         // without adding all the effects, maybe we should have a function that starts up the new functionality for the last task
         // what is the new functionality for the last task?
@@ -502,7 +573,6 @@ public class GameController : MonoBehaviour
         // but wait, we also need it to be in the correct order
         // hmm maybe unlocking new things involves a little version of each of these puzzles
         // I need a way to allow an input when all sides are completed
-
     }
 
     public IEnumerator LevelDone(Side s)
@@ -518,7 +588,7 @@ public class GameController : MonoBehaviour
         print("after fizzle delay");
 
         //StartCoroutine(DelayAndThenFunction(StartNextPuzzle, fizzleDelay));
-
+        FullInputController.instance.TurnAllScreensOff();
         SaveAndLoadGame.IncreasePuzzleForSide(GetIndexOfFocusedSide(focusedSide));
 
         s.puzzleList.gameObject.SetActive(false);
@@ -527,6 +597,7 @@ public class GameController : MonoBehaviour
         s.intel.SetActive(true); // lowkey with the way that I did these sticky notes, I might as well have just done the same thing for theese
         s.done = true;
         s.stickyNote.SetTrigger("Release");
+        RuntimeManager.PlayOneShot(s.sideSolvedSoundPath);
         RuntimeManager.PlayOneShot(s.sideSolvedSoundPath);
 
         RunGameEvent(s.exitCode);
@@ -555,6 +626,18 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void Pause()
+    {
+        cutscene = true;
+        Time.timeScale = 0;
+    }
+
+    public void Unpause()
+    {
+        cutscene = false;
+        Time.timeScale = 1;
+    }
+
     public void AddNewParticle()
     {
         // well no, cause we can have a dialogue trigger this, this is okay
@@ -562,6 +645,10 @@ public class GameController : MonoBehaviour
         unlockedParticles++;
         if (unlockedParticles == 3) cb.StartDialogueSection("endParticle"); // is this even what I want? // shouldn't end particle just go into the list of dialogue sections nums?
         if (unlockedParticles == 4) cb.StartDialogueSection("repeatParticle"); // is this even what I want? // shouldn't end particle just go into the list of dialogue sections nums?
+
+        machineSparks.Play();
+        RuntimeManager.PlayOneShot("event:/MachineFritz");
+        // play sound here too
 
         SaveAndLoadGame.IncreaseUnlockedParticles();
     }
@@ -587,11 +674,13 @@ public class GameController : MonoBehaviour
                 // lowkey what I think I might do also is make it so that based on g, I start a different new dialogue section or something
                 if (g.name == "RotateMachine")
                 {
-                    ChangeTutorialStep();
+                    print("is this going?");
+                    ChangeTutorialStep(); // see this is kind of unreliable?
                     cb.StartDialogueSection("rotateMachine");
                 }
                 if (g.name == "SpreadMachine")
                 {
+                    print("is this going???");
                     ChangeTutorialStep();
                     cb.StartDialogueSection("spreadMachine");
                 }
@@ -647,14 +736,18 @@ public class GameController : MonoBehaviour
 
     public void StartSide() // AKA unlock side
     {
+        RuntimeManager.PlayOneShot("event:/UnlockSide");
+
         //print("from start side");
         SideManager.instance.Unfocus();
         tesseract.animator.enabled = true;
 
         for (int i = 0; i < sides.Length; i++)
         {
-            if (sides[i].projection.unlocked == false) // ohhh so we're just already asking if its on or not or somehting
+            print(sides[i].projection.gameObject.name);
+            if (sides[i].projection.unlocked == false) // ohhh so we're just already asking if its on or not or somehting // so for the first one that ISN"T on, so we just need to reorder the sides list?
             {
+               
                 sides[i].projection.Unlock();
                 SaveAndLoadGame.IncreaseUnlockedSides(); // eh I don't like that I'm doing the math here but, oh my god yeah it'll be so much smoother if we don't do it this way
                 //sides[i].projection.SetState(true); // huh so this is the only way we set things to true? for the first time?
@@ -703,7 +796,7 @@ public class GameController : MonoBehaviour
         print(SaveAndLoadGame.lightsOn + " last call are lights on");
         Application.Quit();
 
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
     }
 
     public void TurnOffLightsInRoom()
@@ -719,7 +812,7 @@ public class GameController : MonoBehaviour
 
     public void TurnOnLightsInRoom()
     {
-        print("turn on lights!");
+        print("turn on lights!!!!");
         foreach (Light l in roomLights)
         {
             l.gameObject.SetActive(true);
@@ -731,6 +824,7 @@ public class GameController : MonoBehaviour
         
     public void ResetGame()
     {
+        Time.timeScale = 1;
         SaveAndLoadGame.ResetGame();
 
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
@@ -747,6 +841,7 @@ public class GameController : MonoBehaviour
 
     public void StartTutorial2()
     {
+        CutSceneStart();
         cb.StartDialogueSection("tutorial2");
         // where to put the code that say if your dialogue section is tutorial, then set restart the tutorial steps, and if you start with tutorial2, load with nother number
     }

@@ -14,7 +14,6 @@ public class PedestalSpinningVFXBrain : MonoBehaviour
 
     public void FireLaser()
     {
-        FMODUnity.RuntimeManager.PlayOneShot("event:/LaserFire");
         //lb.SetColor(output[currentIndex]);
         //laser.SetActive(true);
         FullInputController.instance.MakeBranches();

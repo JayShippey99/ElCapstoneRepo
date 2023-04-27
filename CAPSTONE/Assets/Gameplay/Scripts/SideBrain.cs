@@ -53,6 +53,10 @@ public class SideBrain : InteractableParent
 
     public bool refreshMaterials;
 
+    public ParticleSystem suckParticles;
+    public ParticleSystem SideSuckparticles;
+
+
     private void Start()
     {
         //print("when does this happen"); // okay so I need a way to make it so that they unlock when they need on load
@@ -66,7 +70,11 @@ public class SideBrain : InteractableParent
 
         alienIntel = puzzleHouser.GetChild(puzzleHouser.childCount - 1).gameObject;
 
-        if (refreshMaterials) RefreshMaterials();
+        if (refreshMaterials)
+        {
+            //print("is this bad");
+            RefreshMaterials();
+        }
     }
 
     void RefreshMaterials()
@@ -154,12 +162,32 @@ public class SideBrain : InteractableParent
         }
     }
 
+
+    public void SetProgress(float num)
+    {
+        progress = num;
+    }
+
+    public void SetIdle(bool yes)
+    {
+        idle = yes;
+    }
+
+    public void SetStateTo(int newState)
+    {
+        state = newState;
+    }
+
+
     public void Unlock()
     {
+        // okay so if we're running this from the start then unlock isn't what we want
+        print("maybe the order of this is wrong?");
         // this line looks weird but we won't refresh if we load up a side, but then for eerything else they get reset
         refreshMaterials = false;
         //print("do we unlock?");
-
+        suckParticles.Play();
+        //SideSuckparticles.Play();
         // this could cue up an animtion or something
         unlocked = true;
         state = on;

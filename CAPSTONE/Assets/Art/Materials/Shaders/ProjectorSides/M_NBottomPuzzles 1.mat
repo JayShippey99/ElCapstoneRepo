@@ -98,11 +98,11 @@ Material:
     - _ProjectionIntensity: 0.2
     - _ProjectionStep1: 0
     - _ProjectionStep2: 0.4
-    - _QueueControl: 0
-    - _QueueOffset: 0
+    - _QueueControl: 1
+    - _QueueOffset: 1
     - _Roundedness: 5.01
     - _ShockwaveSize: 0.1
-    - _Visibility: 1
+    - _Visibility: 0
     m_Colors:
     - _MidPoint: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _OutlineColor: {r: 0.514151, g: 0.97523135, b: 1, a: 1}

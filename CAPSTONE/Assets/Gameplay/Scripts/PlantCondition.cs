@@ -34,10 +34,13 @@ public class PlantCondition : MonoBehaviour
         {
             foreach (GameObject f in fruits)
             {
-                //print(transform.localPosition + " " + f.transform.localPosition);
-                print("yep end");
-                if (Vector3.Distance(transform.localPosition, f.transform.localPosition) < .01) return true; // honestly we don't need to worry about what it is, we can just ask for both points right? // actually holy shit I think we can still just use the middle rule for the branches too, but wait no
-                //print("does this run");
+                print(transform.localPosition + " " + f.transform.localPosition + " " + Vector3.Distance(transform.localPosition, f.transform.localPosition));
+                print(Vector3.Distance(transform.localPosition, f.transform.localPosition) == 0);
+                if (Vector3.Distance(transform.localPosition, f.transform.localPosition) < 1f)
+                {
+                    print("does this run");
+                    return true; // honestly we don't need to worry about what it is, we can just ask for both points right? // actually holy shit I think we can still just use the middle rule for the branches too, but wait no
+                }
             }
         }
         else

@@ -19,26 +19,6 @@ public class ProjectorBeamBrain : MonoBehaviour
 
     private void Update()
     {
-        switch (side)
-        {
-            case Sides.front:
-                transform.RotateAroundLocal(Vector3.forward, Time.deltaTime / 2);
-                break;
-            case Sides.back:
-                transform.RotateAroundLocal(Vector3.forward, Time.deltaTime / 2);
-                break;
-            case Sides.top:
-                transform.RotateAroundLocal(Vector3.up, Time.deltaTime / 2);
-                break;
-            case Sides.left:
-                transform.RotateAroundLocal(Vector3.right, Time.deltaTime / 2);
-                break;
-            case Sides.right:
-                transform.RotateAroundLocal(Vector3.right, Time.deltaTime / 2);
-                break;
-            case Sides.bottom:
-                transform.RotateAroundLocal(Vector3.up, Time.deltaTime / 2);
-                break;
-        }
+        transform.RotateAroundLocal(transform.up, Time.deltaTime / 2);
     }
 }

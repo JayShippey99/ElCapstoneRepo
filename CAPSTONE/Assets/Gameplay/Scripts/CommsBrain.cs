@@ -123,6 +123,7 @@ public class CommsBrain : MonoBehaviour
 
     void Start()
     {
+        friendSpeech = FMODUnity.RuntimeManager.CreateInstance("event:/FriendDialogue");
         if (!string.IsNullOrEmpty(sectionToStart)) StartDialogueSection(sectionToStart);
 
         //print(dialogueSections[0].dialogueChunks[1].yourDialogues[0].exitCode);
@@ -242,7 +243,7 @@ public class CommsBrain : MonoBehaviour
             }
             else if (yourLinesToSend > 0)
             {
-                friendSpeech.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                friendSpeech.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 //print(dialogueSections[0].dialogueChunks[1].yourDialogues[0].exitCode + " dialogue chunk coroutine");
 
                 for (int i = 0; i < chunk.yourDialogues.Length; i++)

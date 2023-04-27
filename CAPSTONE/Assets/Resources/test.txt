@@ -1,0 +1,942 @@
+||||||||||||| Intro
+
+So...
+This is the lab
+Make yourself at home
+This place is cool -> int2
+Very interesting -> int2
+Shortcut to choice -> s4.7
+
+||| int2
+This is where I go when people
+can't seem to get a hold of me
+The radio signals are very... filtered here
+So you needed my help, but why me? -> int3
+
+||| int3
+Well
+From what I've seen,
+you just fit the bill
+Right... -> int4
+Thanks, I guess -> int4
+
+||| int4
+Look
+You're the only person that I trust
+I'll prove it
+Lemme get this thing on
+... -> end section
+
+
+||||||||||||| roomStarted
+
+That never gets old to me haha
+Hey that's a tesseract! -> rs2
+What is that thing? -> rs2
+
+||| rs2
+A tesseract, yes
+It's a 4th dimensional cube
+Some call it a hypercube
+How did you do that? -> rs3
+
+||| rs3
+Well, that's actually why I needed
+someone I can trust
+What do you mean? -> rs4
+
+||| rs4
+I mean
+I didn't do this
+THIS, isn't from... here
+What does that mean exactly? -> rs5
+
+||| rs5
+It means
+Not from Earth
+Aliens? -> rs6
+I'm still confused -> rs6
+
+||| rs6
+I know I know I'm sure it sounds insane
+But this tesseract, it has the potential
+to bridge communication between us and the aliens!
+So it is aliens... -> rs7
+That's a lot to take in -> rs7
+
+||| rs7
+I need your help
+We don't know WHERE it came from
+And we don't know WHY it came here
+I can't do this alone
+Why not? -> rs8
+Sounds scary -> rs8
+
+||| rs8
+I can't manage all of
+this equipment by myself
+Well why is it set up this way? -> rs9
+
+||| rs9
+That
+Is a long story that I will happily get into
+But for now, I need to explain the rules to you
+Fine -> end section
+Okay -> end section
+
+
+||||||||||||| tutorial
+
+This is the tesseract
+It is entirely made of quantum fields
+Okay -> t1
+
+||| t1
+This machine controls the rotation of the tesseract
+Pressing this button activates the side closest to us
+Okay -> t2
+
+||| t2
+If you pull these dials left and right
+you can navigate to the other sides
+Okay -> t3
+
+||| t3
+Now, before I continue
+This is the part where I come into play
+Watch this
+... Okay? -> end section
+Watching -> end section
+
+
+||||||||||||| tutorial2
+
+With the correct circumstances
+We can open up the tesseract
+Interesting -> tt2
+
+||| tt2
+From what I can tell, that's space
+But that's all I can really gather
+I haven't been able to investigate it much alone
+How so? -> tt3
+
+||| tt3
+My equipment is over here
+Your equipment is over there
+My arms are only so long
+Fair enough -> tt4
+
+||| tt4
+Anyways
+You know how you're the top student
+in my quantum particle lectures?
+I guess I'm alright -> tt5
+Yeah? -> tt5
+
+||| tt5
+By studying the tesseract
+We've discovered two new particles
+Really? -> tt6
+Who's this 'we' you keep mentioning? -> tt6
+
+||| tt6
+I'll get to that later!
+Fine, fine -> tt7
+
+||| tt7
+This machine
+Lets you load up a series of particles
+By pressing the buttons under each screen
+Okay -> tt9
+
+||| tt9
+Pressing this button here
+will create a cluster particle
+Which is then fired at the tesseract
+Okay -> tt10
+
+||| tt10
+This screen shows you what the cluster
+looks like when you're sending it
+Okay -> tt11
+
+||| tt11
+Each side has its own properties
+and requires increasing amounts of energy
+Okay -> tt11.5
+
+||| tt11.5
+Pulling this lever
+Safely kills the energy levels
+That are temporarily being stored
+Okay -> tt12
+
+||| tt12
+Oh!
+Lastly, to your left is a corkboard
+I see -> tt12.5
+
+||| tt12.5
+I'll be pinning important things to that
+every now and then
+Thanks -> tt13
+
+||| tt13
+When you're ready
+activate the side I opened up
+and start experimenting
+... I'm really not sure what to expect
+Here goes nothing -> end section
+
+
+||||||||||||| side1
+
+Woah!
+What did I do? -> s1.01
+
+||| s1.01
+Something good!
+I'll say that much!
+Wow! 
+Did you hear that? -> s1.02
+
+||| s1.02
+Yeah I heard that
+But do you see that!
+But this is a galaxy!
+Wow, this is amazing -> s1.03
+But what does it mean? -> s1.03
+
+||| s1.03
+This must've been the calibration test!
+And not only that but I can
+probably track down that galaxy
+Awesome! -> s1.04
+
+||| s1.04
+...
+Sure enough
+I found the coordinates
+We are coming, aliens -> s1.05
+
+||| s1.05
+... Well
+I'm glad I have you aboard
+That was amazing
+Wasn't too hard -> s1.1
+Thanks -> s1.1
+
+||| s1.1
+While you were doing that
+I was able to take some notes
+and this is incredible progress
+What did you learn -> s1.2
+
+||| s1.2
+Well, we both saw the weird path
+that you were making
+It was like completing a circuit
+I noticed that too -> s1.3
+Yeah that's interesting -> s1.3
+
+||| s1.3
+And when the circuit was completed
+I noticed that the energy levels
+went higher
+Okay -> s1.4
+
+||| s1.4
+And this symbol at the end...
+The sound we heard...
+Wait a minute...
+I think they might've been right
+Who? -> s1.5
+
+||| s1.5
+An old colleague
+... I had many old colleagues
+What happened to them? -> s1.6
+
+||| s1.6
+Well... I don't know!
+At all!
+They just disappeared one by one!
+Really? -> s1.8
+I still feel like I'm missing something -> s1.8
+
+||| s1.8
+I used to work for NASA
+I've shared this with the class many times
+Right... -> s1.9
+
+||| s1.9
+But I've never told anyone
+about what I did after working there
+What happened? -> s1.10
+
+||| s1.10
+Well to start, 
+my entire department got laid off
+But little did they know that they disposed
+of a team of goddamn geniuses
+... -> s1.11
+
+||| s1.11
+This facility was made by US
+We did our OWN independant research
+You created this place? -> s1.12
+
+||| s1.12
+We created the technology required
+to find the tesseract in space
+and bring it down to Earth
+If anything we were held back at that institution
+I see -> s1.13
+So what happened to everyone? -> s1.13
+
+||| s1.13
+Well, I'm worried that the government
+caught on to us
+To put it one way...
+Oh... -> s1.14
+
+||| s1.14
+His name was Tim
+The person I mentioned earlier
+He had this theory that I have to test
+... One second
+Okay -> s1.15
+
+||| s1.15
+That smart bastard was right!
+Running the signals we just heard
+through a spectrogram gives us an image!
+I'll put it up on the corkboard for you
+Can't wait! -> s1.16
+
+||| s1.16
+I think this is a structure
+for another new particle!
+Really?! -> s1.17
+Sure looks like it -> s1.17
+
+||| s1.17
+Okay give me one sec to hack
+into your machine
+I'm going to add this new one
+This is so exciting! -> s1.18
+Are we sure its stable? -> s1.18
+
+||| s1.18
+This is guaranteed to work
+Math doesn't lie
+Here it goes
+Agreed -> end section
+
+
+||||||||||||| side2
+
+This just keeps getting better and better
+That's a star map!
+It's like we're zooming in on
+The galaxy we found earlier
+Star map? -> s2.01
+
+||| s2.01
+Its an indicator of 
+pulse patterns of the neighboring stars
+like triangulation
+Can you track this star down? -> s2.02
+
+||| s2.02
+I should be able to if I just plug
+the numbers in
+Makes sense -> s2.03
+
+||| s2.03
+AHA!
+I found it
+Let's keep this in mind but keep
+Digging deeper
+Okay -> s2.04
+
+||| s2.04
+I'm also going to check
+what the sound gave us this time
+Okay -> s2.1
+
+||| s2.1
+Oh cool!
+Its another particle
+This one looks interesting
+Show me! -> s2.2
+
+||| s2.2
+I've pinned it up on the corkboard
+Gosh, the crew would've loved this
+At least there's someone to share this with
+I'm glad you brought me in to help -> s2.3
+
+||| s2.3
+You were always a stand out student to me
+Thanks -> s2.4
+... -> s2.4
+
+||| s2.4
+I admit, this is incredibly stupid...
+If word about this facility gets out
+I 'll be gone just like my friends
+Do you understand?
+You have my word -> s2.5
+Yes -> s2.5
+
+||| s2.5
+Not only that
+But all this work
+will have been for nothing
+And that's no good
+I understand -> s2.6
+
+||| s2.6
+Anyways
+I'm accessing your machine again
+to add this new particle
+Roger that -> end section
+
+
+||||||||||||| side3
+
+Well done!
+A solar system!
+We keep getting closer to something
+Agreed -> s3.01
+
+||| s3.01
+Its a rather small one
+There's only 3 planets
+That happens right? -> s3.02
+
+||| s3.02
+Its more common to have a small
+amount of planets actually
+We're incredibly lucky here
+Cool -> s3.03
+
+||| s3.03
+This is super exciting
+How are you feeling?
+This is really cool! -> s3.05
+It's a little spooky -> s3.05
+
+||| s3.05
+I wil admit
+I still am not sure what this
+is leading to
+Right -> s3.06
+
+||| s3.06
+But I can't help but dig deeper
+Speaking of digging deeper
+These are starting to look more complex
+Are you keeping up fine?
+Yeah -> s3.1
+Eh -> s3.1
+
+||| s3.1
+I imagine its only going to get more
+difficult as we go
+But I know you can do it
+Thanks -> s3.7
+
+||| s3.7
+I'm looking at an energy reading...
+These energy levels are really
+starting to get up there
+...
+Should we be concerned? -> s3.8
+
+||| s3.8
+Not yet
+But I can't totally say what will happen
+Once we get past the breaking point
+Breaking point? -> s3.9
+
+||| s3.9
+I mean
+This place can withstand what we expected
+And we've already had two new discoveries
+I see... -> s3.10
+
+||| s3.10
+Don't be anxious
+I won't let things get out of control
+Okay -> s3.11
+
+||| s3.11
+... Oh I totally forgot to check
+with the spectrogram
+One sec...
+Okay -> s3.12
+
+||| s3.12
+That son of a bitch
+Well this is a different son of a bitch
+What's going on? -> s3.13
+
+||| s3.13
+Garret was the one who made
+the machines on your desk
+He was very proactive
+Made a lot more machines than needed
+And? -> s3.14
+
+||| s3.14
+He predicted that there might be
+an additional component we'd control
+This time controlling particle rotation 
+What does this mean for me? -> s3.15
+
+||| s3.15
+Great question
+First
+Let me add this new image to the board
+Okay -> s3.16
+
+||| s3.16
+And now
+I'll set up the machine and then explain it
+Sounds good -> end section
+
+
+||||||||||||| side4
+
+Is that...
+There's a person -> s4.1
+
+||| s4.1
+Yeah there absolutely is
+... Wow
+That looks like two planets
+And the one with the person is whole
+What do you make of that? -> s4.2
+
+||| s4.2
+Firstly, I'm floored
+I wasn't expecting direct mention
+of humans
+... -> s4.3
+
+||| s4.3
+Secondly
+It looks like this planet needs
+humans to survive
+for whatever reason
+Its probably the alien planet -> s4.4
+
+||| s4.4
+That would make a lot of sense since
+we've been zooming in on them
+... I'm beginning to worry 
+Why? -> s4.5
+Me too -> s4.5
+
+||| s4.5
+I need to keep digging deeper
+I need to finish up this
+project for my team
+But...
+... -> s4.6
+
+||| s4.6
+Why us?
+I get what you mean -> s4.7
+... -> s4.7
+
+||| s4.7
+From a species that can harness
+the 4th dimension
+What do we have to offer?
+Intelligence? -> s4.8
+Humanity? -> s4.8
+Help? -> s4.8
+
+||| s4.8
+I mean maybe
+Seems unlikely though
+... -> s4.9
+
+||| s4.9
+I can't dwell on this for long
+I'll just get a migraine
+Lemme check the sound visualizer
+Okay -> s4.10
+Haha okay -> s4.10
+
+||| s4.10
+... Ha!
+He did it again
+We need another machine
+What is it? -> s4.11
+
+||| s4.11
+This one uses soundwaves to
+artificially create gravity
+Oh cool! -> s4.12
+
+||| s4.12
+I added it to the corkboard
+And I'm also going to
+set up the new equipment
+Go ahead -> end section
+
+
+||||||||||||| side5
+
+This is...
+A wormhole?
+But I can't tell what its showing us
+I'm drawing a blank too -> s5.1
+
+||| s5.1
+Huh...
+In the meantime I'll scan the sound
+and see what we get
+Okay -> s5.2
+
+||| s5.2
+... What the hell?
+There's nothing here!
+Nothing? -> s5.3
+
+||| s5.3
+Yeah take a look
+I'll post it up
+Wow, you're right -> s5.4
+
+||| s5.4
+I didn't mess with any settings
+I don't know why its doing this
+God I need my team back
+I'm sorry... -> s5.5
+
+||| s5.5
+They know the inside and out
+of everything in this facility
+... -> s5.6
+
+||| s5.6
+The spectrogram
+The E.M.O.R
+Every station here had an expert
+What's the E.M.O.R? -> s5.7
+
+||| s5.7
+Oh, right
+I never told you how we got
+ahold of the tesseract
+Guess not -> s5.8
+I was wondering that -> s5.8
+
+||| s5.8
+It was floating out in our solar system
+Beyond pluto
+Oh really? -> s5.9
+
+||| s5.9
+Yes and we were lucky we were able
+to spot it before any other
+space organization
+So how did you get it here? -> s5.11
+
+||| s5.11
+We designed a machine that harnessed
+electromagnetic fields in a way that
+space had no way to interfere with
+Wow -> s5.12
+
+||| s5.12
+We called it: EMOR
+Electro-magnetic oscillating rectrator
+This let us control the tesseract
+and pull it in to Earth
+Fascinating -> s5.13
+
+||| s5.13
+We had to tweak the machine so that
+it condensed the tesseract into a point
+so no other agencies could detect it
+as it landed
+... -> s5.14
+
+||| s5.14
+We then reworked the EMOR
+For us to conduct tests here
+And that's the machine underneath it now
+That's fascinating -> s5.15
+
+||| s5.15
+That's how we have been inspecting it
+and that's how we keep it constrained
+when we leave
+You condense it down? -> s5.16
+
+||| s5.16
+Exactly
+That requires constant energy, doesn't it? -> s5.17
+
+||| s5.17
+It does, yes
+It loves to "stretch its legs"
+as we called it when we remove that hold
+... -> s5.18
+
+||| s5.18
+But for how grand that looks
+ you'd be surprised by how little
+energy is needed to keep it down
+That's interesting -> s5.19
+That's funny -> s5.19
+
+||| s5.19
+I'm still stumped on the empty sound
+Maybe there's nothing else for us to know? -> s5.20
+
+||| s5.20
+I'll buy into that for now
+I'll open up the final side
+But if we get stuck, I'm closing it back up
+Sounds good -> end section
+
+
+||||||||||||| side6
+
+... Are those fingerprints?
+It sure looks like it -> s6.1
+
+||| s6.1
+...
+Are you alright? -> s6.2
+
+||| s6.2
+... There are 6 fingerprints
+Did I ever mention the size of my team?
+You didn't -> s6.3
+.. Oh, I'm so sorry -> s6.3
+
+||| s6.3
+Why didn't I think of this sooner
+It makes total sense
+Do you think... -> s6.4
+
+||| s6.4
+We stayed under perfect cover...
+There was a 0 percent chance
+of anyone finding out about this
+... -> s6.5
+
+||| s6.5
+I'm relieved to say my team isn't dead
+But as insane as this sounds
+I do think they were abducted
+What are you going to do? -> s6.6
+
+||| s6.6
+Well, for now we are going to keep
+Trying to crack this thing
+Are you still in?
+Yes -> s6.7
+
+||| s6.7
+Thank you...
+This, is why I chose you
+You're like me and never want to give up
+... I think we're close
+Do you think they're with the aliens? -> s6.8
+
+||| s6.8
+I'm positive those are their fingerprints
+We keep them on record
+And yeah, they are identical 
+Well, now what?  -> s6.9
+
+||| s6.9
+...
+Let me hop over to Dana's station
+One second
+Dana? -> s6.10
+
+||| s6.10
+Dana was our stargazer
+She had the densest documentation
+of the cosmosI had ever seen
+I see -> s6.11
+
+||| s6.11
+Yeah...
+Wow... 
+What is it?  -> s6.12
+
+||| s6.12
+That wormhole...
+If we assume that Earth is one of the
+Starting points
+... -> s6.12.5
+
+||| s6.12.5
+The other end points directly to the star
+we found earlier too
+This is a map!
+A wormhole map!
+These aliens are really impressive -> s6.13
+Dana was really impressive -> s6.13
+That sounds scary! -> s6.13
+
+||| s6.13
+I'll say
+...
+Wow...
+Are you okay? -> s6.14
+
+||| s6.14
+Yeah yeah I'm alright
+Lets keep moving forward with this
+I'm gonna inspect that sound
+See what comes from it
+Okay -> s6.15
+
+||| s6.15
+Odd, it just looks like a summary
+of what we already found
+I'd be interested to hear your thoughts
+I'll take a look -> s6.16
+That is odd -> s6.16
+
+||| s6.16
+Thoughts?
+Not sure -> s6.17
+
+||| s6.17
+- Hey actually you know what
+I'm looking at the energy levels
+of the sides again and
+they have lowered back down? 
+Very interesting -> s6.18
+What do you make of it -> s6.18
+
+||| s6.18
+This does mean that there's room
+for more particles
+I thought that was impossible, really
+I can try some things -> s6.19
+
+||| s6.19
+I'd be careful
+But go ahead
+I'll tweak your machine again
+Okay -> s6.20
+
+||| s6.20
+I'll be back
+I need a break
+I'll let you know what I learn -> end section
+
+
+||||||||||||| rotateMachine
+
+This machine will allow you
+To rotate the starting point
+by pressing these two buttons
+Sounds reasonable -> rm1
+
+||| rm1
+I imagine you'll handle it just fine
+I'm gonna open up the next side now
+Okay -> end section
+
+
+||||||||||||| spreadMachine
+
+This piece of equipment
+Will allow you to change the angle that
+the path splits at
+Okay -> sm1
+
+||| sm1
+These 3 buttons give you the different angles
+Okay -> sm2
+
+||| sm2
+Best of luck with these next ones
+Opening up the next side whenver you're ready
+I'm ready -> end section
+
+
+||||||||||||| endParticle
+
+Oops!
+Sorry about the sparks
+I got it added to the system
+How do I use it? -> ep1
+
+||| ep1
+To be honest
+I don't really know
+This is new to you and me both
+Okay -> ep2
+That's sketchy -> ep2
+
+||| ep2
+Well...
+Anyways...
+I'm opening up the next side for you
+I'm ready -> end section
+
+
+||||||||||||| repeatParticle
+
+You know
+Something I've been noting
+Each of these particles has a unique waveform
+I noticed that too -> rp1
+
+||| rp1
+These structures really are fascinating
+I know right! -> rp2
+
+||| rp2
+And I'm surprised
+no one was able to predict this before
+It does make sense -> rp3
+Agreed -> rp3
+
+||| rp3
+Anyways
+Here's tht next side
+Opening in 3... 2... 1...
+... -> end section
+
+
+||||||||||||| finalWords
+
+Oh my god...
+I think
+I think you did it
+This is getting kind of scary -> fw1
+I think I did it! -> fw1
+
+||| fw1
+... You're abosolutely right
+I'm looking at the energy fields
+and you NEED to get out of here
+Right now
+Right now??  -> fw2
+
+||| fw2
+YES
+It's no longer stable in here
+If you want to live
+You HAVE to get out RIGHT NOW
+(EXIT THE ROOM) -> end section
+
+

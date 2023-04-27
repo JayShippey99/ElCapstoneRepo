@@ -6,6 +6,10 @@ public class MoveCamera : MonoBehaviour
 {
     public static MoveCamera instance;
 
+    public Transform shakeTransform;
+    // so the shakeTransform will be the one receiving the shaking
+    // and the main camera (transform) will be usign the look
+
     Vector3 startLook;
     bool look;
     public float lookSpeed;
@@ -42,7 +46,8 @@ public class MoveCamera : MonoBehaviour
     {
         //print(transform.rotation);
 
-
+        // okay revert this code back to just shaking??
+        // or was the issue that I couldn't rotate and look around?
 
         if (look)
         {
@@ -90,19 +95,29 @@ public class MoveCamera : MonoBehaviour
         // so, if camera is not looking anywhere and not shaking, the rotation doesn't get touched, 
 
         // when there is a cutscene, set the cork look to true and the other one to false
-        
+        /*
         if (look && shaking)
         {
+            print("this? 1");
             transform.rotation = lookRotation * shakeRotation;
         }
         else if (shaking)
         {
+            
+            print("this? 2");
+            
             transform.rotation = shakeRotation;
+            //transform.rotation = lookRotation * shakeRotation;
         }
         else if (look)
         {
+            print("this? 3");
             transform.rotation = lookRotation;
         }
+        */
+
+        transform.rotation = lookRotation;
+        shakeTransform.rotation = shakeRotation;
 
 
         //Quaternion newRotation = Quaternion.Euler(lookRotation + shakeRotation);
@@ -119,6 +134,16 @@ public class MoveCamera : MonoBehaviour
 
         // i want to take the camera's current rotation and add a shake rotation to it. but this only works since look rotation would be hard setting the rotation again
         // i need a way to hard set rotation again if you're not moving the camera, so if not looking, then set rotation back to normal first? or just 
+    }
+
+    public void LeaveRoom() // these aren't necessary but would really add ot the effect
+    {
+
+    }
+
+    public void EnterRoom()
+    {
+
     }
 
     public void LookThisWay(float yRot)

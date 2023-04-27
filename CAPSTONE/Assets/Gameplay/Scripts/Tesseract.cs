@@ -57,6 +57,9 @@ public class Tesseract : InteractableParent
 
     public Material mat;
 
+    public RoomParticles spaceExplosion; // as psychotic as this is to keep this here it'l be the easiest to mange
+
+
     void Start()
     {
         if (instance == null) instance = this;
@@ -167,6 +170,19 @@ public class Tesseract : InteractableParent
                 turnSoundUD.start();
             }
         }
+    }
+
+    public void TesseractLeave()
+    {
+        animator.SetTrigger("Leave"); // leave can actually contain the particles? nah I like the setup that I have, plus that means they can stay loaded in for next time
+        // here 
+        // this means
+        // okay lets just say that the leave is where the star field gets brought in from
+    }
+
+    public void ExplodeStars()
+    {
+        spaceExplosion.Explode();
     }
 
     public void RemoveBrightness(float time)

@@ -14,11 +14,6 @@ public class RoomParticles : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            Explode();
-        }
-
         if (explode)
         {
             if (progress < 1) progress += Time.deltaTime / rangeRate;

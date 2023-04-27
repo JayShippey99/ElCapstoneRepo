@@ -114,6 +114,7 @@ public class SpreadScreen : InteractableParent
 
     public void Restart() // restart will be called from lever pulled
     {
+        print("resetting lever?");
         SetSpread(1);
     }
 
